@@ -3,7 +3,9 @@ package Vue;
 import Modeles.Demande;
 import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
+import com.sothawo.mapjfx.event.MarkerEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +18,49 @@ public class Listener {
     private JFileChooser choix = new JFileChooser();
     private Controller controller;
 
-    private void setOnActions() {
+    private void Init() {
+        // add an event handler for MapViewEvent#MAP_EXTENT and set the extent in the map
+        controller.mapView.addEventHandler(MapViewEvent.MAP_EXTENT, event -> {
+            event.consume();
+            controller.mapView.setExtent(event.getExtent());
+        });
+
+        // add an event handler for extent changes and display them in the status label
+        controller.mapView.addEventHandler(MapViewEvent.MAP_BOUNDING_EXTENT, event -> {
+            event.consume();
+            controller.labelExtent.setText(event.getExtent().toString());
+        });
+
+        controller.mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, event -> {
+            event.consume();
+            controller.labelEvent.setText("Event: map right clicked at: " + event.getCoordinate());
+        });
+        controller.mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, event -> {
+            event.consume();
+            controller.labelEvent.setText("Event: marker clicked: " + event.getMarker().getId());
+        });
+        controller.mapView.addEventHandler(MarkerEvent.MARKER_RIGHTCLICKED, event -> {
+            event.consume();
+            controller.labelEvent.setText("Event: marker right clicked: " + event.getMarker().getId());
+        });
+        controller.mapView.addEventHandler(MapLabelEvent.MAPLABEL_CLICKED, event -> {
+            event.consume();
+            controller.labelEvent.setText("Event: label clicked: " + event.getMapLabel().getText());
+        });
+        controller.mapView.addEventHandler(MapLabelEvent.MAPLABEL_RIGHTCLICKED, event -> {
+            event.consume();
+            controller.labelEvent.setText("Event: label right clicked: " + event.getMapLabel().getText());
+        });
+
+        controller.mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
+        });
+
+
+        controller.buttonZoom.setOnAction(event -> controller.mapView.setZoom(controller.ZOOM_DEFAULT));
+        controller.sliderZoom.valueProperty().bindBidirectional(controller.mapView.zoomProperty());
+    }
+
+    private void chargerPlanEtLivraison() {
 
         controller.chargerPlan.setOnAction(event -> {
             String pathPlan = "";
@@ -42,50 +86,12 @@ public class Listener {
                 ex.printStackTrace();
             }
         });
-
-        controller.buttonZoom.setOnAction(event -> controller.mapView.setZoom(controller.ZOOM_DEFAULT));
-        controller.sliderZoom.valueProperty().bindBidirectional(controller.mapView.zoomProperty());
-
-
-
-
     }
 
-
-
-
-
-/*    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Charger Plan":
-                String pathPlan="";
-                try {
-                    choix.setCurrentDirectory(new File("./datas"));
-                    if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        pathPlan = choix.getSelectedFile().getAbsolutePath();
-                        chargerPlan(pathPlan);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                break;
-            case "Charger Demande":
-                String pathDemande="";
-                choix.setCurrentDirectory(new File("./datas"));
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathDemande = choix.getSelectedFile().getAbsolutePath();
-                    try {
-                        chargerDemande(pathDemande);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                break;
-
-        }
-
-    }*/
+    private void setTopControlsDisable(boolean flag) {
+        controller.topControls.setDisable(flag);
+    }
+    
 
     public void chargerPlan(String path) throws Exception {
         ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
