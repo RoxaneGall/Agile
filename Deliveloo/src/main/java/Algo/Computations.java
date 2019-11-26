@@ -1,9 +1,6 @@
 package Algo;
 
-import Modeles.Graphe;
-import Modeles.Intersection;
-import Modeles.Trajet;
-import Modeles.Troncon;
+import Modeles.*;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -12,6 +9,20 @@ public class Computations {
 
     //VOYAGEUR DE COMMERCE
 
+    public static Tournee getTourneeFromDemande(Demande demande, Graphe graphe)
+    {
+        Tournee tourneePasOptimale = new Tournee(demande);
+        Intersection lastLocation = demande.getEntrepot();
+        for (Livraison livraison: demande.getLivraisons()) {
+            Trajet meilleurTrajet = getMeilleurTrajet(lastLocation,livraison.getPickup(),graphe);
+            tourneePasOptimale.addTrajet(meilleurTrajet);
+            meilleurTrajet = getMeilleurTrajet(livraison.getPickup(),livraison.getDelivery(),graphe);
+            tourneePasOptimale.addTrajet(meilleurTrajet);
+            lastLocation = livraison.getDelivery();
+        }
+        //Idée d'amelioration : explorer toutes les possibilités avec des contraintes et choisir la meilleure
+        return tourneePasOptimale;
+    }
 
 
     //DIJKSTRA
@@ -23,18 +34,18 @@ public class Computations {
         return dijkstra(origine,arrivee,graphe).get(arrivee.getId());
     }
 
-    public static HashMap<Integer, Trajet> dijkstra(Intersection origine,
+    public static HashMap<Long, Trajet> dijkstra(Intersection origine,
                                                     Intersection arrivee,
                                                     Graphe graphe)
     {
         //Dijkstra variables
-        HashMap<Integer,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
-        ArrayList<Integer> alreadyVisitedIntersections = new ArrayList<>(); //Liste des intersection déjà visitées
+        HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
+        ArrayList<Long> alreadyVisitedIntersections = new ArrayList<>(); //Liste des intersection déjà visitées
         //Graphe
-        HashMap<Integer,Intersection> plan = graphe.getIntersectionMap(); //Toutes les intersection avec leurs id en key
+        HashMap<Long,Intersection> plan = graphe.getIntersectionMap(); //Toutes les intersection avec leurs id en key
 
         //remplissage du graphe avec des couts infinis
-        for (Integer id : plan.keySet()){
+        for (Long id : plan.keySet()){
             //Pour chaque intersection mettre son trajet optimal à null
             trajetsPourIntersection.put(id, null);
         }
@@ -65,8 +76,8 @@ public class Computations {
 
     }
 
-    public static Intersection selectNearestIntersection(HashMap<Integer,Trajet> trajetsPourIntersection,
-                                                         ArrayList<Integer> alreadyVisitedIntersections)
+    public static Intersection selectNearestIntersection(HashMap<Long,Trajet> trajetsPourIntersection,
+                                                         ArrayList<Long> alreadyVisitedIntersections)
     {
         Trajet nearestIntersectionTrajet = null;
 
@@ -86,8 +97,8 @@ public class Computations {
     }
 
 
-    public static HashMap<Integer, Trajet> relacher(Trajet newTrajet,
-                                                    HashMap<Integer, Trajet> trajetsPourIntersection)
+    public static HashMap<Long, Trajet> relacher(Trajet newTrajet,
+                                                    HashMap<Long, Trajet> trajetsPourIntersection)
     {
         Trajet trajetActuel = trajetsPourIntersection.get(newTrajet.getArrivee().getId());
 

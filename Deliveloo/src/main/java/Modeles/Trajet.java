@@ -45,9 +45,7 @@ public class Trajet {
     @Override
     public String toString() {
         String troncontxt = "";
-        for (Troncon troncon: troncons) {
-            troncontxt += "\n" + troncon.toString();
-        }
+        for (Troncon troncon: troncons) troncontxt += "\n" + troncon.toString();
         return "Trajet{" +
                 "troncons="+ troncontxt +
                 "\nlongueur=" + getLongueur() +

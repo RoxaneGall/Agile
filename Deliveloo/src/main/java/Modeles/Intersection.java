@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Intersection {
-    private int id;
+    private long id;
     private Coordinate coord;
-    private HashMap<Integer,Troncon> troncons;
+    private HashMap<Long,Troncon> troncons;
 
-    public Intersection(int id, Coordinate c) {
+    public Intersection(long id, Coordinate c) {
         this.id = id;
         this.coord = c;
-        this.troncons = new HashMap<Integer,Troncon>();
+        this.troncons = new HashMap<Long, Troncon>();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
