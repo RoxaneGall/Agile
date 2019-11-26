@@ -22,7 +22,7 @@ public class Listener {
     private JFileChooser choix = new JFileChooser();
     private Controller controller;
 
-    private void InitMap(Projection projection) {
+    private void initializeView(Projection projection) {
         // init MapView-Cache
         final OfflineCache offlineCache = controller.mapView.getOfflineCache();
         final String cacheDir = System.getProperty("java.io.tmpdir") + "/mapjfx-cache";
