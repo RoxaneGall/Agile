@@ -43,8 +43,4 @@ public class Controller {
         //deliveries.add(Pair<pickup,deliver>);
     }
 
-    public void setExtentMap() {
-
-    }
-
 }

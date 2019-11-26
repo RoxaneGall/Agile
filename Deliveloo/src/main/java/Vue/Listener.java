@@ -36,7 +36,7 @@ public class Listener implements ActionListener {
     public void chargerPlan( String path) throws Exception {
         ArrayList<Coordinate> limites=new ArrayList<Coordinate>();
         limites= service.chargerPlan(path);
-        controller.setExtentMap(limites);
+        controller.setMapExtent(limites);
     }
 
     public void chargerDemande()  {
