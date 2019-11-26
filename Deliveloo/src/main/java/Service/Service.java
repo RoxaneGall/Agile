@@ -12,6 +12,7 @@ public class Service {
     public ArrayList<Coordinate>  chargerPlan( String path) throws Exception {
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+        limites= lec.getLimitesPlan();
         //limites= méthode Alice qui renvoie les 4 points
         return limites;
     }
