@@ -12,7 +12,7 @@ public class Computations {
 
     //VOYAGEUR DE COMMERCE
 
-    
+
 
     //DIJKSTRA
 
@@ -23,7 +23,10 @@ public class Computations {
         return dijkstra(origine,arrivee,graphe).get(arrivee.getId());
     }
 
-    public static HashMap<Integer, Trajet> dijkstra(Intersection origine, Intersection arrivee, Graphe graphe) {
+    public static HashMap<Integer, Trajet> dijkstra(Intersection origine,
+                                                    Intersection arrivee,
+                                                    Graphe graphe)
+    {
         //Dijkstra variables
         HashMap<Integer,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
         ArrayList<Integer> alreadyVisitedIntersections = new ArrayList<>(); //Liste des intersection déjà visitées
@@ -62,8 +65,8 @@ public class Computations {
 
     }
 
-    public static Intersection selectNearestIntersection(HashMap<Integer, Trajet> trajetsPourIntersection,
-                                                            ArrayList<Integer> alreadyVisitedIntersections)
+    public static Intersection selectNearestIntersection(HashMap<Integer,Trajet> trajetsPourIntersection,
+                                                         ArrayList<Integer> alreadyVisitedIntersections)
     {
         Trajet nearestIntersectionTrajet = null;
 
@@ -83,7 +86,9 @@ public class Computations {
     }
 
 
-    public static HashMap<Integer, Trajet> relacher(Trajet newTrajet, HashMap<Integer, Trajet> trajetsPourIntersection) {
+    public static HashMap<Integer, Trajet> relacher(Trajet newTrajet,
+                                                    HashMap<Integer, Trajet> trajetsPourIntersection)
+    {
         Trajet trajetActuel = trajetsPourIntersection.get(newTrajet.getArrivee().getId());
 
         if (trajetActuel==null) {
@@ -96,7 +101,8 @@ public class Computations {
         return trajetsPourIntersection;
     }
 
-    public static Trajet newTrajetFromAddingTronconToTrajet(Troncon arc, Trajet previousTrajet)
+    public static Trajet newTrajetFromAddingTronconToTrajet(Troncon arc,
+                                                            Trajet previousTrajet)
     {
         Trajet newTrajet = new Trajet(previousTrajet.getOrigine());
         newTrajet.addTroncons(previousTrajet.getTroncons());
