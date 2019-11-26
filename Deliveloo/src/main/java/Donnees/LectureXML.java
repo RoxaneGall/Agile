@@ -111,22 +111,22 @@ public class LectureXML {
         int countNodes=0;
         for(int i=0; i<nbRootNodes; i++){
             Element myElement = (Element) rootNodes.item(i);
-            List
+            List<Livraison>;
             if (myElement.getNodeName().equals("entrepot")){
-               /* Date today = new Date();
+                Date myDate = new Date(); //Date du jour
                 SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
-                System.out.println(formatter.format(aujourdhui));*/
+                myDate = formatter.parse(myElement.getAttribute("heureDepart"));
 
-                //Date myDate = SimpleDateFormat.parse(myElement.getAttribute("heureDepart"));
                 int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
                 Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
 
-                /*
+/*<entrepot adresse="342873658" heureDepart="8:0:0"/>
+<livraison adresseEnlevement="208769039" adresseLivraison="25173820" dureeEnlevement="180" dureeLivraison="240"/> */
+            }
 
-<entrepot adresse="342873658" heureDepart="8:0:0"/>
-<livraison adresseEnlevement="208769039" adresseLivraison="25173820" dureeEnlevement="180" dureeLivraison="240"/>
-
-                 */
+            if(myElement.getNodeName().equals("livraison")){
+                int idEnlevement = Integer.parseInt(myElement.getAttribute("adresseEnlevement"));
+                Intersection enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
             }
         }
     }
