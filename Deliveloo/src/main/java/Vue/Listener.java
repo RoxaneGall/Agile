@@ -10,13 +10,25 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Listener implements ActionListener {
+public class Listener {
     private Service service;
     private JFileChooser choix = new JFileChooser();
     private Controller controller;
 
+    private void setupEventHandlers() {
 
-    @Override
+
+
+
+
+
+    }
+
+    
+}
+
+
+/*    @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Charger Plan":
@@ -58,4 +70,4 @@ public class Listener implements ActionListener {
         Demande d= service.chargerDemande(path);
         controller.chargerDemande(d);
     }
-}
+} */
