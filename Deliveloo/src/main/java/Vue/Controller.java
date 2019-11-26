@@ -33,15 +33,15 @@ public class Controller {
      */
     /* the box containing the top controls, must be enabled when mapView is initialized */
     @FXML
-    private HBox topControls;
+    public HBox topControls;
     /* slider pour régler le zoom */
     @FXML
-    private Slider sliderZoom;
+    public Slider sliderZoom;
     @FXML
-    private Button buttonZoom;
+    public Button buttonZoom;
     /* button to reset the map's extent. */
     @FXML
-    private Button buttonResetExtent;
+    public Button buttonResetExtent;
 
     /**
      *  FX Elements d'affichage sur la tournée demandée
@@ -49,10 +49,10 @@ public class Controller {
      */
     /* Accordion for all the different options */
     @FXML
-    private Accordion rightControls;
+    public Accordion rightControls;
     /* section contenant les infos sur les livraisons  */
     @FXML
-    private TitledPane detailsLivraisons;
+    public TitledPane detailsLivraisons;
 
     /**
      * FX elements d'affichage pour debug
@@ -60,53 +60,53 @@ public class Controller {
      */
     /* Label de debug pour afficher les infos sur la map et les events */
     @FXML
-    private Label labelCenter;
+    public Label labelCenter;
     @FXML
-    private Label labelExtent;
+    public Label labelExtent;
     @FXML
-    private Label labelZoom;
+    public Label labelZoom;
     @FXML
-    private Label labelEvent;
+    public Label labelEvent;
 
     /**
      * FX Marker au click pour ajout de livraison (ITERATION 2)
      */
     /* Checkbox for click marker */
     @FXML
-    private CheckBox checkClickMarker;
+    public CheckBox checkClickMarker;
 
     /**
      * Attributs pour définir le plan
      */
     /* cadrage de la map */
-    private Extent mapExtent;
+    public Extent mapExtent;
     /* default zoom value. */
-    private static final int ZOOM_DEFAULT = 14;
+    public static final int ZOOM_DEFAULT = 14;
 
     /**
      * Attributs pour la demande
      */
     /* Entrepot */
-    private Coordinate entrepot;
-    private Marker entrepotMarker;
+    public Coordinate entrepot;
+    public Marker entrepotMarker;
     /* Livraisons */
-    private List<Pair<Coordinate, Coordinate>> deliveries;
-    private List<Pair<Marker,Marker>> deliveriesMarkers;
-    private List<MapLabel> deliveriesNumbers;
+    public List<Pair<Coordinate, Coordinate>> deliveries;
+    public List<Pair<Marker,Marker>> deliveriesMarkers;
+    public List<MapLabel> deliveriesNumbers;
     /* Ligne du trajet de la tournée (Coordinateline) */
-    private CoordinateLine trackMagenta;
+    public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
-    private CoordinateLine trackCyan;
+    public CoordinateLine trackCyan;
 
     // ENUM COULEURS
 
 
     /** Parametres for the WMS server. */
-    private WMSParam wmsParam = new WMSParam()
+    public WMSParam wmsParam = new WMSParam()
             .setUrl("http://ows.terrestris.de/osm/service?")
             .addParam("layers", "OSM-WMS");
 
-    private XYZParam xyzParams = new XYZParam()
+    public XYZParam xyzParams = new XYZParam()
             .withUrl("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x})")
             .withAttributions(
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
