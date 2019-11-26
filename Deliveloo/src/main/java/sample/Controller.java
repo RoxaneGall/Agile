@@ -61,8 +61,8 @@ import java.util.stream.Stream;
 public class Controller {
 
 
-    /** some coordinates from around town. */
-    private Point depot;
+
+
     private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
     private static final Coordinate coordKarlsruheHarbour = new Coordinate(49.015511, 8.323497);
     private static final Coordinate coordKarlsruheStation = new Coordinate(48.993284, 8.402186);
