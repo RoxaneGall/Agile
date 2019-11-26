@@ -7,7 +7,7 @@ import javafx.util.Pair;
 
 import java.util.List;
 
-public class Elements {
+public class Controller {
 
     /** Elements pour le plan */
     private List<Coordinate> mapExtent;
@@ -16,6 +16,10 @@ public class Elements {
     private Coordinate entrepot;
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
+
+    public void setMapExtent(List<Coordinate> planCoords) {
+
+    }
 
     public void chargeDemande(Demande demande) {
         entrepot = demande.getEntrepot().getCoordinate();
