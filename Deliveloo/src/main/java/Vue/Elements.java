@@ -1,5 +1,6 @@
 package Vue;
 
+import Modeles.Demande;
 import Modeles.Intersection;
 import com.sothawo.mapjfx.Coordinate;
 import javafx.util.Pair;
@@ -11,14 +12,16 @@ public class Elements {
 
     /** Coordinates to set the map extent */
     private List<Coordinate> mapExtent = new ArrayList();
+    /** Elements pour le plan */
+    private List<Coordinate> mapExtent;
 
-    /** Coordinates du dépot et des points de livraison */
+    /** Elements pour la demande */
     private Coordinate entrepot;
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
 
-    public void setEntrepot(Intersection inter) {
-        this.entrepot = inter.getCoordinate();
+    public void chargeDemande(Demande demande) {
+        entrepot = demande.getEntrepot().getCoordinate();
     }
 
     public void addDelivery(Coordinate pickup, Coordinate deliver) {
