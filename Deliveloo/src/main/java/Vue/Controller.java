@@ -136,6 +136,7 @@ public class Controller {
      */
     public void setMapExtent(ArrayList<Coordinate> planCoords) {
         mapExtent = Extent.forCoordinates(planCoords);
+        mapView.setExtent(mapExtent);
     }
 
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
@@ -257,11 +258,12 @@ public class Controller {
     private void chargerPlan() {
 
         chargerPlan.setOnAction(event -> {
+            System.out.println("****************************");
             String pathPlan = "";
             try {
-                choix.setCurrentDirectory(new File("./datas"));
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathPlan = choix.getSelectedFile().getAbsolutePath();
+                //choix.setCurrentDirectory(new File("./datas"));
+                //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    //pathPlan = choix.getSelectedFile().getAbsolutePath();
                     ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
                     // POUR TESTER :
                     Coordinate c1 = new Coordinate(45.778579, 4.852096);
@@ -275,7 +277,7 @@ public class Controller {
                     //APPEL METHODE ALICE
                     //limites = service.chargerPlan(pathPlan);
                     setMapExtent(limites);
-                }
+                //}
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

@@ -35,98 +35,37 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER" spacing="20.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="chargerPlan" text="Charger Plan"/>
                 <Button fx:id="chargerDemande" text="Charger Demande"/>
-            </children>
-            <padding>
-                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-            </padding>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
-            <children>
                 <Label fx:id="labelCenter" text="Center: "/>
                 <Label fx:id="labelExtent" text="Extent: "/>
                 <Label fx:id="labelZoom" text="Zoom: "/>
                 <Label fx:id="labelEvent" text="Event: "/>
             </children>
             <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
             </padding>
         </HBox>
     </bottom>
-    <left>
-        <Accordion fx:id="leftControls" BorderPane.alignment="CENTER">
+    <right>
+        <Accordion fx:id="rightControls" BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane fx:id="optionsLocations" animated="true" text="locations">
-                    <content>
-                        <VBox spacing="10.0">
-                            <children>
-                                <Button fx:id="buttonKaHarbour" text="Karlsruhe harbour" maxWidth="Infinity"/>
-                                <Button fx:id="buttonKaCastle" text="Karlsruhe castle" maxWidth="Infinity"/>
-                                <Button fx:id="buttonKaStation" text="Karlsruhe station" maxWidth="Infinity"/>
-                                <Button fx:id="buttonKaSoccer" text="KSC soccer stadium" maxWidth="Infinity"/>
-                                <Button fx:id="buttonAllLocations" text="All" maxWidth="Infinity"/>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="optionsMapType" animated="true" text="map style">
-                    <content>
-                        <VBox spacing="10.0">
-                            <fx:define>
-                                <ToggleGroup fx:id="mapTypeGroup"/>
-                            </fx:define>
-                            <children>
-                                <RadioButton fx:id="radioMsOSM" text="OSM" toggleGroup="$mapTypeGroup"/>
-                                <RadioButton fx:id="radioMsSTW" text="Stamen Watercolor" toggleGroup="$mapTypeGroup"/>
-                                <RadioButton fx:id="radioMsBR" text="Bing Road" toggleGroup="$mapTypeGroup"/>
-                                <RadioButton fx:id="radioMsBA" text="Bing Aerial" toggleGroup="$mapTypeGroup"/>
-                                <RadioButton fx:id="radioMsWMS" text="WMS terrestris OSM" toggleGroup="$mapTypeGroup"/>
-                                <RadioButton fx:id="radioMsXYZ" text="XYZ source" toggleGroup="$mapTypeGroup"/>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
                 <TitledPane fx:id="optionsMarkers" animated="true" text="markers">
                     <content>
                         <VBox spacing="10.0">
                             <children>
-                                <CheckBox fx:id="checkKaHarbourMarker" text="Karlsruhe harbour" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkKaCastleMarker" text="Karlsruhe castle" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkKaStationMarker" text="Karlsruhe station" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkKaSoccerMarker" text="KSC soccer stadium" maxWidth="Infinity"/>
+                                <CheckBox fx:id="livraison1" text="Livraison 1" maxWidth="Infinity"/>
+                                <CheckBox fx:id="livraison2" text="Livraison 2" maxWidth="Infinity"/>
+                                <CheckBox fx:id="livraison3" text="Livraison 3" maxWidth="Infinity"/>
+                                <CheckBox fx:id="livraison4" text="Livraison 4" maxWidth="Infinity"/>
                                 <CheckBox fx:id="checkClickMarker" text="click location" maxWidth="Infinity"/>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="optionsTracks" animated="true" text="tracks and polygons">
-                    <content>
-                        <VBox spacing="10.0">
-                            <children>
-                                <CheckBox fx:id="checkTrackMagenta" text="magenta track" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkTrackCyan" text="cyan track" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkDrawPolygon" text="draw a polygon" maxWidth="Infinity"/>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="optionsMisc" animated="true" text="misc">
-                    <content>
-                        <VBox spacing="10.0">
-                            <children>
-                                <Label text="animation duration"/>
-                                <TextField fx:id="animationDuration" prefWidth="120.0" promptText="milliseconds"/>
-                                <Label text="Bing Maps API-Key"/>
-                                <TextField fx:id="bingMapsApiKey" prefWidth="120.0" promptText="API-Key"/>
-                                <CheckBox fx:id="checkConstrainGermany" text="constrain to Germany" maxWidth="Infinity"/>
                             </children>
                         </VBox>
                     </content>
                 </TitledPane>
             </panes>
         </Accordion>
-    </left>
+    </right>
 </BorderPane>
