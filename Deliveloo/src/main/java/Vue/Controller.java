@@ -4,6 +4,7 @@ import Modeles.Demande;
 
 import Modeles.Livraison;
 import com.sothawo.mapjfx.*;
+import com.sothawo.mapjfx.Projection;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -139,6 +140,10 @@ public class Controller {
 
     public void addDelivery(Coordinate pickup, Coordinate deliver) {
         //deliveries.add(Pair<pickup,deliver>);
+    }
+
+    public void initializeView(Projection projection) {
+
     }
 
 
