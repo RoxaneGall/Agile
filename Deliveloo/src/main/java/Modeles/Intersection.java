@@ -1,14 +1,17 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate; // OBJET COORDINATE QUI REMPLACE POINT, classe ici :
+// https://github.com/sothawo/mapjfx/blob/master/src/main/java/com/sothawo/mapjfx/Coordinate.java
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Intersection {
     private int id;
-    private Point p;
+    private Coordinate p;
     private List<Troncon> troncons;
 
-    public Intersection(int id, Point p) {
+    public Intersection(int id, Coordinate p) {
         this.id = id;
         this.p = p;
         this.troncons = new ArrayList<Troncon>();
@@ -22,11 +25,11 @@ public class Intersection {
         troncons.add(t);
     }
 
-    public Point getP() {
+    public Coordinate getP() {
         return p;
     }
 
-    public void setP(Point p) {
+    public void setP(Coordinate p) {
         this.p = p;
     }
 
