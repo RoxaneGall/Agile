@@ -15,7 +15,6 @@ public class Controller {
 
     //private Demande = ;
     /** Coordinates to set the map extent */
-    private List<Coordinate> mapExtent = new ArrayList();
     /** Elements pour le plan */
     private Extent mapExtent;
 
@@ -24,18 +23,17 @@ public class Controller {
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
 
+    /** Mise à jour des éléments nécessaires à l'affichage du plan */
     public void setMapExtent(ArrayList<Coordinate> planCoords) {
         mapExtent = Extent.forCoordinates(planCoords);
 
     }
 
-    public void chargeDemande(Demande demande) {
+    public void chargerDemande(Demande demande) {
         entrepot = demande.getEntrepot().getCoordinate();
-    }
-    /** Coordinates du dépot et des points de livraison */
-    //private Coordinate entrepot = getEntrepot().getCoordinate();
-    private List<Pair<Coordinate,Coordinate>> deliveries;
+        //deliveries = demande.getLivraisons();
 
+    }
 
     /*public void setEntrepot(Intersection inter) {
         this.entrepot = inter.getCoordinate();
@@ -43,10 +41,6 @@ public class Controller {
 
     public void addDelivery(Coordinate pickup, Coordinate deliver) {
         //deliveries.add(Pair<pickup,deliver>);
-    }
-
-    public void setExtentMap() {
-
     }
 
 }
