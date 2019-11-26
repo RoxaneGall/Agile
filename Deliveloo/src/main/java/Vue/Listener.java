@@ -43,6 +43,11 @@ public class Listener {
             }
         });
 
+        controller.buttonZoom.setOnAction(event -> controller.mapView.setZoom(controller.ZOOM_DEFAULT));
+        controller.sliderZoom.valueProperty().bindBidirectional(controller.mapView.zoomProperty());
+
+
+
 
     }
 
