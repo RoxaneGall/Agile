@@ -139,7 +139,7 @@ public class LectureXML {
     }
 
     public ArrayList<Coordinate> getLimitesPlan(){
-        ArrayList<Coordinate> myList = null;
+        ArrayList<Coordinate> myList = new ArrayList<>();
 
         return myList;
     }
