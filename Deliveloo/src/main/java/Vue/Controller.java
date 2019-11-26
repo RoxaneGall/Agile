@@ -8,7 +8,7 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Elements {
+public class Controller {
 
     /** Coordinates to set the map extent */
     private List<Coordinate> mapExtent = new ArrayList();
@@ -19,6 +19,10 @@ public class Elements {
     private Coordinate entrepot;
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
+
+    public void setMapExtent(List<Coordinate> planCoords) {
+
+    }
 
     public void chargeDemande(Demande demande) {
         entrepot = demande.getEntrepot().getCoordinate();
