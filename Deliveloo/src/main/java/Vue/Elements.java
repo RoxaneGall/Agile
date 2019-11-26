@@ -17,7 +17,7 @@ public class Elements {
 
 
     public void setEntrepot(Intersection inter) {
-        this.entrepot = Intersection.getCoordinate();
+        this.entrepot = inter.getCoordinate();
     }
 
     public void addDelivery(Coordinate pickup, Coordinate deliver) {
