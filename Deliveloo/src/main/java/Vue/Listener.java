@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Listener implements ActionListener {
     private Service service;
     private JFileChooser choix = new JFileChooser();
-    private Elements elements;
+    private Controller controller;
 
 
     @Override
@@ -36,7 +36,7 @@ public class Listener implements ActionListener {
     public void chargerPlan( String path) throws Exception {
         ArrayList<Coordinate> limites=new ArrayList<Coordinate>();
         limites= service.chargerPlan(path);
-        elements.setExtentMap(limites);
+        controller.setExtentMap(limites);
     }
 
     public void chargerDemande()  {
