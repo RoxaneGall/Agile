@@ -36,7 +36,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        String fxmlFile = "/VueDeliveloo.fxml";
+        String fxmlFile = "/fxml/VueDeliveloo.fxml";
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent rootNode = fxmlLoader.load(getClass().getResourceAsStream(fxmlFile));
 

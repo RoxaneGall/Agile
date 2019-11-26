@@ -2,13 +2,13 @@ package Vue;
 
 import com.sothawo.mapjfx.Projection;
 
-import Vue.Controller;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        String fxmlFile = "/VueDeliveloo.fxml";
+        String fxmlFile = "/fxml/VueDeliveloo.fxml";
         FXMLLoader fxmlLoader = new FXMLLoader();
         Parent rootNode = fxmlLoader.load(getClass().getResourceAsStream(fxmlFile));
 

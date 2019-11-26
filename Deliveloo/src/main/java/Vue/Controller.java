@@ -168,7 +168,7 @@ public class Controller {
         // set the custom css file for the MapView
         mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
 
-        // set the controls to disabled, this will be changed when the MapView is intialized
+        // set the controls to disabled, this will be changed when the MapView is initialized
         setTopControlsDisable(true);
 
         // wire the zoom button and connect the slider to the map's zoom
@@ -301,7 +301,5 @@ public class Controller {
     private void setTopControlsDisable(boolean flag) {
         topControls.setDisable(flag);
     }
-
-
 
 }
