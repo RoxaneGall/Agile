@@ -35,7 +35,7 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
+        <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="chargerPlan" text="Charger Plan"/>
                 <Button fx:id="chargerDemande" text="Charger Demande"/>
@@ -50,17 +50,17 @@
         </HBox>
     </bottom>
     <right>
-        <Accordion fx:id="rightControls" BorderPane.alignment="CENTER">
+        <Accordion prefWidth="400.0" fx:id="rightControls" BorderPane.alignment="CENTER">
             <panes>
                 <TitledPane fx:id="optionsMarkers" animated="true" text="markers">
                     <content>
                         <VBox spacing="10.0">
                             <children>
-                                <CheckBox fx:id="livraison1" text="Livraison 1" maxWidth="Infinity"/>
-                                <CheckBox fx:id="livraison2" text="Livraison 2" maxWidth="Infinity"/>
-                                <CheckBox fx:id="livraison3" text="Livraison 3" maxWidth="Infinity"/>
-                                <CheckBox fx:id="livraison4" text="Livraison 4" maxWidth="Infinity"/>
-                                <CheckBox fx:id="checkClickMarker" text="click location" maxWidth="Infinity"/>
+                                <CheckBox prefHeight="60.0" fx:id="livraison1" text="Livraison 1" maxWidth="Infinity"/>
+                                <CheckBox prefHeight="60.0" fx:id="livraison2" text="Livraison 2" maxWidth="Infinity"/>
+                                <CheckBox prefHeight="60.0" fx:id="livraison3" text="Livraison 3" maxWidth="Infinity"/>
+                                <CheckBox prefHeight="60.0" fx:id="livraison4" text="Livraison 4" maxWidth="Infinity"/>
+                                <CheckBox prefHeight="60.0" fx:id="checkClickMarker" text="click location" maxWidth="Infinity"/>
                             </children>
                         </VBox>
                     </content>
