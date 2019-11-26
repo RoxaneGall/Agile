@@ -2,10 +2,14 @@ package Vue;
 
 import Modeles.Demande;
 import Service.Service;
+import com.sothawo.mapjfx.Configuration;
 import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
+import com.sothawo.mapjfx.offline.OfflineCache;
+import javafx.beans.binding.Bindings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +22,43 @@ public class Listener {
     private JFileChooser choix = new JFileChooser();
     private Controller controller;
 
-    private void Init() {
+    private void InitMap(Projection projection) {
+        // init MapView-Cache
+        final OfflineCache offlineCache = controller.mapView.getOfflineCache();
+        final String cacheDir = System.getProperty("java.io.tmpdir") + "/mapjfx-cache";
+
+        // set the custom css file for the MapView
+        controller.mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
+
+        // set the controls to disabled, this will be changed when the MapView is intialized
+        setTopControlsDisable(true);
+
+        // wire the zoom button and connect the slider to the map's zoom
+        controller.buttonZoom.setOnAction(event -> controller.mapView.setZoom(controller.ZOOM_DEFAULT));
+        controller.sliderZoom.valueProperty().bindBidirectional(controller.mapView.zoomProperty());
+
+        // bind the map's center and zoom properties to the corresponding labels and format them
+        controller.labelCenter.textProperty().bind(Bindings.format("center: %s", controller.mapView.centerProperty()));
+        controller.labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", controller.mapView.zoomProperty()));
+
+
+        // set the extents of the map
+        chargerPlan();
+
+        // add event Handlers to the mapView
+        eventHandlers();
+
+
+        // finally initialize the map view
+        controller.mapView.initialize(Configuration.builder()
+                .projection(projection)
+                .showZoomControls(false)
+                .build());
+
+    }
+
+    public void eventHandlers() {
+
         // add an event handler for MapViewEvent#MAP_EXTENT and set the extent in the map
         controller.mapView.addEventHandler(MapViewEvent.MAP_EXTENT, event -> {
             event.consume();
@@ -56,11 +96,9 @@ public class Listener {
         });
 
 
-        controller.buttonZoom.setOnAction(event -> controller.mapView.setZoom(controller.ZOOM_DEFAULT));
-        controller.sliderZoom.valueProperty().bindBidirectional(controller.mapView.zoomProperty());
     }
 
-    private void chargerPlanEtLivraison() {
+    private void chargerPlan() {
 
         controller.chargerPlan.setOnAction(event -> {
             String pathPlan = "";
@@ -68,7 +106,9 @@ public class Listener {
                 choix.setCurrentDirectory(new File("./datas"));
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     pathPlan = choix.getSelectedFile().getAbsolutePath();
-                    chargerPlan(pathPlan);
+                    ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+                    limites = service.chargerPlan(pathPlan);
+                    controller.setMapExtent(limites);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -81,7 +121,8 @@ public class Listener {
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     pathDemande = choix.getSelectedFile().getAbsolutePath();
                 }
-                chargerDemande(pathDemande);
+                Demande d = service.chargerDemande(pathDemande);
+                controller.chargerDemande(d);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -91,18 +132,7 @@ public class Listener {
     private void setTopControlsDisable(boolean flag) {
         controller.topControls.setDisable(flag);
     }
-    
 
-    public void chargerPlan(String path) throws Exception {
-        ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
-        limites = service.chargerPlan(path);
-        controller.setMapExtent(limites);
-    }
-
-    public void chargerDemande(String path) throws Exception {
-        Demande d = service.chargerDemande(path);
-        controller.chargerDemande(d);
-    }
 }
 
 
