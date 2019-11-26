@@ -1,11 +1,11 @@
-package Controleur;
+package Service;
 
 import Donnees.LectureXML;
 import com.sothawo.mapjfx.Coordinate;
 
 import java.util.*;
 
-public class Controleur {
+public class Service {
 
     private LectureXML lec;
 

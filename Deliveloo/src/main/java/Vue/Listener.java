@@ -1,6 +1,6 @@
 package Vue;
 
-import Controleur.Controleur;
+import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
 
 import javax.swing.*;
@@ -10,8 +10,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Listener implements ActionListener {
-    private Controleur controleur;
+    private Service service;
     private JFileChooser choix = new JFileChooser();
+    private Elements elements;
 
 
     @Override
@@ -34,7 +35,11 @@ public class Listener implements ActionListener {
 
     public void chargerPlan( String path) throws Exception {
         ArrayList<Coordinate> limites=new ArrayList<Coordinate>();
-        limites=controleur.chargerPlan(path);
+        limites= service.chargerPlan(path);
+        elements.setExtentMap(limites);
+    }
 
+    public void chargerDemande()  {
+       
     }
 }
