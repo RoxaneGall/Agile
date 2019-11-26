@@ -7,9 +7,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
 import Modeles.*;
+import Vue.Elements;
 import org.w3c.dom.Document;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.xml.sax.SAXException;
@@ -110,18 +112,12 @@ public class LectureXML {
 
         int countNodes=0;
         Intersection entrepot;
-        List<Livraison> deliveries;
+        ArrayList<Livraison> deliveries=null;
         Date myDate = new Date(); //Date du jour
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
 
         for(int i=0; i<nbRootNodes; i++){
             Element myElement = (Element) rootNodes.item(i);
-            if (myElement.getNodeName().equals("entrepot")){
-                myDate = formatter.parse(myElement.getAttribute("heureDepart"));
-                int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
-                entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-                setEntrepot(entrepot); // pour l'IHM
-            }
 
             if(myElement.getNodeName().equals("livraison")){
                 int idEnlevement = Integer.parseInt(myElement.getAttribute("adresseEnlevement"));
@@ -133,7 +129,13 @@ public class LectureXML {
                 Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
                 deliveries.add(myDelivery);
             }
-            //Demande myDemande = new Demande();
+            if (myElement.getNodeName().equals("entrepot")){
+                myDate = formatter.parse(myElement.getAttribute("heureDepart"));
+                int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
+                entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
+                //setEntrepot(entrepot); // pour l'IHM
+                Demande demande = new Demande(deliveries,entrepot, myDate);
+            }
         }
     }
 

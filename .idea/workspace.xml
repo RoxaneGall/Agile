@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d79d79ae-8d0f-4e42-ac21-01eb7fbe2ff1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Donnees/LectureXML.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Donnees/LectureXML.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,7 +17,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Deliveloo" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -41,7 +41,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1574758129077</updated>
-      <workItem from="1574758130352" duration="3456000" />
+      <workItem from="1574758130352" duration="3582000" />
+      <workItem from="1574763276544" duration="232000" />
     </task>
     <servers />
   </component>
@@ -53,7 +54,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
