@@ -11,12 +11,17 @@ public class Listener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Charger Plan":
-                chargerPlan();
+                String chemin="";
+                try {
+                    chargerPlan(chemin);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
         }
 
     }
 
-    public void chargerPlan(){
-        controleur.chargerPlan();
+    public void chargerPlan( String chemin) throws Exception {
+        controleur.chargerPlan(chemin);
     }
 }
