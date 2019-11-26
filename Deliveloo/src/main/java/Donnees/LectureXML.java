@@ -7,9 +7,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
 import Modeles.*;
+import Vue.Elements;
 import org.w3c.dom.Document;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.xml.sax.SAXException;
@@ -89,7 +91,7 @@ public class LectureXML {
         }
     }
 
-    public void chargerDemande(String cheminFichier) throws Exception {
+    public Demande chargerDemande(String cheminFichier) throws Exception {
 
         Document document = null;
 
@@ -108,22 +110,37 @@ public class LectureXML {
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        int countNodes=0;
+        Element elementEntrepot = (Element)root.getElementsByTagName("entrepot");
+        int idEntrepot = Integer.parseInt(elementEntrepot.getAttribute("adresse"));
+        Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
+
+        Date myDate = new Date(); //Date du jour
+        SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
+        myDate = formatter.parse(elementEntrepot.getAttribute("heureDepart"));
+
+        ArrayList<Livraison> deliveries=null;
+
         for(int i=0; i<nbRootNodes; i++){
             Element myElement = (Element) rootNodes.item(i);
-            if (myElement.getNodeName().equals("entrepot")){
-                //SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
-                //Date myDate = SimpleDateFormat.parse(myElement.getAttribute("heureDepart"));
-                int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
-                Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-                /*
 
-<entrepot adresse="342873658" heureDepart="8:0:0"/>
-<livraison adresseEnlevement="208769039" adresseLivraison="25173820" dureeEnlevement="180" dureeLivraison="240"/>
-
-                 */
+            if(myElement.getNodeName().equals("livraison")){
+                int idEnlevement = Integer.parseInt(myElement.getAttribute("adresseEnlevement"));
+                Intersection enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
+                int idLivraison = Integer.parseInt(myElement.getAttribute("adresseLivraison"));
+                Intersection livraison = Graphe.shared.getIntersectionMap().get(idLivraison);
+                int dureeEnlevement = Integer.parseInt(myElement.getAttribute("dureeEnlevement"));
+                int dureeLivraison = Integer.parseInt(myElement.getAttribute("dureeLivraison"));
+                Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
+                deliveries.add(myDelivery);
             }
         }
+        Demande demande = new Demande(deliveries,entrepot, myDate);
+        return demande;
     }
 
+    public ArrayList<Coordinate> getLimitesPlan(){
+        ArrayList<Coordinate> myList = null;
+
+        return myList;
+    }
 }
