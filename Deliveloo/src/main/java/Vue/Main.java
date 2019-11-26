@@ -1,12 +1,15 @@
 package Vue;
 
 import com.sothawo.mapjfx.Projection;
+
+import Vue.Controller;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sample.Controller;
+
 
 /**
  * Demo application for the mapjfx component.
