@@ -61,9 +61,6 @@ import java.util.stream.Stream;
 public class Controller {
 
 
-    /** some coordinates from around town. */
-    private Coordinate depot;
-    private List<Coordinate> mapExtent;
 
 
     private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
