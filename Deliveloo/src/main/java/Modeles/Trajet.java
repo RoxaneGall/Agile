@@ -5,50 +5,54 @@ import java.util.ArrayList;
 
 public class Trajet {
     private ArrayList<Troncon> troncons;
-    private Double longueur;
     private Intersection origine;
-    private Intersection arrivee;
 
-    public Trajet(Double longueur,Intersection origine, Intersection arrivee) {
-        this.longueur=longueur;
-        this.origine=origine;
-        this.arrivee=arrivee;
+    public Trajet(Intersection origine) {
+        this.origine = origine;
         this.troncons = new ArrayList<Troncon>();
     }
 
     public Double getLongueur() {
+        Double longueur = 0.0;
+        for(Troncon troncon: troncons) {
+            longueur+=troncon.getLongueur();
+        }
         return longueur;
-    }
-
-    public void setLongueur(Double longueur) {
-        this.longueur = longueur;
     }
 
     public Intersection getOrigine() {
         return origine;
     }
 
-    public void setOrigine(Intersection origine) {
-        this.origine = origine;
-    }
-
     public Intersection getArrivee() {
-        return arrivee;
-    }
-
-    public void setArrivee(Intersection arrivee) {
-        this.arrivee = arrivee;
+        return troncons.size() > 0 ? troncons.get(troncons.size()-1).getDestination() : origine;
     }
 
     public ArrayList<Troncon> getTroncons() {
         return troncons;
     }
 
-    public void setTroncons(ArrayList<Troncon> troncons) {
-        this.troncons = troncons;
+    public void addTroncons(ArrayList<Troncon> troncons) {
+        for (Troncon troncon: troncons) {
+            addTroncon(troncon);
+        }
     }
 
-    public void addMeilleurTroncon (Troncon t){
-        this.troncons.add(t);
+    public void addTroncon(Troncon troncon) {
+        this.troncons.add(troncon);
+    }
+
+    @Override
+    public String toString() {
+        String troncontxt = "";
+        for (Troncon troncon: troncons) {
+            troncontxt += "\n" + troncon.toString();
+        }
+        return "Trajet{" +
+                "troncons="+ troncontxt +
+                "\nlongueur=" + getLongueur() +
+                ", origine=" + origine +
+                ", arrivee=" + getArrivee() +
+                '}'+'\n';
     }
 }
