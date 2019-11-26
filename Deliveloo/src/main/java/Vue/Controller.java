@@ -34,7 +34,7 @@ public class Controller {
      */
     /* the box containing the top controls, must be enabled when mapView is initialized */
     @FXML
-    public HBox topControls;
+    public HBox topControls; // POURQUOI ON DECLARE CETTE HBOX ET PAS LES AUTRES ?
     /* slider pour régler le zoom */
     @FXML
     public Slider sliderZoom;
