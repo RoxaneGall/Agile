@@ -91,7 +91,7 @@ public class LectureXML {
         }
     }
 
-    public void chargerDemande(String cheminFichier) throws Exception {
+    public Demande chargerDemande(String cheminFichier) throws Exception {
 
         Document document = null;
 
@@ -110,8 +110,9 @@ public class LectureXML {
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        int countNodes=0;
+        //Element elementEntrepot = root.getElementsByTagName("entrepot");
         Intersection entrepot;
+        Demande demande;
         ArrayList<Livraison> deliveries=null;
         Date myDate = new Date(); //Date du jour
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
@@ -134,9 +135,14 @@ public class LectureXML {
                 int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
                 //setEntrepot(entrepot); // pour l'IHM
-                Demande demande = new Demande(deliveries,entrepot, myDate);
             }
+            demande = new Demande(deliveries,entrepot, myDate);
         }
+        return demande;
     }
-
+    public ArrayList<Coordinate> getLimitesPlan(){
+        ArrayList<Coordinate> myList = null;
+        
+        return myList;
+    }
 }
