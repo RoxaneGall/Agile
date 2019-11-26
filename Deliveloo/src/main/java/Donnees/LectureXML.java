@@ -109,25 +109,31 @@ public class LectureXML {
         int nbRootNodes = rootNodes.getLength();
 
         int countNodes=0;
+        Intersection entrepot;
+        List<Livraison> deliveries;
+        Date myDate = new Date(); //Date du jour
+        SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
+
         for(int i=0; i<nbRootNodes; i++){
             Element myElement = (Element) rootNodes.item(i);
-            List<Livraison>;
             if (myElement.getNodeName().equals("entrepot")){
-                Date myDate = new Date(); //Date du jour
-                SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
                 myDate = formatter.parse(myElement.getAttribute("heureDepart"));
-
                 int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
-                Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-
-/*<entrepot adresse="342873658" heureDepart="8:0:0"/>
-<livraison adresseEnlevement="208769039" adresseLivraison="25173820" dureeEnlevement="180" dureeLivraison="240"/> */
+                entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
+                setEntrepot(entrepot); // pour l'IHM
             }
 
             if(myElement.getNodeName().equals("livraison")){
                 int idEnlevement = Integer.parseInt(myElement.getAttribute("adresseEnlevement"));
                 Intersection enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
+                int idLivraison = Integer.parseInt(myElement.getAttribute("adresseLivraison"));
+                Intersection livraison = Graphe.shared.getIntersectionMap().get(idLivraison);
+                int dureeEnlevement = Integer.parseInt(myElement.getAttribute("dureeEnlevement"));
+                int dureeLivraison = Integer.parseInt(myElement.getAttribute("dureeLivraison"));
+                Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
+                deliveries.add(myDelivery);
             }
+            //Demande myDemande = new Demande();
         }
     }
 
