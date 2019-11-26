@@ -1,5 +1,6 @@
 package Vue;
 
+import Modeles.Intersection;
 import com.sothawo.mapjfx.Coordinate;
 import javafx.util.Pair;
 
@@ -15,10 +16,12 @@ public class Elements {
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
 
-    public void setEntrepot(double latitude, double longitude) {
-        this.entrepot = new Coordinate(latitude,longitude);
+    public void setEntrepot(Intersection inter) {
+        this.entrepot = Intersection.getCoordinate();
     }
 
-    public void
+    public void addDelivery(Coordinate pickup, Coordinate deliver) {
+        //deliveries.add(Pair<pickup,deliver>);
+    }
 
 }

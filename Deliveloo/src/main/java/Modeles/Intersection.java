@@ -8,12 +8,12 @@ import java.util.List;
 
 public class Intersection {
     private int id;
-    private Coordinate p;
+    private Coordinate coord;
     private List<Troncon> troncons;
 
-    public Intersection(int id, Coordinate p) {
+    public Intersection(int id, Coordinate c) {
         this.id = id;
-        this.p = p;
+        this.coord = c;
         this.troncons = new ArrayList<Troncon>();
     }
 
@@ -25,12 +25,12 @@ public class Intersection {
         troncons.add(t);
     }
 
-    public Coordinate getP() {
-        return p;
+    public Coordinate getCoordinate() {
+        return coord;
     }
 
-    public void setP(Coordinate p) {
-        this.p = p;
+    public void setP(Coordinate c) {
+        this.coord = c;
     }
 
     public List<Troncon> getTroncons() {
@@ -40,7 +40,7 @@ public class Intersection {
     @java.lang.Override
     public java.lang.String toString() {
         return "Intersection{" +
-                "p=" + p +
+                "c=" + coord +
                 "nbTroncons="+troncons.size() +
                 '}';
     }
