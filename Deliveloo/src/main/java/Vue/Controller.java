@@ -20,13 +20,16 @@ public class Controller {
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
 
+    /** Mise à jour des éléments nécessaires à l'affichage du plan */
     public void setMapExtent(ArrayList<Coordinate> planCoords) {
         mapExtent = Extent.forCoordinates(planCoords);
 
     }
 
-    public void chargeDemande(Demande demande) {
+    public void chargerDemande(Demande demande) {
         entrepot = demande.getEntrepot().getCoordinate();
+        deliveries = demande.getLivraisons()
+
     }
 
     public void addDelivery(Coordinate pickup, Coordinate deliver) {
