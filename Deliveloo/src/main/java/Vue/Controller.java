@@ -2,7 +2,9 @@ package Vue;
 
 import Modeles.Demande;
 import Modeles.Intersection;
+
 import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Extent;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -13,14 +15,15 @@ public class Controller {
     /** Coordinates to set the map extent */
     private List<Coordinate> mapExtent = new ArrayList();
     /** Elements pour le plan */
-    private List<Coordinate> mapExtent;
+    private Extent mapExtent;
 
     /** Elements pour la demande */
     private Coordinate entrepot;
     private List<Pair<Coordinate,Coordinate>> deliveries;
 
 
-    public void setMapExtent(List<Coordinate> planCoords) {
+    public void setMapExtent(ArrayList<Coordinate> planCoords) {
+        mapExtent = Extent.forCoordinates(planCoords);
 
     }
 

@@ -59,10 +59,7 @@ import java.util.stream.Stream;
  */
 public class Controller {
 
-
-
-
-    private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
+    /* private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
     private static final Coordinate coordKarlsruheHarbour = new Coordinate(49.015511, 8.323497);
     private static final Coordinate coordKarlsruheStation = new Coordinate(48.993284, 8.402186);
     private static final Coordinate coordKarlsruheSoccer = new Coordinate(49.020035, 8.412975);
@@ -74,7 +71,7 @@ public class Controller {
     private static final Coordinate coordGermanyWest = new Coordinate(51.0525, 5.866944444);
     private static final Coordinate coordGermanyEast = new Coordinate(51.27277778, 15.04361111);
     private static final Extent extentGermany = Extent.forCoordinates(coordGermanyNorth, coordGermanySouth, coordGermanyWest, coordGermanyEast);
-
+*/
     /** default zoom value. */
     private static final int ZOOM_DEFAULT = 14;
 
