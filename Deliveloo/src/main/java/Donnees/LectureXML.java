@@ -1,5 +1,6 @@
 package Donnees;
 
+import com.sothawo.mapjfx.Coordinate;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -65,7 +66,7 @@ public class LectureXML {
                 double lat = Double.parseDouble(myElement.getAttribute("latitude"));
                 double lg = Double.parseDouble(myElement.getAttribute("longitude"));
                 int idIntersection = Integer.parseInt(myElement.getAttribute("id"));
-                Point myPoint = new Point(lg, lat);
+                Coordinate myPoint = new Coordinate(lg, lat);
                 myIntersection = new Intersection(idIntersection, myPoint);
                 countNodes++;
                 Graphe.shared.addIntersection(myIntersection);
