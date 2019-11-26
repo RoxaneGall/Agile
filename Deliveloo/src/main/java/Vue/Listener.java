@@ -1,5 +1,6 @@
 package Vue;
 
+import Modeles.Demande;
 import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
 
@@ -19,16 +20,30 @@ public class Listener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Charger Plan":
-                String path="";
+                String pathPlan="";
                 try {
                     choix.setCurrentDirectory(new File("./datas"));
                     if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        path = choix.getSelectedFile().getAbsolutePath();
-                        chargerPlan(path);
+                        pathPlan = choix.getSelectedFile().getAbsolutePath();
+                        chargerPlan(pathPlan);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                break;
+            case "Charger Demande":
+                String pathDemande="";
+                choix.setCurrentDirectory(new File("./datas"));
+                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    pathDemande = choix.getSelectedFile().getAbsolutePath();
+                    try {
+                        chargerDemande(pathDemande);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                break;
+
         }
 
     }
@@ -39,7 +54,8 @@ public class Listener implements ActionListener {
         controller.setMapExtent(limites);
     }
 
-    public void chargerDemande()  {
-
+    public void chargerDemande(String path) throws Exception {
+        Demande d= service.chargerDemande(path);
+        controller.chargerDemande(d);
     }
 }

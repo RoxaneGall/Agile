@@ -1,6 +1,7 @@
 package Service;
 
 import Donnees.LectureXML;
+import Modeles.Demande;
 import com.sothawo.mapjfx.Coordinate;
 
 import java.util.*;
@@ -15,6 +16,12 @@ public class Service {
         limites= lec.getLimitesPlan();
         //limites= méthode Alice qui renvoie les 4 points
         return limites;
+    }
+
+    public Demande chargerDemande(String path) throws Exception {
+        Demande d = lec.chargerDemande(path);
+        return d;
+
     }
 
 
