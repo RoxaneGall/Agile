@@ -10,9 +10,16 @@ import java.util.*;
 
 public class Computations {
 
+    //VOYAGEUR DE COMMERCE
+
+    
+
+    //DIJKSTRA
+
     public static Trajet getMeilleurTrajet(Intersection origine,
                                            Intersection arrivee,
-                                           Graphe graphe) {
+                                           Graphe graphe)
+    {
         return dijkstra(origine,arrivee,graphe).get(arrivee.getId());
     }
 
