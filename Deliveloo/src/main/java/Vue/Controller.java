@@ -187,7 +187,6 @@ public class Controller {
         // add event Handlers to the mapView
         eventHandlers();
 
-
         // finally initialize the map view
         mapView.initialize(Configuration.builder()
                 .projection(projection)
@@ -209,8 +208,6 @@ public class Controller {
                     limites.add(c4);
                     setMapExtent(limites);
         });
-
-
     }
 
 
@@ -277,6 +274,7 @@ public class Controller {
                     //APPEL METHODE ALICE
                     //limites = service.chargerPlan(pathPlan);
                     setMapExtent(limites);
+                    setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
                 //}
             } catch (Exception ex) {
                 ex.printStackTrace();

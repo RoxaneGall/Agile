@@ -52,7 +52,7 @@
     <right>
         <Accordion prefWidth="400.0" fx:id="rightControls" BorderPane.alignment="CENTER">
             <panes>
-                <TitledPane fx:id="optionsMarkers" animated="true" text="markers">
+                <TitledPane fx:id="optionsMarkers" animated="true" text="Livraisons">
                     <content>
                         <VBox spacing="10.0">
                             <children>
