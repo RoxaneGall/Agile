@@ -15,7 +15,6 @@
 */
 package sample;
 
-import Modeles.Point;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
