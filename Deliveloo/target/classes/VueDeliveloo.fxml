@@ -8,8 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Vue.Main"
+            fx:controller="Vue.VueDeliveloo"
             prefHeight="400.0" prefWidth="600.0">
 
 </AnchorPane>
-
