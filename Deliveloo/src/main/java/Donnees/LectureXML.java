@@ -110,12 +110,15 @@ public class LectureXML {
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        //Element elementEntrepot = root.getElementsByTagName("entrepot");
-        Intersection entrepot;
-        Demande demande;
-        ArrayList<Livraison> deliveries=null;
+        Element elementEntrepot = (Element)root.getElementsByTagName("entrepot");
+        int idEntrepot = Integer.parseInt(elementEntrepot.getAttribute("adresse"));
+        Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
+
         Date myDate = new Date(); //Date du jour
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
+        myDate = formatter.parse(elementEntrepot.getAttribute("heureDepart"));
+
+        ArrayList<Livraison> deliveries=null;
 
         for(int i=0; i<nbRootNodes; i++){
             Element myElement = (Element) rootNodes.item(i);
@@ -130,19 +133,14 @@ public class LectureXML {
                 Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
                 deliveries.add(myDelivery);
             }
-            if (myElement.getNodeName().equals("entrepot")){
-                myDate = formatter.parse(myElement.getAttribute("heureDepart"));
-                int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
-                entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-                //setEntrepot(entrepot); // pour l'IHM
-            }
-            demande = new Demande(deliveries,entrepot, myDate);
         }
+        Demande demande = new Demande(deliveries,entrepot, myDate);
         return demande;
     }
+
     public ArrayList<Coordinate> getLimitesPlan(){
         ArrayList<Coordinate> myList = null;
-        
+
         return myList;
     }
 }
