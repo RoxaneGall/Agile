@@ -3,18 +3,16 @@ package Modeles;
 import java.util.Date;
 
 public class Livraison {
-    private Date date;
     private Intersection depart;
     private Intersection arrivee;
+    int dureeEnlevement;
+    int dureeLivraison;
 
-    public Livraison(Date date, Intersection depart, Intersection arrivee) {
-        this.date = date;
+    public Livraison(Intersection depart, Intersection arrivee, int dE, int dL) {
         this.depart = depart;
         this.arrivee = arrivee;
-    }
-
-    public Date getDate() {
-        return date;
+        this.dureeEnlevement = dE;
+        this.dureeLivraison = dL;
     }
 
     public Intersection getDepart() {
@@ -25,9 +23,9 @@ public class Livraison {
         return arrivee;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public int getDureeEnlevement() { return dureeEnlevement; }
+
+    public int getDureeLivraison() { return dureeLivraison; }
 
     public void setDepart(Intersection depart) {
         this.depart = depart;
@@ -36,4 +34,8 @@ public class Livraison {
     public void setArrivee(Intersection arrivee) {
         this.arrivee = arrivee;
     }
+
+    public void setDureeEnlevement(int dureeEnlevement) { this.dureeEnlevement = dureeEnlevement; }
+
+    public void setDureeLivraison(int dureeLivraison) { this.dureeLivraison = dureeLivraison; }
 }
