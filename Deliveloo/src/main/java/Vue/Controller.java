@@ -141,5 +141,9 @@ public class Controller {
         //deliveries.add(Pair<pickup,deliver>);
     }
 
+    public void initializeView(Projection projection) {
+
+    }
+
 
 }
