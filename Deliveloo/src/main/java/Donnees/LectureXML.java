@@ -112,11 +112,11 @@ public class LectureXML {
             Element myElement = (Element) rootNodes.item(i);
             List
             if (myElement.getNodeName().equals("entrepot")){
-                Date today = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yy H:m:s");
-                /* formater = new SimpleDateFormat("h:mm a");
-    System.out.println(formater.format(aujourdhui));*/
-                Date myDate = SimpleDateFormat.parse(myElement.getAttribute("heureDepart"));
+               /* Date today = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
+                System.out.println(formatter.format(aujourdhui));*/
+
+                //Date myDate = SimpleDateFormat.parse(myElement.getAttribute("heureDepart"));
                 int idEntrepot = Integer.parseInt(myElement.getAttribute("adresse"));
                 Intersection entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
 
