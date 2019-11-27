@@ -122,7 +122,7 @@ public class Controller {
     /**
      * Attributs pour le trajet/la tournee
      */
-    public List<Coordinate> tournee =  new ArrayList<>();
+    public List<Coordinate> tournee = new ArrayList<>();
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
@@ -312,25 +312,24 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);
 
-                for(int i=0;i<demande.getLivraisons().size();i++){
+                for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                     markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                    System.out.println(pickUp+"/////"+delivery);
 
                     markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
-                    deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+                    deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
                     mapView.addMarker(markerPickUp);
                     mapView.addMarker(markerDelivery);
-
+                    System.out.println(markerPickUp + "/////" + markerDelivery);
 
 
 
@@ -342,9 +341,8 @@ public class Controller {
             }
         });
     }
-    public void setDeliveriesMarkers(Demande d){
 
-
+    public void setDeliveriesMarkers(Demande d) {
 
 
     }
@@ -354,7 +352,7 @@ public class Controller {
         calculTournee.setOnAction(event -> {
             System.out.println("Calcul d'une tournée");
             try {
-                Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+                Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
                 // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
                 for (Trajet trajet : t.getTrajets()) {
                     tournee.add(trajet.getOrigine().getCoordinate());
@@ -364,7 +362,7 @@ public class Controller {
                 }
                 trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
                 trackCyan.setVisible(true);
-                System.out.println("Tournee: "+trackCyan.toString());
+                System.out.println("Tournee: " + trackCyan.toString());
                 mapView.addCoordinateLine(trackCyan);
             } catch (Exception ex) {
                 ex.printStackTrace();
