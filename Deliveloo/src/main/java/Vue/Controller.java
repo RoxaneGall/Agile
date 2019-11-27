@@ -199,8 +199,8 @@ public class Controller {
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
         //setDeliveriesMarkers();
+
         // enable le bouton calculer une tournée avec l'event correspondant
-        mapView.addCoordinateLine(trackCyan);
         setCalculerTournee();
 
         // add event Handlers to the mapView
@@ -360,12 +360,32 @@ public class Controller {
                 }
                 trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
                 trackCyan.setVisible(true);
-                System.out.println("Tournee: "+trackCyan.toString());
                 mapView.addCoordinateLine(trackCyan);
+                System.out.println("Tournee: "+trackCyan.toString());
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
+    }
+
+    private void calculTournee() {
+        System.out.println("Calcul d'une tournée");
+        try {
+            Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+            for (Trajet trajet : t.getTrajets()) {
+                tournee.add(trajet.getOrigine().getCoordinate());
+                for (Troncon troncon : trajet.getTroncons()) {
+                    tournee.add(troncon.getDestination().getCoordinate());
+                }
+            }
+            trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
+            System.out.println("Tournee: "+trackCyan.toString());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void setTopControlsDisable(boolean flag) {
