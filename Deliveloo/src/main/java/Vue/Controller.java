@@ -328,6 +328,10 @@ public class Controller {
 
                     markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
                     deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+                    mapView.addMarker(markerPickUp);
+                    mapView.addMarker(markerDelivery);
+
+
 
 
                 }
