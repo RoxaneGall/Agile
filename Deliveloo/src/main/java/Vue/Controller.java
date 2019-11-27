@@ -37,6 +37,8 @@ public class Controller {
     public Button chargerPlan;
     @FXML
     public Button chargerDemande;
+    @FXML
+    public Button calculTournee;
 
     /**
      * Carte
@@ -103,6 +105,7 @@ public class Controller {
     /**
      * Attributs pour la demande
      */
+    public Demande demande;
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
@@ -115,6 +118,10 @@ public class Controller {
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
     public CoordinateLine trackCyan;
 
+    /**
+     * Attributs pour la tournée
+     */
+    public List<Coordinate> tournee;
     // ENUM COULEURS
 
 
@@ -185,6 +192,8 @@ public class Controller {
         setButtonChargerPlan();
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
+        // enable le bouton calculer une tournée avec l'event correspondant
+        setCalculerTournee();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -250,8 +259,6 @@ public class Controller {
 
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
         });
-
-
     }
 
     private void setButtonChargerPlan() {
@@ -301,6 +308,19 @@ public class Controller {
                 System.out.println(service);
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void setCalculerTournee() {
+
+        System.out.println("Calcul d'une tournée");
+
+        calculTournee.setOnAction(event -> {
+            try {
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
