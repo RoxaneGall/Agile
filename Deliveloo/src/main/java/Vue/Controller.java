@@ -1,8 +1,9 @@
 package Vue;
 
-import Modeles.Demande;
+import Algo.Computations;
+import Donnees.LectureXML;
+import Modeles.*;
 
-import Modeles.Livraison;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
@@ -13,6 +14,7 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -113,15 +115,15 @@ public class Controller {
     public List<Pair<Coordinate, Coordinate>> deliveries = new ArrayList<>();
     public List<Pair<Marker, Marker>> deliveriesMarkers;
     public List<MapLabel> deliveriesNumbers;
+
+    /**
+     * Attributs pour le trajet/la tournee
+     */
+    public List<Coordinate> tournee;
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
     public CoordinateLine trackCyan;
-
-    /**
-     * Attributs pour la tournée
-     */
-    public List<Coordinate> tournee;
     // ENUM COULEURS
 
 
@@ -263,11 +265,10 @@ public class Controller {
 
     private void setButtonChargerPlan() {
 
-        System.out.println("Chargement d'un plan");
-
         chargerPlan.setOnAction(event -> {
             //String pathPlan = "";
             try {
+                System.out.println("Chargement d'un plan");
                 //choix.setCurrentDirectory(new File("./datas"));
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 //pathPlan = choix.getSelectedFile().getAbsolutePath();
@@ -298,16 +299,15 @@ public class Controller {
 
     private void setButtonChargerDemande() {
 
-        System.out.println("Chargement d'une demande");
-
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
             try {
+                System.out.println("Chargement d'une demande");
                 //choix.setCurrentDirectory(new File("./datas"));
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
                 System.out.println(d.getEntrepot());
@@ -319,11 +319,22 @@ public class Controller {
 
     private void setCalculerTournee() {
 
-        System.out.println("Calcul d'une tournée");
-
         calculTournee.setOnAction(event -> {
+            System.out.println("Calcul d'une tournée");
             try {
-
+                LectureXML lectureXML = new LectureXML();
+                lectureXML.chargerPlan("../datas/PetitPlan.xml");
+                Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
+                Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+                // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+                for (Trajet trajet : t.getTrajets()) {
+                    tournee.add(trajet.getOrigine().getCoordinate());
+                    for (Troncon troncon : trajet.getTroncons()) {
+                        tournee.add(troncon.getDestination().getCoordinate());
+                    }
+                }
+                System.out.println(tournee);
+                trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
