@@ -3,37 +3,37 @@ package Modeles;
 import java.util.Date;
 
 public class Livraison {
-    private Intersection depart;
-    private Intersection arrivee;
+    private Intersection pickup;
+    private Intersection delivery;
     int dureeEnlevement;
     int dureeLivraison;
 
-    public Livraison(Intersection depart, Intersection arrivee, int dE, int dL) {
-        this.depart = depart;
-        this.arrivee = arrivee;
+    public Livraison(Intersection pickup, Intersection delivery, int dE, int dL) {
+        this.pickup = pickup;
+        this.delivery = delivery;
         this.dureeEnlevement = dE;
         this.dureeLivraison = dL;
     }
 
-    public Intersection getDepart() {
-        return depart;
+    public Intersection getPickup() {
+        return pickup;
     }
 
-    public Intersection getArrivee() {
-        return arrivee;
+    public void setPickup(Intersection pickup) {
+        this.pickup = pickup;
+    }
+
+    public Intersection getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Intersection delivery) {
+        this.delivery = delivery;
     }
 
     public int getDureeEnlevement() { return dureeEnlevement; }
 
     public int getDureeLivraison() { return dureeLivraison; }
-
-    public void setDepart(Intersection depart) {
-        this.depart = depart;
-    }
-
-    public void setArrivee(Intersection arrivee) {
-        this.arrivee = arrivee;
-    }
 
     public void setDureeEnlevement(int dureeEnlevement) { this.dureeEnlevement = dureeEnlevement; }
 

@@ -4,8 +4,11 @@ import Modeles.Graphe;
 import Modeles.Intersection;
 import Modeles.Troncon;
 
+
 import java.util.*;
 
+import java.util.Collections;
+/*
 public class Dijkstra {
 
 
@@ -13,15 +16,15 @@ public class Dijkstra {
 
     private Intersection end;
 
-    private HashMap<Integer, Double> whiteNode; //Long = id des intersections Double = Poids
+    public HashMap<Integer, Double> whiteNode; //Long = id des intersections Double = Poids
 
-    private HashMap<Integer, Double> greyNode; //Long = id des intersections Double = Poids
+    public HashMap<Integer, Double> greyNode; //Long = id des intersections Double = Poids
 
-    private HashMap<Integer, Double> cost;
+    public HashMap<Integer, Double> cost;
 
     private HashMap<Double, List<Integer>> greyNodeInv;
 
-    private HashMap<Integer, Intersection> pi;
+    public HashMap<Integer, Intersection> pi;
 
     private HashMap<Integer,Intersection> plan;
 
@@ -29,34 +32,38 @@ public class Dijkstra {
     public Dijkstra(Graphe graphe, Intersection i1, Intersection i2){
         start = i1;
         end = i2;
-        HashMap<Integer, Double> whiteNode = new HashMap();
-        HashMap<Integer, Double> greyNode = new HashMap();
-
-        HashMap<Integer, Double> cost = new HashMap();
-        HashMap<Double, Integer> greyNodeInv = new HashMap();
-        HashMap<Integer,Intersection> plan = graphe.getIntersectionMap();
+        whiteNode = new HashMap();
+        greyNode = new HashMap();
+        cost = new HashMap();
+        greyNodeInv = new HashMap();
+        plan = new HashMap();
+        pi = new HashMap();
+        plan = graphe.getIntersectionMap();
         for (Map.Entry<Integer, Intersection> entry : plan.entrySet()){
             whiteNode.put(entry.getKey(), Double.MAX_VALUE);
             cost.put(entry.getKey(), Double.MAX_VALUE);
-            greyNode.put(entry.getKey(), null);
+            pi.put(entry.getKey(), null);
         }
         whiteNode.remove(start.getId());
         greyNode.put(start.getId(), 0.0);
         cost.put(start.getId(), 0.0);
-        greyNodeInv.put(0.0, start.getId());
+        List<Integer> newListe = new ArrayList<Integer>();
+        newListe.add(start.getId());
+        greyNodeInv.put(0.0, newListe);
+        run();
     }
 
     public void run(){
         while(greyNode.values().size() != 0){
-            Double min = Collections.min(greyNode.values());
-            Integer idNodeMin = greyNodeInv.get(min).get(0); //Si plusieurs idMin ?
+            Double nodeMin = Collections.min(greyNode.values());
+
+            Integer idNodeMin = greyNodeInv.get(nodeMin).get(0); //Si plusieurs idMin ?
             //Récupérer les voisins du node min en calculant nouvelles distances
             Intersection iCurrent = plan.get(idNodeMin);
-            List<Troncon> voisins = iCurrent.getTroncons();
+            Collection<Troncon> voisins = iCurrent.getTroncons();
             for(Troncon tCurrent : voisins){
-                if(greyNode.containsKey(tCurrent.getDestination()) || whiteNode.containsKey(tCurrent.getDestination())){
+                if(greyNode.containsKey(tCurrent.getDestination().getId()) || whiteNode.containsKey(tCurrent.getDestination().getId())){
                     relacherNode(iCurrent, tCurrent.getDestination());
-                    //Mettre à jour les sommets visités
                     //Si un sommet est dans les intersections blanches càd qu'il n'a jamais été visité
                     if(whiteNode.containsKey(tCurrent.getDestination().getId())){
                         greyNode.put(tCurrent.getDestination().getId(), cost.get(tCurrent.getDestination().getId()));
@@ -92,32 +99,38 @@ public class Dijkstra {
                 }
             }
             greyNode.remove(idNodeMin);
-            if (greyNodeInv.get(min).size() != 1) {
-                greyNodeInv.get(min).remove(idNodeMin);
+            if (greyNodeInv.get(nodeMin).size() != 1) {
+                greyNodeInv.get(nodeMin).remove(idNodeMin);
             } else {
-                greyNodeInv.remove(min);
+                greyNodeInv.remove(nodeMin);
             }
         }
     }
 
     public void relacherNode(Intersection si, Intersection sj){
+        System.out.println(si);
+        System.out.println(sj);
         Troncon t = null;
-        List<Troncon> listTroncon = si.getTroncons();
+        Collection<Troncon> listTroncon = si.getTroncons();
         for(Troncon tCurrent : listTroncon){
-            if(t == null) {
-                t = tCurrent;
-            }
-            else if(tCurrent.getLongueur() < t.getLongueur()) {
-                t = tCurrent;
+            if(tCurrent.getDestination().getId() == sj.getId()) {
+                if (t == null) {
+                    t = tCurrent;
+                } else if (tCurrent.getLongueur() < t.getLongueur()) {
+                    t = tCurrent;
+                }
             }
         }
+        System.out.println(t.getLongueur());
+        System.out.println(cost.get(si.getId()));
         double vTest = cost.get(si.getId()) + t.getLongueur();
         if(cost.get(sj.getId()) == Double.MAX_VALUE){
             cost.put(sj.getId(), vTest);
-            pi.put(sj.getId(), sj);
+            pi.put(sj.getId(), si);
         }else if(cost.get(sj.getId()) > vTest){
             cost.put(sj.getId(), vTest);
-            pi.put(sj.getId(), sj);
+            pi.put(sj.getId(), si);
         }
+        System.out.println(cost);
     }
-}
+}*/
