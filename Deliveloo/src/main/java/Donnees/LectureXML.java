@@ -119,8 +119,8 @@ public class LectureXML {
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
         ArrayList<Livraison> deliveries= new ArrayList<>();
-        Date myDate = null;
-        Intersection entrepot = null;
+        Date myDate = new Date();
+        Intersection entrepot = new Intersection();
 
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
@@ -135,10 +135,10 @@ public class LectureXML {
                 int dureeLivraison = Integer.parseInt(attributes.getNamedItem("dureeLivraison").getNodeValue());
                 Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
                 deliveries.add(myDelivery);
+
             } else if(node.getNodeName().equals("entrepot")){
                 long idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-
                 SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
                 myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
             }
