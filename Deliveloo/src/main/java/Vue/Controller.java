@@ -128,8 +128,6 @@ public class Controller {
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
     public CoordinateLine trackCyan;
     /* display track tournee*/
-    @FXML
-    private CheckBox checkTrackTournee;
     // ENUM COULEURS
 
 
@@ -202,7 +200,8 @@ public class Controller {
         setButtonChargerDemande();
         //setDeliveriesMarkers();
         // enable le bouton calculer une tournée avec l'event correspondant
-        //setCalculerTournee();
+        mapView.addCoordinateLine(trackCyan);
+        setCalculerTournee();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -313,7 +312,7 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);
@@ -339,7 +338,6 @@ public class Controller {
             }
         });
     }
-
     public void setDeliveriesMarkers(Demande d){
 
 
@@ -360,16 +358,9 @@ public class Controller {
                         tournee.add(troncon.getDestination().getCoordinate());
                     }
                 }
-                System.out.println("Coordinate de la tournee : "+tournee);
                 trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
-
-                Extent tracksExtent = Extent.forCoordinates(
-                        Stream.concat(trackMagenta.getCoordinateStream(), trackCyan.getCoordinateStream())
-                                .collect(Collectors.toList()));
-                ChangeListener<Boolean> trackVisibleListener =
-                        (observable, oldValue, newValue) -> mapView.setExtent(tracksExtent);
-                trackCyan.visibleProperty().addListener(trackVisibleListener);
-                checkTrackTournee.selectedProperty().bindBidirectional(trackCyan.visibleProperty());
+                trackCyan.setVisible(true);
+                System.out.println("Tournee: "+trackCyan.toString());
                 mapView.addCoordinateLine(trackCyan);
             } catch (Exception ex) {
                 ex.printStackTrace();
