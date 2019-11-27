@@ -11,6 +11,7 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -21,6 +22,8 @@ import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import Service.Service;
 
@@ -119,11 +122,14 @@ public class Controller {
     /**
      * Attributs pour le trajet/la tournee
      */
-    public List<Coordinate> tournee;
+    public List<Coordinate> tournee =  new ArrayList<>();
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
     public CoordinateLine trackCyan;
+    /* display track tournee*/
+    @FXML
+    private CheckBox checkTrackTournee;
     // ENUM COULEURS
 
 
@@ -309,9 +315,9 @@ public class Controller {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
                 pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
-                Demande d = service.chargerDemande(pathDemande);
-                chargerDemande(d);
-                System.out.println(d.getEntrepot());
+                demande = service.chargerDemande(pathDemande);
+                chargerDemande(demande);
+                System.out.println(demande.getEntrepot());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -339,9 +345,6 @@ public class Controller {
         calculTournee.setOnAction(event -> {
             System.out.println("Calcul d'une tournée");
             try {
-                LectureXML lectureXML = new LectureXML();
-                lectureXML.chargerPlan("../datas/PetitPlan.xml");
-                Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
                 Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
                 // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
                 for (Trajet trajet : t.getTrajets()) {
@@ -350,8 +353,17 @@ public class Controller {
                         tournee.add(troncon.getDestination().getCoordinate());
                     }
                 }
-                System.out.println(tournee);
+                System.out.println("Coordinate de la tournee : "+tournee);
                 trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
+
+                Extent tracksExtent = Extent.forCoordinates(
+                        Stream.concat(trackMagenta.getCoordinateStream(), trackCyan.getCoordinateStream())
+                                .collect(Collectors.toList()));
+                ChangeListener<Boolean> trackVisibleListener =
+                        (observable, oldValue, newValue) -> mapView.setExtent(tracksExtent);
+                trackCyan.visibleProperty().addListener(trackVisibleListener);
+                checkTrackTournee.selectedProperty().bindBidirectional(trackCyan.visibleProperty());
+                mapView.addCoordinateLine(trackCyan);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

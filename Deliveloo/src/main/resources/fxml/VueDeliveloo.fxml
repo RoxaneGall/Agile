@@ -39,6 +39,7 @@
             <children>
                 <Button fx:id="chargerPlan" text="Charger Plan"/>
                 <Button fx:id="chargerDemande" text="Charger Demande"/>
+                <Button fx:id="calculTournee" text="Charger Demande"/>
                 <Label fx:id="labelCenter" text="Center: "/>
                 <Label fx:id="labelExtent" text="Extent: "/>
                 <Label fx:id="labelZoom" text="Zoom: "/>

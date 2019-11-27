@@ -396,6 +396,8 @@ public class Controller {
             ()).setColor(Color.MAGENTA);
         trackCyan = loadCoordinateLine(getClass().getResource("/M2.csv")).orElse(new CoordinateLine
             ()).setColor(Color.CYAN).setWidth(7);
+
+        System.out.println(trackCyan.toString());
         logger.trace("tracks loaded");
         checkTrackMagenta.selectedProperty().bindBidirectional(trackMagenta.visibleProperty());
         checkTrackCyan.selectedProperty().bindBidirectional(trackCyan.visibleProperty());
