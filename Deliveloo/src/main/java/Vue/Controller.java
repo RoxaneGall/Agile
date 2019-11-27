@@ -1,8 +1,9 @@
 package Vue;
 
-import Modeles.Demande;
+import Algo.Computations;
+import Donnees.LectureXML;
+import Modeles.*;
 
-import Modeles.Livraison;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
@@ -320,6 +321,16 @@ public class Controller {
 
         calculTournee.setOnAction(event -> {
             try {
+                LectureXML lectureXML = new LectureXML();
+                lectureXML.chargerPlan("../datas/PetitPlan.xml");
+                Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
+                Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+                for (Trajet trajet : t.getTrajets()) {
+                    for (Troncon troncon : trajet.getTroncons()) {
+
+                    }
+                }
+
 
             } catch (Exception ex) {
                 ex.printStackTrace();
