@@ -7,8 +7,10 @@ import com.sothawo.mapjfx.Coordinate;
 import java.util.*;
 
 public class Service {
+    public Service() {
+    }
 
-    private LectureXML lec;
+    private LectureXML lec = new LectureXML();
 
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
         lec.chargerPlan(path);

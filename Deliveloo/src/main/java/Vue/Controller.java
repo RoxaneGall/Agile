@@ -29,7 +29,7 @@ public class Controller {
      * partie en bas de l'IHM
      */
 
-    public Service service;
+    public Service service =new Service();
 
     public JFileChooser choix = new JFileChooser();
 
@@ -297,8 +297,7 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1";
-                System.out.println(service);
+                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
             } catch (Exception ex) {
