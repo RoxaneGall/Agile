@@ -19,9 +19,15 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -122,11 +128,11 @@ public class Controller {
     /**
      * Attributs pour le trajet/la tournee
      */
-    public List<Coordinate> tournee =  new ArrayList<>();
+    public ArrayList<Coordinate> tournee = new ArrayList();
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
-    public CoordinateLine trackCyan;
+    public CoordinateLine trackCyan = new CoordinateLine().setColor(Color.CYAN).setWidth(7);
     /* display track tournee*/
     // ENUM COULEURS
 
@@ -206,11 +212,21 @@ public class Controller {
         // add event Handlers to the mapView
         eventHandlers();
 
+        // watch the MapView's initialized property to finish initialization
+        mapView.initializedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                System.out.println("NEW VALUE");
+                afterMapIsInitialized();
+            }
+        });
+
         // finally initialize the map view
         mapView.initialize(Configuration.builder()
                 .projection(projection)
                 .showZoomControls(false)
                 .build());
+
+        System.out.println("Map is init");
 
         //reset the extent of the map using the resetButton
         // Pas sûre que ça doit être ici
@@ -317,22 +333,19 @@ public class Controller {
                 chargerDemande(demande);
                 System.out.println(demande);
 
-                for(int i=0;i<demande.getLivraisons().size();i++){
+                for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                     markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                    System.out.println(pickUp+"/////"+delivery);
+                    System.out.println(pickUp + "/////" + delivery);
 
                     markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
-                    deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+                    deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
                     mapView.addMarker(markerPickUp);
                     mapView.addMarker(markerDelivery);
-
-
-
 
                 }
 
@@ -342,9 +355,8 @@ public class Controller {
             }
         });
     }
-    public void setDeliveriesMarkers(Demande d){
 
-
+    public void setDeliveriesMarkers(Demande d) {
 
 
     }
@@ -354,7 +366,7 @@ public class Controller {
         calculTournee.setOnAction(event -> {
             System.out.println("Calcul d'une tournée");
             try {
-                Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+                Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
                 // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
                 for (Trajet trajet : t.getTrajets()) {
                     tournee.add(trajet.getOrigine().getCoordinate());
@@ -362,38 +374,66 @@ public class Controller {
                         tournee.add(troncon.getDestination().getCoordinate());
                     }
                 }
-                trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
+                System.out.println("LINE :"+trackCyan);
+                trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN);
                 trackCyan.setVisible(true);
+                // add the tracks
+                System.out.println("ADD TRACK TO MAP");
                 mapView.addCoordinateLine(trackCyan);
-                System.out.println("Tournee: "+trackCyan.toString());
-
+                System.out.println("Tournee: " + trackCyan.toString());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
     }
 
-    private void calculTournee() {
-        System.out.println("Calcul d'une tournée");
-        try {
-            Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-            for (Trajet trajet : t.getTrajets()) {
-                tournee.add(trajet.getOrigine().getCoordinate());
-                for (Troncon troncon : trajet.getTroncons()) {
-                    tournee.add(troncon.getDestination().getCoordinate());
-                }
-            }
-            trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN).setWidth(7);
-            System.out.println("Tournee: "+trackCyan.toString());
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     private void setTopControlsDisable(boolean flag) {
         topControls.setDisable(flag);
+    }
+
+    /**
+     * finishes setup after the mpa is initialzed
+     */
+    private void afterMapIsInitialized() {
+        // start at the harbour with default zoom
+        mapView.setZoom(ZOOM_DEFAULT);
+
+        System.out.println("LINE :"+trackCyan);
+        Coordinate c1 = new Coordinate(45.778579, 4.852096);
+        Coordinate c2 = new Coordinate(45.781901, 4.791063);
+        ArrayList <Coordinate> listCoord = new ArrayList();
+        listCoord.add(c1);
+        listCoord.add(c2);
+        trackCyan = new CoordinateLine
+                (listCoord).setColor(Color.MAGENTA);
+        trackCyan.setVisible(true);
+        // add the tracks
+            System.out.println("ADD TRACK TO MAP AFTER INIT");
+            mapView.addCoordinateLine(trackCyan);
+        }
+
+    /**
+     * load a coordinateLine from the given uri in lat;lon csv format
+     *
+     * @param url
+     *     url where to load from
+     * @return optional CoordinateLine object
+     * @throws java.lang.NullPointerException
+     *     if uri is null
+     */
+    private Optional<CoordinateLine> loadCoordinateLine(URL url) {
+        try (
+                Stream<String> lines = new BufferedReader(
+                        new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).lines()
+        ) {
+            return Optional.of(new CoordinateLine(
+                    lines.map(line -> line.split(";")).filter(array -> array.length == 2)
+                            .map(values -> new Coordinate(Double.valueOf(values[0]), Double.valueOf(values[1])))
+                            .collect(Collectors.toList())));
+        } catch (IOException | NumberFormatException e) {
+            System.out.println(e);
+        }
+        return Optional.empty();
     }
 
 }
