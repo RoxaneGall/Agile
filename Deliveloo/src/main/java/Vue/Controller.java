@@ -110,7 +110,7 @@ public class Controller {
     /**
      * Attributs pour la demande
      */
-    public Demande demande;
+    public Demande demande = new Demande();
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
@@ -200,7 +200,7 @@ public class Controller {
         setButtonChargerPlan();
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
-        setDeliveriesMarkers();
+        //setDeliveriesMarkers();
         // enable le bouton calculer une tournée avec l'event correspondant
         //setCalculerTournee();
 
@@ -304,8 +304,7 @@ public class Controller {
         });
     }
 
-    private Demande setButtonChargerDemande() {
-
+    private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
             try {
@@ -314,28 +313,32 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
-                System.out.println(demande.getEntrepot());
+                System.out.println(demande);
+
+                for(int i=0;i<demande.getLivraisons().size();i++){
+                    Marker markerPickUp;
+                    Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
+
+                    Marker markerDelivery;
+                    Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
+                    deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+                }
+
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-
     }
 
-    public void setDeliveriesMarkers(){
-        for(int i=0;i<demande.getLivraisons().size();i++){
-            Marker markerPickUp;
-            Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-            markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
+    public void setDeliveriesMarkers(Demande d){
 
-            Marker markerDelivery;
-            Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-            markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
-            deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
-        }
+
 
 
     }
