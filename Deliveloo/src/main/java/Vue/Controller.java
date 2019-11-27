@@ -201,7 +201,7 @@ public class Controller {
         //setDeliveriesMarkers();
         // enable le bouton calculer une tournée avec l'event correspondant
         mapView.addCoordinateLine(trackCyan);
-        //setCalculerTournee();
+        setCalculerTournee();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -312,7 +312,7 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);
@@ -334,7 +334,6 @@ public class Controller {
             }
         });
     }
-
     public void setDeliveriesMarkers(Demande d){
 
 
