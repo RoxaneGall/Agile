@@ -7,9 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
 import Modeles.*;
-import Vue.Elements;
-import org.w3c.dom.*;
-
+import Vue.Controller;
+import org.w3c.dom.Document;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
