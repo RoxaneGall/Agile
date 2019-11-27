@@ -142,12 +142,13 @@ public class Controller {
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
 
         for (Livraison livr : livraisons) {
-            Pair delivery = new Pair(livr.getDepart().getCoordinate(), livr.getArrivee().getCoordinate());
+            Pair delivery = new Pair(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
             deliveries.add(delivery);
         }
     }
 
     public void chargerDemande(Demande demande) {
+        System.out.println("*******************");
         entrepot = demande.getEntrepot().getCoordinate();
         setDeliveriesFromLivraisons(demande.getLivraisons());
 
@@ -255,7 +256,6 @@ public class Controller {
     private void chargerPlan() {
 
         chargerPlan.setOnAction(event -> {
-            System.out.println("****************************");
             String pathPlan = "";
             try {
                 //choix.setCurrentDirectory(new File("./datas"));
@@ -286,10 +286,11 @@ public class Controller {
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
             try {
-                choix.setCurrentDirectory(new File("./datas"));
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathDemande = choix.getSelectedFile().getAbsolutePath();
-                }
+                //choix.setCurrentDirectory(new File("./datas"));
+                //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                  // pathDemande = choix.getSelectedFile().getAbsolutePath();
+                //}
+                pathDemande = "/Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1";
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
             } catch (Exception ex) {
