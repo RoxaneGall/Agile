@@ -200,6 +200,7 @@ public class Controller {
         setButtonChargerPlan();
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
+        setDeliveriesMarkers();
         // enable le bouton calculer une tournée avec l'event correspondant
         //setCalculerTournee();
 
@@ -321,6 +322,21 @@ public class Controller {
                 ex.printStackTrace();
             }
         });
+    }
+
+    public void setDeliveriesMarkers(){
+        for(int i=0;i<demande.getLivraisons().size();i++){
+            Marker markerPickUp;
+            Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+            markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
+
+            Marker markerDelivery;
+            Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+            markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
+            deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+        }
+
+
     }
 
     private void setCalculerTournee() {
