@@ -116,7 +116,7 @@ public class Controller {
     public Marker entrepotMarker;
     /* Livraisons */
     public List<Pair<Coordinate, Coordinate>> deliveries = new ArrayList<>();
-    public List<Pair<Marker, Marker>> deliveriesMarkers;
+    public List<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<>();
     public List<MapLabel> deliveriesNumbers;
 
     /**
@@ -325,8 +325,12 @@ public class Controller {
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                    System.out.println(pickUp+"/////"+delivery);
+
                     markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
                     deliveriesMarkers.add(new Pair<Marker,Marker>(markerPickUp,markerDelivery));
+
+
                 }
 
 
