@@ -298,7 +298,7 @@ public class Controller {
         });
     }
 
-    private void setButtonChargerDemande() {
+    private Demande setButtonChargerDemande() {
 
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
@@ -316,6 +316,7 @@ public class Controller {
                 ex.printStackTrace();
             }
         });
+
     }
 
     public void setDeliveriesMarkers(){
