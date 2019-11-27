@@ -29,7 +29,7 @@ public class Controller {
      * partie en bas de l'IHM
      */
 
-    public Service service =new Service();
+    public Service service = new Service();
 
     public JFileChooser choix = new JFileChooser();
 
@@ -110,7 +110,7 @@ public class Controller {
     public Coordinate entrepot;
     public Marker entrepotMarker;
     /* Livraisons */
-    public List<Pair<Coordinate, Coordinate>> deliveries;
+    public List<Pair<Coordinate, Coordinate>> deliveries = new ArrayList<>();
     public List<Pair<Marker, Marker>> deliveriesMarkers;
     public List<MapLabel> deliveriesNumbers;
     /* Ligne du trajet de la tournée (Coordinateline) */
@@ -193,7 +193,7 @@ public class Controller {
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
         // enable le bouton calculer une tournée avec l'event correspondant
-        setCalculerTournee();
+        //setCalculerTournee();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -207,17 +207,17 @@ public class Controller {
         //reset the extent of the map using the resetButton
         // Pas sûre que ça doit être ici
         buttonResetExtent.setOnAction(event -> {
-                    ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
-                    // POUR TESTER :
-                    Coordinate c1 = new Coordinate(45.778579, 4.852096);
-                    Coordinate c2 = new Coordinate(45.781901, 4.791063);
-                    Coordinate c3 = new Coordinate(45.730995, 4.859773);
-                    Coordinate c4 = new Coordinate(45.714939, 4.901873);
-                    limites.add(c1);
-                    limites.add(c2);
-                    limites.add(c3);
-                    limites.add(c4);
-                    setMapExtent(limites);
+            ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+            // POUR TESTER :
+            Coordinate c1 = new Coordinate(45.778579, 4.852096);
+            Coordinate c2 = new Coordinate(45.781901, 4.791063);
+            Coordinate c3 = new Coordinate(45.730995, 4.859773);
+            Coordinate c4 = new Coordinate(45.714939, 4.901873);
+            limites.add(c1);
+            limites.add(c2);
+            limites.add(c3);
+            limites.add(c4);
+            setMapExtent(limites);
         });
     }
 
@@ -266,26 +266,29 @@ public class Controller {
         System.out.println("Chargement d'un plan");
 
         chargerPlan.setOnAction(event -> {
-            String pathPlan = "";
+            //String pathPlan = "";
             try {
                 //choix.setCurrentDirectory(new File("./datas"));
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    //pathPlan = choix.getSelectedFile().getAbsolutePath();
-                    ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
-                    // POUR TESTER :
+                //pathPlan = choix.getSelectedFile().getAbsolutePath();
+                ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
 
-                    Coordinate c1 = new Coordinate(45.778579, 4.852096);
-                    Coordinate c2 = new Coordinate(45.781901, 4.791063);
-                    Coordinate c3 = new Coordinate(45.730995, 4.859773);
-                    Coordinate c4 = new Coordinate(45.714939, 4.901873);
-                    limites.add(c1);
-                    limites.add(c2);
-                    limites.add(c3);
-                    limites.add(c4);
-                    //APPEL METHODE ALICE
-                    //limites = service.chargerPlan(pathPlan);
-                    setMapExtent(limites);
-                    setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
+                //APPEL METHODE ALICE
+                String pathPlan = "../datas/PetitPlan.xml";
+                limites = service.chargerPlan(pathPlan);
+                // POUR TESTER :
+
+                Coordinate c1 = new Coordinate(45.778579, 4.852096);
+                Coordinate c2 = new Coordinate(45.781901, 4.791063);
+                Coordinate c3 = new Coordinate(45.730995, 4.859773);
+                Coordinate c4 = new Coordinate(45.714939, 4.901873);
+                limites.add(c1);
+                limites.add(c2);
+                limites.add(c3);
+                limites.add(c4);
+                System.out.println(limites);
+                setMapExtent(limites);
+                setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
                 //}
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -302,11 +305,12 @@ public class Controller {
             try {
                 //choix.setCurrentDirectory(new File("./datas"));
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                  // pathDemande = choix.getSelectedFile().getAbsolutePath();
+                // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
                 pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
+                System.out.println(d.getEntrepot());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
