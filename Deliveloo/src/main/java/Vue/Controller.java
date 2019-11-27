@@ -148,7 +148,6 @@ public class Controller {
     }
 
     public void chargerDemande(Demande demande) {
-        System.out.println("*******************");
         entrepot = demande.getEntrepot().getCoordinate();
         setDeliveriesFromLivraisons(demande.getLivraisons());
 
@@ -182,8 +181,10 @@ public class Controller {
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
 
-        // set the extents of the map
-        chargerPlan();
+        // enable le bouton charger plan avec l'event correspondant
+        setButtonChargerPlan();
+        // enable le bouton charger demande avec l'event correspondant
+        setButtonChargerDemande();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -253,7 +254,9 @@ public class Controller {
 
     }
 
-    private void chargerPlan() {
+    private void setButtonChargerPlan() {
+
+        System.out.println("Chargement d'un plan");
 
         chargerPlan.setOnAction(event -> {
             String pathPlan = "";
@@ -263,6 +266,7 @@ public class Controller {
                     //pathPlan = choix.getSelectedFile().getAbsolutePath();
                     ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
                     // POUR TESTER :
+
                     Coordinate c1 = new Coordinate(45.778579, 4.852096);
                     Coordinate c2 = new Coordinate(45.781901, 4.791063);
                     Coordinate c3 = new Coordinate(45.730995, 4.859773);
@@ -282,7 +286,10 @@ public class Controller {
         });
     }
 
-    private void chargerDemande() {
+    private void setButtonChargerDemande() {
+
+        System.out.println("Chargement d'une demande");
+
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
             try {
@@ -290,7 +297,8 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                   // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "/Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1";
+                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1";
+                System.out.println(service);
                 Demande d = service.chargerDemande(pathDemande);
                 chargerDemande(d);
             } catch (Exception ex) {

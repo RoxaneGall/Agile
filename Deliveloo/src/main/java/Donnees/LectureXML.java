@@ -42,6 +42,7 @@ public class LectureXML {
 
     public void chargerPlan(String cheminFichier) throws Exception {
 
+        System.out.println("Lecture du XML plan");
         Document document = null;
 
         try {
@@ -99,6 +100,7 @@ public class LectureXML {
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
 
+        System.out.println("Lecture du XML ");
         Document document = null;
 
         try {
