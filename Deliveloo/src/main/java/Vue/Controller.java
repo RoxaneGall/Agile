@@ -128,7 +128,7 @@ public class Controller {
     /**
      * Attributs pour le trajet/la tournee
      */
-    public ArrayList<Coordinate> tournee = new ArrayList();
+    public ArrayList<Coordinate> tournee = new ArrayList<>();
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
@@ -328,7 +328,7 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);

@@ -74,7 +74,7 @@ public class LectureXML {
 
                 long idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
 
-                Coordinate myPoint = new Coordinate(lg, lat);
+                Coordinate myPoint = new Coordinate(lat, lg);
                 Intersection myIntersection = new Intersection(idIntersection, myPoint);
                 countNodes++;
                 Graphe.shared.addIntersection(myIntersection);
