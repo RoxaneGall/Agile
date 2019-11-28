@@ -324,6 +324,10 @@ public class Controller {
                 chargerDemande(demande);
                 System.out.println(demande);
 
+                Marker markerEntrepot;
+                Coordinate entrepot= demande.getEntrepot().getCoordinate();
+                markerEntrepot = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
