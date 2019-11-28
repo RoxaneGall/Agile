@@ -4,17 +4,19 @@ import com.sothawo.mapjfx.Coordinate; // OBJET COORDINATE QUI REMPLACE POINT, cl
 // https://github.com/sothawo/mapjfx/blob/master/src/main/java/com/sothawo/mapjfx/Coordinate.java
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class Intersection {
     private long id;
     private Coordinate coord;
-    private List<Troncon> troncons;
+    private HashMap<Long,Troncon> troncons;
 
     public Intersection(long id, Coordinate c) {
         this.id = id;
         this.coord = c;
-        this.troncons = new ArrayList<Troncon>();
+        this.troncons = new HashMap<Long, Troncon>();
     }
 
     public long getId() {
@@ -22,20 +24,18 @@ public class Intersection {
     }
 
     public void addTroncon(Troncon t) {
-        troncons.add(t);
+        troncons.put(t.getDestination().getId(),t);
     }
 
     public Coordinate getCoordinate() {
         return coord;
     }
 
-    public void setP(Coordinate c) {
-        this.coord = c;
+    public Collection<Troncon> getTroncons() {
+        return troncons.values();
     }
 
-    public List<Troncon> getTroncons() {
-        return troncons;
-    }
+    public Troncon getTronconFromDestinationId(Integer id) { return troncons.get(id); }
 
     @java.lang.Override
     public java.lang.String toString() {

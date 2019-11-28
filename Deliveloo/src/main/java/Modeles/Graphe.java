@@ -6,19 +6,19 @@ public class Graphe {
 
     public static Graphe shared = new Graphe();
 
-    private HashMap<Integer,Intersection> intersectionMap;
+    private HashMap<Long,Intersection> intersectionMap;
 
     public Graphe() {
-        this.intersectionMap = new HashMap<Integer, Intersection>();
+        this.intersectionMap = new HashMap<Long, Intersection>();
     }
 
-    public HashMap<Integer,Intersection> getIntersectionMap() {
+    public HashMap<Long,Intersection> getIntersectionMap() {
         return intersectionMap;
     }
 
-    public void addTroncon(Troncon troncon, Intersection origine) {
-        if (!intersectionMap.containsKey(origine.getId())) {
-            intersectionMap.get(origine.getId()).addTroncon(troncon);
+    public void addTroncon(Troncon troncon, long origineId) {
+        if (intersectionMap.containsKey(origineId)) {
+            intersectionMap.get(origineId).addTroncon(troncon);
         }
     }
 

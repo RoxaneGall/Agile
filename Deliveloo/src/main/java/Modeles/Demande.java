@@ -8,14 +8,12 @@ import java.util.Date;
 public class Demande {
     private ArrayList<Livraison> livraisons;
     private Intersection entrepot;
-    private Double longueurTotale;
     private Date heureDepart;
 
-    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Date heureDepart ,Double longueurTotale) {
+    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Date heureDepart) {
         this.livraisons = livraisons;
         this.entrepot = entrepot;
         this.heureDepart = heureDepart;
-        this.longueurTotale = longueurTotale;
     }
 
     public ArrayList<Livraison> getLivraisons() {
@@ -32,14 +30,6 @@ public class Demande {
 
     public void setEntrepot(Intersection entrepot) {
         this.entrepot = entrepot;
-    }
-
-    public Double getLongueurTotale() {
-        return longueurTotale;
-    }
-
-    public void setLongueurTotale(Double longueurTotale) {
-        this.longueurTotale = longueurTotale;
     }
 
     public Date getHeureDepart() {

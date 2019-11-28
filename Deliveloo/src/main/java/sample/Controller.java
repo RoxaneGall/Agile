@@ -59,9 +59,6 @@ import java.util.stream.Stream;
  */
 public class Controller {
 
-
-
-
     private static final Coordinate coordKarlsruheCastle = new Coordinate(49.013517, 8.404435);
     private static final Coordinate coordKarlsruheHarbour = new Coordinate(49.015511, 8.323497);
     private static final Coordinate coordKarlsruheStation = new Coordinate(48.993284, 8.402186);
@@ -79,7 +76,6 @@ public class Controller {
     private static final int ZOOM_DEFAULT = 14;
 
     /** the markers. */
-    private List <Marker> deliveries;
     private final Marker markerKaHarbour;
     private final Marker markerKaCastle;
     private final Marker markerKaStation;
@@ -583,4 +579,5 @@ public class Controller {
         }
         return Optional.empty();
     }
+
 }
