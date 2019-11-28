@@ -202,9 +202,6 @@ public class Controller {
 
         // enable le bouton charger plan avec l'event correspondant
         setButtonChargerPlan();
-        // enable le bouton charger demande avec l'event correspondant
-        setButtonChargerDemande();
-        //setDeliveriesMarkers();
 
         // enable le bouton calculer une tournée avec l'event correspondant
         setCalculerTournee();
@@ -219,6 +216,9 @@ public class Controller {
                 afterMapIsInitialized();
             }
         });
+
+        // enable le bouton charger demande avec l'event correspondant
+        setButtonChargerDemande();
 
         // finally initialize the map view
         mapView.initialize(Configuration.builder()
@@ -328,7 +328,7 @@ public class Controller {
                 //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 // pathDemande = choix.getSelectedFile().getAbsolutePath();
                 //}
-                pathDemande = "C://Users/manal/Documents/GitHub/Agile/datas/demandePetit1.xml";
+                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);
@@ -356,9 +356,34 @@ public class Controller {
         });
     }
 
-    public void setDeliveriesMarkers(Demande d) {
+    public void chargerDemandeApresMap() {
+        String pathDemande = "";
+        try {
+            System.out.println("Chargement d'une demande");
+            //choix.setCurrentDirectory(new File("./datas"));
+            //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            // pathDemande = choix.getSelectedFile().getAbsolutePath();
+            //}
+            pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit1.xml";
+            demande = service.chargerDemande(pathDemande);
+            chargerDemande(demande);
+            System.out.println(demande);
 
+            for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                Marker markerPickUp;
+                Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
 
+                Marker markerDelivery;
+                Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                System.out.println(pickUp + "/////" + delivery);
+
+                markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
+                deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private void setCalculerTournee() {
@@ -407,6 +432,9 @@ public class Controller {
         trackCyan = new CoordinateLine
                 (listCoord).setColor(Color.MAGENTA);
         trackCyan.setVisible(true);
+
+        chargerDemandeApresMap();
+
         // add the tracks
             System.out.println("ADD TRACK TO MAP AFTER INIT");
             mapView.addCoordinateLine(trackCyan);
