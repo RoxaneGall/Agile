@@ -319,6 +319,8 @@ public class Controller {
                 mapView.removeMarker(deliveriesMarkers.get(i).getKey());
                 mapView.removeMarker(deliveriesMarkers.get(i).getValue());
             }
+            deliveriesMarkers.clear();
+            System.out.println("******"+deliveriesMarkers.size());
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
