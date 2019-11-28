@@ -327,6 +327,7 @@ public class Controller {
                 Marker markerEntrepot;
                 Coordinate entrepot= demande.getEntrepot().getCoordinate();
                 markerEntrepot = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+                mapView.addMarker(markerEntrepot);
 
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
