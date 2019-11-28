@@ -177,6 +177,10 @@ public class LectureXML {
        myList.add(maxLatminLong);
        myList.add(maxLatmaxLong);
 
+       if(myList.isEmpty()){
+           System.out.println("test list empty");
+       }
+
         return myList;
     }
 }
