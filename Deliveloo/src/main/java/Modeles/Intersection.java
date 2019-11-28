@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Intersection {
-    private int id;
+    private long id;
     private Coordinate coord;
     private List<Troncon> troncons;
 
-    public Intersection(int id, Coordinate c) {
+    public Intersection(long id, Coordinate c) {
         this.id = id;
         this.coord = c;
         this.troncons = new ArrayList<Troncon>();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
