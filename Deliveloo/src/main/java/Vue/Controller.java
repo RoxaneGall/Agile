@@ -181,6 +181,8 @@ public class Controller {
     }
 
     public void initializeView(Projection projection) {
+        choix.setCurrentDirectory(new File("./datas"));
+
         // init MapView-Cache
         final OfflineCache offlineCache = mapView.getOfflineCache();
         final String cacheDir = System.getProperty("java.io.tmpdir") + "/mapjfx-cache";
@@ -277,17 +279,19 @@ public class Controller {
     private void setButtonChargerPlan() {
 
         chargerPlan.setOnAction(event -> {
-            //String pathPlan = "";
+            String pathPlan = "";
             try {
                 System.out.println("Chargement d'un plan");
-                //choix.setCurrentDirectory(new File("./datas"));
-                //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                //pathPlan = choix.getSelectedFile().getAbsolutePath();
-                ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+                choix.setCurrentDirectory(new File("./datas"));
+                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    pathPlan = choix.getSelectedFile().getAbsolutePath();
+                }
+                    ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
 
-                //APPEL METHODE ALICE
-                String pathPlan = "../datas/PetitPlan.xml";
-                limites = service.chargerPlan(pathPlan);
+                    //APPEL METHODE ALICE
+                    //String pathPlan = "../datas/PetitPlan.xml";
+                    limites = service.chargerPlan(pathPlan);
+
                 // POUR TESTER :
 
                 Coordinate c1 = new Coordinate(45.778579, 4.852096);
@@ -301,7 +305,7 @@ public class Controller {
                 System.out.println(limites);
                 setMapExtent(limites);
                 setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
-                //}
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -313,11 +317,9 @@ public class Controller {
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
-                //choix.setCurrentDirectory(new File("./datas"));
-                //if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                // pathDemande = choix.getSelectedFile().getAbsolutePath();
-                //}
-                pathDemande = "C://Users/Rox'/Documents/GitHub/Agile/datas/demandePetit2.xml";
+                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                 pathDemande = choix.getSelectedFile().getAbsolutePath();
+                }
                 demande = service.chargerDemande(pathDemande);
                 chargerDemande(demande);
                 System.out.println(demande);
