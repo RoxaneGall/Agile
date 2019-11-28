@@ -314,7 +314,11 @@ public class Controller {
 
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
-            deliveriesMarkers.clear(); // empty the markers list
+            for (int i = 0; i < deliveriesMarkers.size(); i++)
+            {
+                mapView.removeMarker(deliveriesMarkers.get(i).getKey());
+                mapView.removeMarker(deliveriesMarkers.get(i).getValue());
+            }
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
