@@ -286,11 +286,11 @@ public class Controller {
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     pathPlan = choix.getSelectedFile().getAbsolutePath();
                 }
-                    ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+                ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
 
-                    //APPEL METHODE ALICE
-                    //String pathPlan = "../datas/PetitPlan.xml";
-                    limites = service.chargerPlan(pathPlan);
+                //APPEL METHODE ALICE
+                //String pathPlan = "../datas/PetitPlan.xml";
+                limites = service.chargerPlan(pathPlan);
 
                 // POUR TESTER :
 
@@ -314,14 +314,15 @@ public class Controller {
 
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
+            deliveriesMarkers.clear(); // empty the markers list
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                 pathDemande = choix.getSelectedFile().getAbsolutePath();
+                    pathDemande = choix.getSelectedFile().getAbsolutePath();
                 }
                 demande = service.chargerDemande(pathDemande);
-                entrepot=demande.getEntrepot().getCoordinate();
+                entrepot = demande.getEntrepot().getCoordinate();
                 chargerDemande(demande);
                 System.out.println(demande);
 
@@ -331,17 +332,23 @@ public class Controller {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp).setVisible(true);
+                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
                     System.out.println(pickUp + "/////" + delivery);
 
-                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery).setVisible(true);
+                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
                     deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
-                    mapView.addMarker(markerPickUp);
-                    mapView.addMarker(markerDelivery);
 
+
+                }
+
+                for (int i = 0; i < deliveriesMarkers.size(); i++) {
+                    deliveriesMarkers.get(i).getKey().setVisible(true);
+                    deliveriesMarkers.get(i).getValue().setVisible(true);
+                    mapView.addMarker(deliveriesMarkers.get(i).getKey());
+                    mapView.addMarker(deliveriesMarkers.get(i).getValue());
                 }
 
                 System.out.println(deliveriesMarkers.size());
@@ -367,7 +374,7 @@ public class Controller {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
                     }
-                    System.out.println("LINE :"+trackCyan);
+                    System.out.println("LINE :" + trackCyan);
                     trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN);
                     trackCyan.setVisible(true);
                     // add the tracks
