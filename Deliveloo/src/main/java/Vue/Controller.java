@@ -321,13 +321,12 @@ public class Controller {
                  pathDemande = choix.getSelectedFile().getAbsolutePath();
                 }
                 demande = service.chargerDemande(pathDemande);
+                entrepot=demande.getEntrepot().getCoordinate();
                 chargerDemande(demande);
                 System.out.println(demande);
 
-                Marker markerEntrepot;
-                Coordinate entrepot= demande.getEntrepot().getCoordinate();
-                markerEntrepot = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
-                mapView.addMarker(markerEntrepot);
+                entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+                mapView.addMarker(entrepotMarker);
 
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
