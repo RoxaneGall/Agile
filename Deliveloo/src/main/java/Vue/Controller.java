@@ -314,6 +314,7 @@ public class Controller {
 
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
+            mapView.removeMarker(entrepotMarker);
             for (int i = 0; i < deliveriesMarkers.size(); i++)
             {
                 mapView.removeMarker(deliveriesMarkers.get(i).getKey());
