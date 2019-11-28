@@ -19,6 +19,10 @@ public class Intersection {
         this.troncons = new HashMap<Long, Troncon>();
     }
 
+    public Intersection() {
+
+    }
+
     public long getId() {
         return id;
     }

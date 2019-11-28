@@ -18,6 +18,10 @@ public class Tournee {
         return demande;
     }
 
+    public ArrayList<Trajet> getTrajets() {
+        return this.trajets;
+    }
+
     public double getTotalDistance() {
         Double longueur = 0.0;
         for(Trajet trajet: trajets) {
