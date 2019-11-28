@@ -282,7 +282,7 @@ public class Controller {
             String pathPlan = "";
             try {
                 System.out.println("Chargement d'un plan");
-                choix.setCurrentDirectory(new File("./datas"));
+                choix.setCurrentDirectory(new File("../datas"));
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     pathPlan = choix.getSelectedFile().getAbsolutePath();
                 }
