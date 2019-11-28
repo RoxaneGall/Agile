@@ -8,12 +8,14 @@ import java.io.File;
 
 import Modeles.*;
 import Vue.Controller;
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public class LectureXML {
@@ -149,6 +151,35 @@ public class LectureXML {
 
     public ArrayList<Coordinate> getLimitesPlan(){
         ArrayList<Coordinate> myList = new ArrayList<>();
+
+        double minLatitude = 100;
+        double minLongitude = 100;
+        double maxLatitude = -100;
+        double maxLongitude = -100;
+
+       for(HashMap.Entry mapValue : Graphe.shared.getIntersectionMap().entrySet()){
+           Intersection myIntersection = (Intersection) mapValue.getValue();
+           double latitude = myIntersection.getCoordinate().getLatitude();
+           double longitude = myIntersection.getCoordinate().getLongitude();
+           if(latitude<minLatitude){ minLatitude = latitude; }
+           else if(latitude>maxLatitude){ maxLatitude = latitude;}
+           if(longitude<minLongitude){ minLongitude = longitude;}
+           else if(longitude>minLongitude){ maxLongitude = longitude; }
+       }
+
+       Coordinate minLatminLong = new Coordinate(minLatitude,minLongitude);
+       Coordinate minLatmaxLong = new Coordinate(minLatitude,maxLongitude);
+       Coordinate maxLatminLong = new Coordinate(maxLatitude,minLongitude);
+       Coordinate maxLatmaxLong = new Coordinate(maxLatitude,maxLongitude);
+
+       myList.add(minLatminLong);
+       myList.add(minLatmaxLong);
+       myList.add(maxLatminLong);
+       myList.add(maxLatmaxLong);
+
+       if(myList.isEmpty()){
+           System.out.println("test list empty");
+       }
 
         return myList;
     }
