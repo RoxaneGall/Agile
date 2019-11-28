@@ -4,9 +4,12 @@ import Algo.Computations;
 import Modeles.Demande;
 import Modeles.Graphe;
 import Modeles.Tournee;
+import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,5 +44,15 @@ class LectureXMLTest {
 
     @Test
     void getLimitesPlan() {
+        ArrayList<Coordinate> testList = new ArrayList<>();
+        testList = lectureXML.getLimitesPlan();
+        System.out.println("test testList");
+        int compteur = 1;
+        for(Coordinate c : testList){
+            System.out.println("Coordinate "+compteur);
+            System.out.println("latitude : " + c.getLatitude());
+            System.out.println("longitude : "+ c.getLongitude());
+            compteur++;
+        }
     }
 }

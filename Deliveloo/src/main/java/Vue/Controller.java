@@ -142,7 +142,7 @@ public class Controller {
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
 
         for (Livraison livr : livraisons) {
-            Pair delivery = new Pair(livr.getDepart().getCoordinate(), livr.getArrivee().getCoordinate());
+            Pair delivery = new Pair(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
             deliveries.add(delivery);
         }
     }
