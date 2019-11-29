@@ -287,6 +287,7 @@ public class Controller {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
+            choix.setCurrentDirectory(new File("../datas"));
             try {
                 System.out.println("Chargement d'une demande");
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
