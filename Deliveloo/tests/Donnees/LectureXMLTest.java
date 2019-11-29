@@ -8,6 +8,7 @@ import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 
@@ -30,17 +31,6 @@ class LectureXMLTest {
     void chargerPetitPlan_shouldSucceed() throws Exception {
         lectureXML.chargerPlan("../datas.petitPlan.xml");
         /* à continuer*/
-
-    }
-    void chargerPlan() throws Exception {
-        lectureXML.chargerPlan("../datas/GrandPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
     }
 
     @Test
@@ -112,7 +102,6 @@ class LectureXMLTest {
 
     @Test
     void realiserTourneeDepuisGrandPlanEtGrandeDemande_shouldSucceed() throws Exception {
-        System.out.println("test LectureXMLTest.testTournee");
         lectureXML.chargerPlan("../datas/grandPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
         Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
@@ -125,7 +114,6 @@ class LectureXMLTest {
 
     @Test
     void realiserTourneeDepuisPetitPlanEtMoyenneDemande_shouldFail() throws Exception {
-        System.out.println("test LectureXMLTest.testTournee");
         lectureXML.chargerPlan("../datas/petitPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
         Demande demande = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
@@ -138,7 +126,6 @@ class LectureXMLTest {
 
     @Test
     void realiserTourneeDepuisPetitPlanEtGrandeDemande_shouldFail() throws Exception {
-        System.out.println("test LectureXMLTest.testTournee");
         lectureXML.chargerPlan("../datas/petitPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
         Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
@@ -151,15 +138,19 @@ class LectureXMLTest {
 
     @Test
     void realiserTourneeDepuisMoyenPlanEtGrandeDemande_shouldFail() throws Exception {
-        System.out.println("test LectureXMLTest.testTournee");
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
+        try {
+            lectureXML.chargerPlan("../datas/moyenPlan.xml");
+            System.out.println(Graphe.shared.getIntersectionMap().values().size());
+            Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
+            Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
+            System.out.println(t.getHeureArrivee());
+            System.out.println(t.getDemande().getHeureDepart());
+            System.out.println(t.getTotalDistance());
+            System.out.println(t.getTotalDuration());
+        }catch(Exception e){
+            throw new NotImplementedException();
+        }
+
     }
 
 
