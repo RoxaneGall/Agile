@@ -8,7 +8,7 @@ import Modeles.Troncon;
 import java.util.*;
 
 import java.util.Collections;
-/*
+
 public class Dijkstra {
 
 
@@ -16,17 +16,17 @@ public class Dijkstra {
 
     private Intersection end;
 
-    public HashMap<Integer, Double> whiteNode; //Long = id des intersections Double = Poids
+    public HashMap<Long, Double> whiteNode; //Long = id des intersections Double = Poids
 
-    public HashMap<Integer, Double> greyNode; //Long = id des intersections Double = Poids
+    public HashMap<Long, Double> greyNode; //Long = id des intersections Double = Poids
 
-    public HashMap<Integer, Double> cost;
+    public HashMap<Long, Double> cost;
 
-    private HashMap<Double, List<Integer>> greyNodeInv;
+    private HashMap<Double, List<Long>> greyNodeInv;
 
-    public HashMap<Integer, Intersection> pi;
+    public HashMap<Long, Intersection> pi;
 
-    private HashMap<Integer,Intersection> plan;
+    private HashMap<Long,Intersection> plan;
 
 
     public Dijkstra(Graphe graphe, Intersection i1, Intersection i2){
@@ -39,7 +39,7 @@ public class Dijkstra {
         plan = new HashMap();
         pi = new HashMap();
         plan = graphe.getIntersectionMap();
-        for (Map.Entry<Integer, Intersection> entry : plan.entrySet()){
+        for (Map.Entry<Long, Intersection> entry : plan.entrySet()){
             whiteNode.put(entry.getKey(), Double.MAX_VALUE);
             cost.put(entry.getKey(), Double.MAX_VALUE);
             pi.put(entry.getKey(), null);
@@ -47,7 +47,7 @@ public class Dijkstra {
         whiteNode.remove(start.getId());
         greyNode.put(start.getId(), 0.0);
         cost.put(start.getId(), 0.0);
-        List<Integer> newListe = new ArrayList<Integer>();
+        List<Long> newListe = new ArrayList<Long>();
         newListe.add(start.getId());
         greyNodeInv.put(0.0, newListe);
         run();
@@ -57,7 +57,7 @@ public class Dijkstra {
         while(greyNode.values().size() != 0){
             Double nodeMin = Collections.min(greyNode.values());
 
-            Integer idNodeMin = greyNodeInv.get(nodeMin).get(0); //Si plusieurs idMin ?
+            Long idNodeMin = greyNodeInv.get(nodeMin).get(0); //Si plusieurs idMin ?
             //Récupérer les voisins du node min en calculant nouvelles distances
             Intersection iCurrent = plan.get(idNodeMin);
             Collection<Troncon> voisins = iCurrent.getTroncons();
@@ -71,7 +71,7 @@ public class Dijkstra {
                         if(greyNodeInv.containsKey(cost.get(tCurrent.getDestination().getId()))){
                             greyNodeInv.get(cost.get(tCurrent.getDestination().getId())).add(tCurrent.getDestination().getId());
                         }else{
-                            List<Integer> newList = new ArrayList<Integer>();
+                            List<Long> newList = new ArrayList<Long>();
                             newList.add(tCurrent.getDestination().getId());
                             greyNodeInv.put(cost.get(tCurrent.getDestination().getId()), newList);
                         }
@@ -90,7 +90,7 @@ public class Dijkstra {
                             if(greyNodeInv.containsKey(newCost)){
                                 greyNodeInv.get(cost.get(tCurrent.getDestination().getId())).add(tCurrent.getDestination().getId());
                             }else{
-                                List<Integer> newList = new ArrayList<Integer>();
+                                List<Long> newList = new ArrayList<Long>();
                                 newList.add(tCurrent.getDestination().getId());
                                 greyNodeInv.put(newCost, newList);
                             }
@@ -133,4 +133,4 @@ public class Dijkstra {
         }
         System.out.println(cost);
     }
-}*/
+}
