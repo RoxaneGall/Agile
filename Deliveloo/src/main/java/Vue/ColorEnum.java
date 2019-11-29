@@ -1,11 +1,9 @@
-package Vue;
+/*package Vue;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public class ColorEnum {
-    final Color orange = new Color(225,134,72);
-    public enum colors {
-        orange
+    final Color orange = new Color.web("0x0000FF",1.0);
 
-    }
 }
+*/

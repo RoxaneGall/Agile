@@ -132,6 +132,7 @@ public class Controller {
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
+    //public ColorEnum colors = new ColorEnum();
     public CoordinateLine trackTrajet = new CoordinateLine().setColor(Color.CYAN).setWidth(7);
     /* display track tournee*/
     // ENUM COULEURS
@@ -362,7 +363,7 @@ public class Controller {
                         }
                     }
                     System.out.println("LINE :" + trackTrajet);
-                    trackTrajet = new CoordinateLine(tournee).setColor().setWidth(10);
+                    trackTrajet = new CoordinateLine(tournee).setColor(Color.SANDYBROWN).setWidth(10);
                     trackTrajet.setVisible(true);
                     // add the tracks
                     System.out.println("ADD TRACK TO MAP");
