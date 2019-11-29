@@ -132,7 +132,7 @@ public class Controller {
     /* Ligne du trajet de la tournée (Coordinateline) */
     public CoordinateLine trackMagenta;
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
-    public CoordinateLine trackCyan = new CoordinateLine().setColor(Color.CYAN).setWidth(7);
+    public CoordinateLine trackTrajet = new CoordinateLine().setColor(Color.CYAN).setWidth(7);
     /* display track tournee*/
     // ENUM COULEURS
 
@@ -295,7 +295,7 @@ public class Controller {
                 demande = service.chargerDemande(pathDemande);
 
             /* nettoyage de la carte */
-            mapView.removeCoordinateLine(trackCyan);
+            mapView.removeCoordinateLine(trackTrajet);
             if (entrepotMarker != null) {
                 mapView.removeMarker(entrepotMarker);
             } else if (deliveriesMarkers != null) {
@@ -346,7 +346,7 @@ public class Controller {
     private void setCalculerTournee() {
 
         calculTournee.setOnAction(event -> {
-            mapView.removeCoordinateLine(trackCyan);
+            mapView.removeCoordinateLine(trackTrajet);
             tournee.clear();
             System.out.println("Calcul d'une tournée");
             try {
@@ -359,13 +359,13 @@ public class Controller {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
                     }
-                    System.out.println("LINE :" + trackCyan);
-                    trackCyan = new CoordinateLine(tournee).setColor(Color.MAGENTA).setWidth(15);
-                    trackCyan.setVisible(true);
+                    System.out.println("LINE :" + trackTrajet);
+                    trackTrajet = new CoordinateLine(tournee).setColor().setWidth(10);
+                    trackTrajet.setVisible(true);
                     // add the tracks
                     System.out.println("ADD TRACK TO MAP");
-                    mapView.addCoordinateLine(trackCyan);
-                    System.out.println("Tournee: " + trackCyan.toString());
+                    mapView.addCoordinateLine(trackTrajet);
+                    System.out.println("Tournee: " + trackTrajet.toString());
                 } else {
                     System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
                 }
