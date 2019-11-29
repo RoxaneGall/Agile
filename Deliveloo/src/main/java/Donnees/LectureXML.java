@@ -32,15 +32,6 @@ public class LectureXML {
         }
     }
 
-/*    public void testest() throws IOException, SAXException {
-        final Document document= parser.parse(new File("./datas/petitPlan.xml"));
-
-        // Parcourir et charger le petitPlan
-        final Element racine = document.getDocumentElement();
-        System.out.println(racine.getNodeName());
-    }
-*/
-
     public void chargerPlan(String cheminFichier) throws Exception {
 
         System.out.println("Lecture du XML plan");
@@ -138,6 +129,7 @@ public class LectureXML {
                 deliveries.add(myDelivery);
 
             } else if(node.getNodeName().equals("entrepot")){
+                System.out.println("Test : node est un entrepot");
                 long idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
                 SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
@@ -145,6 +137,12 @@ public class LectureXML {
             }
         }
         if (entrepot == null|| myDate==null){
+            if(myDate == null){
+                System.out.println("test myDate null");
+            }
+            if (entrepot == null){
+                System.out.println("test entrepot null");
+            }
             throw new Exception("L'entrepot n'est pas defini'...");
         }
         Demande demande = new Demande(deliveries,entrepot, myDate);
