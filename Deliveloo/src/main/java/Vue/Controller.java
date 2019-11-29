@@ -319,8 +319,9 @@ public class Controller {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo.png");
-                    markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);
+                  /*  URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
+                    markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);*/
+                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
