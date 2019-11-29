@@ -150,16 +150,10 @@ public class Controller {
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
 
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
-
         for (Livraison livr : livraisons) {
             Pair delivery = new Pair(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
             deliveries.add(delivery);
         }
-    }
-
-    public void chargerDemande(Demande demande) {
-        entrepot = demande.getEntrepot().getCoordinate();
-        setDeliveriesFromLivraisons(demande.getLivraisons());
     }
 
     /*public void setEntrepot(Intersection inter) {
@@ -290,19 +284,8 @@ public class Controller {
         }
     }
 
-
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
-            mapView.removeCoordinateLine(trackCyan);
-            if (entrepotMarker != null) {
-                mapView.removeMarker(entrepotMarker);
-            }
-            for (int i = 0; i < deliveriesMarkers.size(); i++) {
-                mapView.removeMarker(deliveriesMarkers.get(i).getKey());
-                mapView.removeMarker(deliveriesMarkers.get(i).getValue());
-            }
-            deliveriesMarkers.clear();
-            System.out.println("******" + deliveriesMarkers.size());
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
@@ -310,9 +293,23 @@ public class Controller {
                     pathDemande = choix.getSelectedFile().getAbsolutePath();
                 }
                 demande = service.chargerDemande(pathDemande);
+
+            /* nettoyage de la carte */
+            mapView.removeCoordinateLine(trackCyan);
+            if (entrepotMarker != null) {
+                mapView.removeMarker(entrepotMarker);
+            } else if (deliveriesMarkers != null) {
+                for (int i = 0; i < deliveriesMarkers.size(); i++) {
+                    mapView.removeMarker(deliveriesMarkers.get(i).getKey());
+                    mapView.removeMarker(deliveriesMarkers.get(i).getValue());
+                }
+                deliveriesMarkers.clear();
+            }
+
+            /* ajout des markers */
                 entrepot = demande.getEntrepot().getCoordinate();
-                chargerDemande(demande);
-                System.out.println(demande);
+                setDeliveriesFromLivraisons(demande.getLivraisons());
+                System.out.println("Demande : "+demande);
 
                 entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
                 mapView.addMarker(entrepotMarker);
@@ -328,8 +325,6 @@ public class Controller {
 
                     markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
                     deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
-
-
                 }
 
                 for (int i = 0; i < deliveriesMarkers.size(); i++) {
@@ -365,7 +360,7 @@ public class Controller {
                         }
                     }
                     System.out.println("LINE :" + trackCyan);
-                    trackCyan = new CoordinateLine(tournee).setColor(Color.CYAN);
+                    trackCyan = new CoordinateLine(tournee).setColor(Color.MAGENTA).setWidth(15);
                     trackCyan.setVisible(true);
                     // add the tracks
                     System.out.println("ADD TRACK TO MAP");
