@@ -11,8 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0"
-            prefWidth="1200.0"
+            prefHeight="400.0"
+            prefWidth="600.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
     <top>
@@ -39,6 +39,7 @@
             <children>
                 <Button fx:id="chargerPlan" text="Charger Plan"/>
                 <Button fx:id="chargerDemande" text="Charger Demande"/>
+                <Button fx:id="calculTournee" text="Calculer Tournée"/>
                 <Label fx:id="labelCenter" text="Center: "/>
                 <Label fx:id="labelExtent" text="Extent: "/>
                 <Label fx:id="labelZoom" text="Zoom: "/>

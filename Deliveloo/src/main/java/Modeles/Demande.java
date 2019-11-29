@@ -16,6 +16,10 @@ public class Demande {
         this.heureDepart = heureDepart;
     }
 
+    public Demande() {
+
+    }
+
     public ArrayList<Livraison> getLivraisons() {
         return livraisons;
     }
