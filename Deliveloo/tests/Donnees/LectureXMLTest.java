@@ -30,6 +30,17 @@ class LectureXMLTest {
     void chargerPetitPlan_shouldSucceed() throws Exception {
         lectureXML.chargerPlan("../datas.petitPlan.xml");
         /* à continuer*/
+
+    }
+    void chargerPlan() throws Exception {
+        lectureXML.chargerPlan("../datas/GrandPlan.xml");
+        System.out.println(Graphe.shared.getIntersectionMap().values().size());
+        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
+        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+        System.out.println(t.getHeureArrivee());
+        System.out.println(t.getDemande().getHeureDepart());
+        System.out.println(t.getTotalDistance());
+        System.out.println(t.getTotalDuration());
     }
 
     @Test
