@@ -37,7 +37,6 @@
     <bottom>
         <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="chargerPlan" text="Charger Plan"/>
                 <Button fx:id="chargerDemande" text="Charger Demande"/>
                 <Button fx:id="calculTournee" text="Calculer Tournée"/>
                 <Label fx:id="labelCenter" text="Center: "/>

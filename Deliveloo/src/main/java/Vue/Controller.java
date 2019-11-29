@@ -149,15 +149,6 @@ public class Controller {
             .withAttributions(
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
 
-
-    /**
-     * Methodes pour définir les éléments/attributs
-     */
-    public void setMapExtent(ArrayList<Coordinate> planCoords) {
-        mapExtent = Extent.forCoordinates(planCoords);
-        mapView.setExtent(mapExtent);
-    }
-
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
 
         for (Livraison livr : livraisons) {
@@ -169,7 +160,6 @@ public class Controller {
     public void chargerDemande(Demande demande) {
         entrepot = demande.getEntrepot().getCoordinate();
         setDeliveriesFromLivraisons(demande.getLivraisons());
-
     }
 
     /*public void setEntrepot(Intersection inter) {
@@ -193,6 +183,10 @@ public class Controller {
         // set the controls to disabled, this will be changed when the MapView is initialized
         setTopControlsDisable(true);
 
+        buttonResetExtent.setOnAction(event -> {
+            mapView.setExtent(mapExtent);
+        });
+
         // wire the zoom button and connect the slider to the map's zoom
         buttonZoom.setOnAction(event -> mapView.setZoom(ZOOM_DEFAULT));
         sliderZoom.valueProperty().bindBidirectional(mapView.zoomProperty());
@@ -201,8 +195,6 @@ public class Controller {
         labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
-        // enable le bouton charger plan avec l'event correspondant
-        setButtonChargerPlan();
         // enable le bouton charger demande avec l'event correspondant
         setButtonChargerDemande();
         // enable le bouton calculer une tournée avec l'event correspondant
@@ -219,21 +211,17 @@ public class Controller {
 
         System.out.println("Map is init");
 
-        //reset the extent of the map using the resetButton
-        // Pas sûre que ça doit être ici
-        buttonResetExtent.setOnAction(event -> {
-            ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
-            // POUR TESTER :
-            Coordinate c1 = new Coordinate(45.778579, 4.852096);
-            Coordinate c2 = new Coordinate(45.781901, 4.791063);
-            Coordinate c3 = new Coordinate(45.730995, 4.859773);
-            Coordinate c4 = new Coordinate(45.714939, 4.901873);
-            limites.add(c1);
-            limites.add(c2);
-            limites.add(c3);
-            limites.add(c4);
-            setMapExtent(limites);
+        // watch the MapView's initialized property to finish initialization
+        mapView.initializedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                afterMapIsInitialized();
+            }
         });
+    }
+
+
+    private void afterMapIsInitialized() {
+        chargerPlan();
     }
 
 
@@ -276,54 +264,45 @@ public class Controller {
         });
     }
 
-    private void setButtonChargerPlan() {
+    private void chargerPlan() {
+        System.out.println("Chargement du plan");
+        try {
+            ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
 
-        chargerPlan.setOnAction(event -> {
-            String pathPlan = "";
-            try {
-                System.out.println("Chargement d'un plan");
-                choix.setCurrentDirectory(new File("../datas"));
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathPlan = choix.getSelectedFile().getAbsolutePath();
-                }
-                ArrayList<Coordinate> limites = new ArrayList<Coordinate>();
+            // POUR TESTER :
+            Coordinate c1 = new Coordinate(45.778579, 4.852096);
+            Coordinate c2 = new Coordinate(45.781901, 4.791063);
+            Coordinate c3 = new Coordinate(45.730995, 4.859773);
+            Coordinate c4 = new Coordinate(45.714939, 4.901873);
+            limites.add(c1);
+            limites.add(c2);
+            limites.add(c3);
+            limites.add(c4);
+            System.out.println("Limites du plan :"+limites);
 
-                //APPEL METHODE ALICE
-                //String pathPlan = "../datas/PetitPlan.xml";
-                limites = service.chargerPlan(pathPlan);
+            mapExtent = Extent.forCoordinates(limites);
+            mapView.setExtent(mapExtent);
 
-                // POUR TESTER :
+            setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
 
-                Coordinate c1 = new Coordinate(45.778579, 4.852096);
-                Coordinate c2 = new Coordinate(45.781901, 4.791063);
-                Coordinate c3 = new Coordinate(45.730995, 4.859773);
-                Coordinate c4 = new Coordinate(45.714939, 4.901873);
-                limites.add(c1);
-                limites.add(c2);
-                limites.add(c3);
-                limites.add(c4);
-                System.out.println(limites);
-                setMapExtent(limites);
-                setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
 
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
+            mapView.removeCoordinateLine(trackCyan);
             if (entrepotMarker != null) {
                 mapView.removeMarker(entrepotMarker);
             }
-            for (int i = 0; i < deliveriesMarkers.size(); i++)
-            {
+            for (int i = 0; i < deliveriesMarkers.size(); i++) {
                 mapView.removeMarker(deliveriesMarkers.get(i).getKey());
                 mapView.removeMarker(deliveriesMarkers.get(i).getValue());
             }
             deliveriesMarkers.clear();
-            System.out.println("******"+deliveriesMarkers.size());
+            System.out.println("******" + deliveriesMarkers.size());
             String pathDemande = "";
             try {
                 System.out.println("Chargement d'une demande");
@@ -372,10 +351,12 @@ public class Controller {
     private void setCalculerTournee() {
 
         calculTournee.setOnAction(event -> {
+            mapView.removeCoordinateLine(trackCyan);
+            tournee.clear();
             System.out.println("Calcul d'une tournée");
             try {
                 if (demande != null) {
-                    Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
+                    Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
                     for (Trajet trajet : t.getTrajets()) {
                         tournee.add(trajet.getOrigine().getCoordinate());
