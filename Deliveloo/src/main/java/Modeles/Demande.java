@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-
 public class Demande {
     private ArrayList<Livraison> livraisons;
     private Intersection entrepot;
