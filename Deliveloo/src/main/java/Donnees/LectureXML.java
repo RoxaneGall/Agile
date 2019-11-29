@@ -129,7 +129,6 @@ public class LectureXML {
                 deliveries.add(myDelivery);
 
             } else if(node.getNodeName().equals("entrepot")){
-                System.out.println("Test : node est un entrepot");
                 long idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
                 SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
@@ -137,14 +136,16 @@ public class LectureXML {
             }
         }
         if (entrepot == null|| myDate==null){
+            String message ="";
             if(myDate == null){
-                System.out.println("test myDate null");
+                message = "La date de la demande de livraisons n'est pas définie.";
             }
             if (entrepot == null){
-                System.out.println("test entrepot null");
+                message = "L'entrepot de la demande de livraisons n'est pas défini.";
             }
-            throw new Exception("L'entrepot n'est pas defini'...");
+            throw new Exception(message);
         }
+
         Demande demande = new Demande(deliveries,entrepot, myDate);
         return demande;
     }
