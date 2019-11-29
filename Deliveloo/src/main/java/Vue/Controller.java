@@ -287,6 +287,7 @@ public class Controller {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             String pathDemande = "";
+            choix.setCurrentDirectory(new File("../datas"));
             try {
                 System.out.println("Chargement d'une demande");
                 if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -317,7 +318,8 @@ public class Controller {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
+                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo.png");
+                    markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
