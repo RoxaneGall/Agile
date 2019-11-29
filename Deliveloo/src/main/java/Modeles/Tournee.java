@@ -31,12 +31,13 @@ public class Tournee {
     }
 
     public double getTotalDuration() {
-        double livraisonsTotalDuration = 0;
+        double livraisonsTotalDurationSeconds = 0;
         for(Livraison livraison: demande.getLivraisons()) {
-            livraisonsTotalDuration+=livraison.getDureeEnlevement()+livraison.getDureeLivraison();
+            livraisonsTotalDurationSeconds+=livraison.getDureeEnlevement()+livraison.getDureeLivraison();
         }
-        double bicycleTotalMinutes = 60*getTotalDistance()/14000;
-        return bicycleTotalMinutes+livraisonsTotalDuration;
+        double vitesse = 14 * 1000 / 60; //En m/min
+        double bicycleTotalMinutes = getTotalDistance()/vitesse;
+        return bicycleTotalMinutes+livraisonsTotalDurationSeconds/60;
     }
 
     public Date getHeureArrivee() {
