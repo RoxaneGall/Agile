@@ -1,5 +1,6 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,11 +18,25 @@ class IntersectionTest {
     }
 
     @Test
-    void getId() {
+    void getIdTest_shouldReturnId() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
+
+        //Act
+        long actualId = inter.getId();
+
+        //Assert
+        assertEquals(initialId, actualId);
     }
 
     @Test
-    void addTroncon() {
+    void addTronconTest_shouldIncreaseTronconsSize() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
     }
 
     @Test
