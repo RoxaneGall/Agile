@@ -28,9 +28,9 @@ class LectureXMLTest {
 
     @Test
     void chargerPlan() throws Exception {
-        lectureXML.chargerPlan("../datas/PetitPlan.xml");
+        lectureXML.chargerPlan("../datas/GrandPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
+        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
         Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
         System.out.println(t.getHeureArrivee());
         System.out.println(t.getDemande().getHeureDepart());

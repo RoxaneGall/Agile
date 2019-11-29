@@ -20,6 +20,9 @@ public class Computations {
             tourneePasOptimale.addTrajet(meilleurTrajet);
             lastLocation = livraison.getDelivery();
         }
+        //revenir à l'entrepot
+        Trajet meilleurTrajet = getMeilleurTrajet(lastLocation,demande.getEntrepot(),graphe);
+        tourneePasOptimale.addTrajet(meilleurTrajet);
         //Idée d'amelioration : explorer toutes les possibilités avec des contraintes et choisir la meilleure
         return tourneePasOptimale;
     }
@@ -40,13 +43,14 @@ public class Computations {
     {
         //Dijkstra variables
         HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
-        ArrayList<Long> alreadyVisitedIntersections = new ArrayList<>(); //Liste des intersection déjà visitées
+        HashMap<Long,Boolean> alreadyVisitedIntersections = new HashMap<>(); //Liste des intersection déjà visitées
         //Graphe
         HashMap<Long,Intersection> plan = graphe.getIntersectionMap(); //Toutes les intersection avec leurs id en key
 
         //remplissage du graphe avec des couts infinis
         for (Long id : plan.keySet()){
             //Pour chaque intersection mettre son trajet optimal à null
+            alreadyVisitedIntersections.put(id, false);
             trajetsPourIntersection.put(id, null);
         }
 
@@ -69,7 +73,7 @@ public class Computations {
             }
 
             //Ajouter l'intersection aux intersections déjà visitées
-            alreadyVisitedIntersections.add(intersection.getId());
+            alreadyVisitedIntersections.put(intersection.getId(),true);
         }
 
         return trajetsPourIntersection;
@@ -77,14 +81,14 @@ public class Computations {
     }
 
     public static Intersection selectNearestIntersection(HashMap<Long,Trajet> trajetsPourIntersection,
-                                                         ArrayList<Long> alreadyVisitedIntersections)
+                                                         HashMap<Long,Boolean> alreadyVisitedIntersections)
     {
         Trajet nearestIntersectionTrajet = null;
 
         //Pour prendre le trajet optimal de chaque intersection du graphe
         for (Trajet trajet : trajetsPourIntersection.values()) {
             //Verifier qu'il n'est pas null (intersection jamais atteinte) et qu'il n'a pas deja ete visité
-            if (trajet != null && !alreadyVisitedIntersections.contains(trajet.getArrivee().getId())) {
+            if (trajet != null && !alreadyVisitedIntersections.get(trajet.getArrivee().getId())) {
                 //Si c'est la plus proche intersection alors on mets son itineraire depuis l'origine dans la variable
                 if (nearestIntersectionTrajet == null || nearestIntersectionTrajet.getLongueur() > trajet.getLongueur()) {
                     nearestIntersectionTrajet = trajet;
