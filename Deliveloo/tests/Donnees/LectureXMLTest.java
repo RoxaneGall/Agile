@@ -1,10 +1,7 @@
 package Donnees;
 
 import Algo.Computations;
-import Modeles.Demande;
-import Modeles.Graphe;
-import Modeles.Intersection;
-import Modeles.Tournee;
+import Modeles.*;
 import com.sothawo.mapjfx.Coordinate;
 import com.sun.corba.se.impl.orbutil.graph.Graph;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +12,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,9 +57,30 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerDemande_shouldSucceed() throws Exception {
-        Demande testGrandeDemande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        /* à continuer*/
+    void chargerDemandeGrand7_shouldSucceed() throws Exception {
+        Demande testDemandeGrand7 = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
+        assertTrue((BooleanSupplier) testDemandeGrand7.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandeGrand7.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeGrand7.getEntrepot()));
+        assertTrue(testDemandeGrand7.getLivraisons().size()==7);
+    }
+
+    @Test
+    void chargerDemandeMoyen3_shouldSucceed() throws Exception {
+        Demande testDemandeMoyen3 = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
+        assertTrue((BooleanSupplier) testDemandeMoyen3.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandeMoyen3.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeMoyen3.getEntrepot()));
+        assertTrue(testDemandeMoyen3.getLivraisons().size()==3);
+    }
+
+    @Test
+    void chargerDemandePetit1_shouldSucceed() throws Exception {
+        Demande testDemandePetit1 = lectureXML.chargerDemande("../datas/demandePetit1.xml");
+        assertTrue((BooleanSupplier) testDemandePetit1.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandePetit1.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandePetit1.getEntrepot()));
+        assertTrue(testDemandePetit1.getLivraisons().size()==1);
     }
 
     @Test
