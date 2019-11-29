@@ -6,17 +6,17 @@ import java.util.ArrayList;
 public class Trajet {
     private ArrayList<Troncon> troncons;
     private Intersection origine;
+    private Intersection arrivee;
+    private Double longueur;
 
     public Trajet(Intersection origine) {
         this.origine = origine;
         this.troncons = new ArrayList<Troncon>();
+        this.arrivee = origine;
+        this.longueur = 0.0;
     }
 
     public Double getLongueur() {
-        Double longueur = 0.0;
-        for(Troncon troncon: troncons) {
-            longueur+=troncon.getLongueur();
-        }
         return longueur;
     }
 
@@ -25,7 +25,7 @@ public class Trajet {
     }
 
     public Intersection getArrivee() {
-        return troncons.size() > 0 ? troncons.get(troncons.size()-1).getDestination() : origine;
+        return arrivee;
     }
 
     public ArrayList<Troncon> getTroncons() {
@@ -40,6 +40,8 @@ public class Trajet {
 
     public void addTroncon(Troncon troncon) {
         this.troncons.add(troncon);
+        this.arrivee = troncon.getDestination();
+        this.longueur += troncon.getLongueur();
     }
 
     @Override
