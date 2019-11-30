@@ -6,6 +6,7 @@ import Modeles.Trajet;
 import Modeles.Troncon;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PlusCourtChemin {
 
@@ -58,12 +59,12 @@ public class PlusCourtChemin {
         Trajet nearestIntersectionTrajet = null;
 
         //Pour prendre le trajet optimal de chaque intersection du graphe
-        for (Trajet trajet : trajetsPourIntersection.values()) {
+        for ( Map.Entry<Long, Trajet> trajet : trajetsPourIntersection.entrySet()) {
             //Verifier qu'il n'est pas null (intersection jamais atteinte) et qu'il n'a pas deja ete visité
-            if (trajet != null && !alreadyVisitedIntersections.get(trajet.getArrivee().getId())) {
+            if (trajet.getValue() != null && !alreadyVisitedIntersections.get(trajet.getKey())) {
                 //Si c'est la plus proche intersection alors on mets son itineraire depuis l'origine dans la variable
-                if (nearestIntersectionTrajet == null || nearestIntersectionTrajet.getLongueur() > trajet.getLongueur()) {
-                    nearestIntersectionTrajet = trajet;
+                if (nearestIntersectionTrajet == null || nearestIntersectionTrajet.getLongueur() > trajet.getValue().getLongueur()) {
+                    nearestIntersectionTrajet = trajet.getValue();
                 }
             }
         }
