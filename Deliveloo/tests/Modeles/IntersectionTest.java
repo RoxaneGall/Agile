@@ -10,15 +10,6 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IntersectionTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void getIdTest_shouldReturnId() {
         //Arrange
@@ -63,5 +54,19 @@ class IntersectionTest {
 
         //Assert
         assertEquals(1,c.size());
+    }
+
+    @Test
+    void getCoordinateTest_ShouldReturnTronconsMap() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
+
+        //Act
+        Coordinate actualp = inter.getCoordinate();
+
+        //Assert
+        assertEquals(p,actualp);
     }
 }
