@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,33 +68,58 @@ class PlusCourtCheminTest {
 
         i6.addTroncon(t61);
 
-        System.out.println(Computations.getMeilleurTrajet(i5,i3).toString());
-
         Assertions.assertTrue(PlusCourtChemin.dijkstra(i5,i3).get(i3.getId()).getLongueur() == 6.0);
 
     }
 
     @Test
-    void selectNearestIntersection() {
-        //TODO
-       /* HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
-        HashMap<Long,Boolean> alreadyVisitedIntersections = new HashMap<>(); //Liste des intersection déjà visitées
-        //Graphe
-        HashMap<Long,Intersection> plan = ; //Toutes les intersection avec leurs id en key
+    void selectNearestIntersection_ShoudlSelectOrigin() {
+        //Initializing
+        HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>();
+        ArrayList<Long> consideredIntersections = new ArrayList<>();
 
-        //remplissage du graphe avec des couts infinis
-        for (Long id : plan.keySet()){
-            //Pour chaque intersection mettre son trajet optimal à null
-            alreadyVisitedIntersections.put(id, false);
-            trajetsPourIntersection.put(id, null);
-        }
+        Intersection origine = new Intersection(2,new Coordinate(2.0,2.0));
+        trajetsPourIntersection.put(origine.getId(),new Trajet(origine));
+        consideredIntersections.add(origine.getId());
 
-        PlusCourtChemin.selectNearestIntersection(trajetsPourIntersection,
-                alreadyVisitedIntersections);*/
+        //Doing
+        Intersection intersection = PlusCourtChemin.selectNearestIntersection(trajetsPourIntersection, consideredIntersections);
+
+        //Testing
+        Assertions.assertTrue(intersection.getId() == 2);
     }
 
     @Test
-    void relacher() {
+    void relacherNouveauTrajet_shouldAjouterNouveauTrajet() {
+        HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
+        ArrayList<Long> consideredIntersections = new ArrayList<>(); //Liste des intersection non visités ayant un trajet depuis l'origine
+
+        Intersection i1 = new Intersection(1,new Coordinate(1.0,2.0));
+        Trajet newTrajet = new Trajet(i1);
+        PlusCourtChemin.relacher(newTrajet,trajetsPourIntersection,consideredIntersections);
+
+        Assertions.assertTrue(consideredIntersections.contains(i1.getId()));
+        Assertions.assertTrue(trajetsPourIntersection.get(i1.getId()) == newTrajet);
+    }
+
+    @Test
+    void relacherTrajetAvecMeilleurLongueur_shouldRemplacerTrajet() {
+        HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
+        ArrayList<Long> consideredIntersections = new ArrayList<>(); //Liste des intersection non visités ayant un trajet depuis l'origine
+
+        Intersection i1 = new Intersection(1,new Coordinate(1.0,2.0));
+        Trajet traj1 = new Trajet(i1);
+        Troncon tron1 = new Troncon(i1,"",2.0);
+        traj1.addTroncon(tron1);
+        PlusCourtChemin.relacher(traj1,trajetsPourIntersection,consideredIntersections);
+
+        Assertions.assertTrue(consideredIntersections.contains(i1.getId()));
+        Assertions.assertTrue(trajetsPourIntersection.get(i1.getId()) == traj1);
+
+        Trajet traj = new Trajet(i1);
+        PlusCourtChemin.relacher(traj,trajetsPourIntersection,consideredIntersections);
+
+        Assertions.assertTrue(trajetsPourIntersection.get(i1.getId()) == traj);
     }
 
     @Test

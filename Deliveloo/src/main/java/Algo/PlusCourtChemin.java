@@ -1,14 +1,11 @@
 package Algo;
 
-import Modeles.Graphe;
 import Modeles.Intersection;
 import Modeles.Trajet;
 import Modeles.Troncon;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class PlusCourtChemin {
 
@@ -69,8 +66,8 @@ public class PlusCourtChemin {
 
 
     public static void relacher(Trajet newTrajet,
-                                                 HashMap<Long, Trajet> trajetsPourIntersection,
-                                                 ArrayList<Long> consideredIntersections)
+                                HashMap<Long, Trajet> trajetsPourIntersection,
+                                ArrayList<Long> consideredIntersections)
     {
         Trajet trajetActuel = trajetsPourIntersection.get(newTrajet.getArrivee().getId());
 
