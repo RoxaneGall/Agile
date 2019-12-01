@@ -323,7 +323,6 @@ public class Controller {
                     }
                 });
 
-
                 entrepot = demande.getEntrepot().getCoordinate();
                 chargerDemande(demande);
                 System.out.println(demande);
