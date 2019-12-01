@@ -10,6 +10,7 @@ import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
+import com.sun.java.swing.plaf.windows.WindowsFileChooserUI;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -46,6 +47,7 @@ public class Controller {
     public Service service = new Service();
 
     public JFileChooser choix = new JFileChooser();
+
 
     @FXML
     public Button chargerPlan;
@@ -187,7 +189,7 @@ public class Controller {
         labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
-        // enable le bouton charger demande avec l'event correspondant
+
         setButtonChargerDemande();
         // enable le bouton calculer une tournée avec l'event correspondant
         setCalculerTournee();
@@ -299,6 +301,15 @@ public class Controller {
      */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
+            // enable le bouton charger demande avec l'event correspondant
+            if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    System.out.println("Chargement d'une demande");
+                    demande = service.chargerDemande(choix.getSelectedFile().getAbsolutePath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             mapView.removeCoordinateLine(trackTrajet);
             if (entrepotMarker != null) {
                 mapView.removeMarker(entrepotMarker);
@@ -310,23 +321,9 @@ public class Controller {
             deliveriesMarkers.clear();
             System.out.println("****** " + deliveriesMarkers.size());
 
-            try {
 
-                EventQueue.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                            try {
-                                System.out.println("Chargement d'une demande");
-                                demande = service.chargerDemande(choix.getSelectedFile().getAbsolutePath());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
 
-                entrepot = demande.getEntrepot().getCoordinate();
+            entrepot = demande.getEntrepot().getCoordinate();
                 setDeliveriesFromLivraisons(demande.getLivraisons());
                 System.out.println("Demande : " + demande);
 
@@ -358,9 +355,6 @@ public class Controller {
                 System.out.println(deliveriesMarkers.size());
 
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         });
     }
 

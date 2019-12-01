@@ -14,9 +14,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import javafx.application.Application;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javafx.application.Application;
+
+import javax.swing.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -79,6 +82,5 @@ class ControllerTest {
             Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
         }
         System.out.println(" Deliveries markers  Test : PASSED ");
-
     }
 }
