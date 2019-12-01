@@ -14,11 +14,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -302,14 +305,25 @@ public class Controller {
                 mapView.removeMarker(deliveriesMarkers.get(i).getValue());
             }
             deliveriesMarkers.clear();
-            System.out.println("******" + deliveriesMarkers.size());
-            String pathDemande = "";
+            System.out.println("****** " + deliveriesMarkers.size());
+
             try {
-                System.out.println("Chargement d'une demande");
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathDemande = choix.getSelectedFile().getAbsolutePath();
-                }
-                demande = service.chargerDemande(pathDemande);
+
+                EventQueue.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                System.out.println("Chargement d'une demande");
+                                demande = service.chargerDemande(choix.getSelectedFile().getAbsolutePath());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+
                 entrepot = demande.getEntrepot().getCoordinate();
                 chargerDemande(demande);
                 System.out.println(demande);
