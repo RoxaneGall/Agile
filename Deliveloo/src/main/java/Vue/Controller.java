@@ -14,11 +14,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +119,7 @@ public class Controller {
     /**
      * Attributs pour la demande
      */
-    public Demande demande = new Demande();
+    public Demande demande;
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
@@ -296,27 +299,33 @@ public class Controller {
      */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
-            String pathDemande = "";
+            mapView.removeCoordinateLine(trackTrajet);
+            if (entrepotMarker != null) {
+                mapView.removeMarker(entrepotMarker);
+            }
+            for (int i = 0; i < deliveriesMarkers.size(); i++) {
+                mapView.removeMarker(deliveriesMarkers.get(i).getKey());
+                mapView.removeMarker(deliveriesMarkers.get(i).getValue());
+            }
+            deliveriesMarkers.clear();
+            System.out.println("****** " + deliveriesMarkers.size());
+
             try {
-                System.out.println("Chargement d'une demande");
-                if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    pathDemande = choix.getSelectedFile().getAbsolutePath();
-                }
-                demande = service.chargerDemande(pathDemande);
 
-                /* nettoyage de la carte */
-                mapView.removeCoordinateLine(trackTrajet);
-                if (entrepotMarker != null) {
-                    mapView.removeMarker(entrepotMarker);
-                }
-                for (int i = 0; i < deliveriesMarkers.size(); i++) {
-                    mapView.removeMarker(deliveriesMarkers.get(i).getKey());
-                    mapView.removeMarker(deliveriesMarkers.get(i).getValue());
-                }
-                deliveriesMarkers.clear();
+                EventQueue.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                System.out.println("Chargement d'une demande");
+                                demande = service.chargerDemande(choix.getSelectedFile().getAbsolutePath());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
 
-
-                /* ajout des markers */
                 entrepot = demande.getEntrepot().getCoordinate();
                 setDeliveriesFromLivraisons(demande.getLivraisons());
                 System.out.println("Demande : " + demande);

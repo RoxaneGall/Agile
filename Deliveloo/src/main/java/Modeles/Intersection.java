@@ -11,12 +11,12 @@ import java.util.List;
 public class Intersection {
     private long id;
     private Coordinate coord;
-    private HashMap<Long,Troncon> troncons;
+    private ArrayList<Troncon> troncons;
 
     public Intersection(long id, Coordinate c) {
         this.id = id;
         this.coord = c;
-        this.troncons = new HashMap<Long, Troncon>();
+        this.troncons = new ArrayList<Troncon>();
     }
 
     public Intersection() {
@@ -28,7 +28,7 @@ public class Intersection {
     }
 
     public void addTroncon(Troncon t) {
-        troncons.put(t.getDestination().getId(),t);
+        troncons.add(t);
     }
 
     public Coordinate getCoordinate() {
@@ -36,10 +36,8 @@ public class Intersection {
     }
 
     public Collection<Troncon> getTroncons() {
-        return troncons.values();
+        return troncons;
     }
-
-    public Troncon getTronconFromDestinationId(Integer id) { return troncons.get(id); }
 
     @java.lang.Override
     public java.lang.String toString() {

@@ -5,18 +5,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IntersectionTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void getIdTest_shouldReturnId() {
         //Arrange
@@ -37,21 +30,43 @@ class IntersectionTest {
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId,p);
+        Troncon t = new Troncon(inter, "rue ahmed", 12.243);
+
+        //Act
+        inter.addTroncon(t);
+
+        //Assert
+        assertEquals(1,inter.getTroncons().size());
+
     }
 
     @Test
-    void getP() {
+    void getTronconsTest_ShouldReturnTronconsMap() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
+        Troncon t = new Troncon(inter, "rue ahmed", 12.243);
+        inter.addTroncon(t);
+
+        //Act
+        Collection c = inter.getTroncons();
+
+        //Assert
+        assertEquals(1,c.size());
     }
 
     @Test
-    void setP() {
-    }
+    void getCoordinateTest_ShouldReturnTronconsMap() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
 
-    @Test
-    void getTroncons() {
-    }
+        //Act
+        Coordinate actualp = inter.getCoordinate();
 
-    @Test
-    void testToString() {
+        //Assert
+        assertEquals(p,actualp);
     }
 }

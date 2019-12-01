@@ -31,7 +31,7 @@ class LectureXMLTest {
         lectureXML.chargerPlan("../datas/GrandPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
         Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
+        Tournee t = Computations.getTourneeFromDemande(demande);
         System.out.println(t.getHeureArrivee());
         System.out.println(t.getDemande().getHeureDepart());
         System.out.println(t.getTotalDistance());
