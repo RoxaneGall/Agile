@@ -262,7 +262,7 @@ public class Controller {
     /**
      *
      */
-    private void chargerPlan() {
+    public void chargerPlan() {
         System.out.println("Chargement du plan");
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
@@ -279,7 +279,10 @@ public class Controller {
             System.out.println("Limites du plan :" + limites);
 
             mapExtent = Extent.forCoordinates(limites);
-            mapView.setExtent(mapExtent);
+            if(mapView!=null) {
+                mapView.setExtent(mapExtent);
+            }
+
 
             setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
 
