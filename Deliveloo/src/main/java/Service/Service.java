@@ -28,7 +28,7 @@ public class Service {
     }
 
     public Tournee calculerTournee(Demande demande) throws Exception {
-        Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
+        Tournee t = Computations.getTourneeFromDemande(demande);
         return t;
     }
 

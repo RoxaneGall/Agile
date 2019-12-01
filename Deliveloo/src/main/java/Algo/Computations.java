@@ -7,17 +7,15 @@ import java.util.*;
 
 public class Computations {
 
-    public static Tournee getTourneeFromDemande(Demande demande,
-                                                Graphe graphe)
+    public static Tournee getTourneeFromDemande(Demande demande)
     {
-        return VoyageurDeCommerce.voyageurDeCommerceALaCon(demande,graphe);
+        return VoyageurDeCommerce.voyageurDeCommerceALaCon(demande);
     }
 
     public static Trajet getMeilleurTrajet(Intersection origine,
-                                           Intersection arrivee,
-                                           Graphe graphe)
+                                           Intersection arrivee)
     {
-        return PlusCourtChemin.dijkstra(origine,arrivee,graphe).get(arrivee.getId());
+        return PlusCourtChemin.dijkstra(origine,arrivee).get(arrivee.getId());
     }
 
 }

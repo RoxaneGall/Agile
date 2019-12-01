@@ -67,9 +67,9 @@ class PlusCourtCheminTest {
 
         i6.addTroncon(t61);
 
-        System.out.println(Computations.getMeilleurTrajet(i5,i3, Graphe.shared).toString());
+        System.out.println(Computations.getMeilleurTrajet(i5,i3).toString());
 
-        Assertions.assertTrue(PlusCourtChemin.dijkstra(i5,i3,Graphe.shared).get(i3.getId()).getLongueur() == 6.0);
+        Assertions.assertTrue(PlusCourtChemin.dijkstra(i5,i3).get(i3.getId()).getLongueur() == 6.0);
 
     }
 
