@@ -116,7 +116,7 @@ public class Controller {
     /**
      * Attributs pour la demande
      */
-    public Demande demande = new Demande();
+    public Demande demande;
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
