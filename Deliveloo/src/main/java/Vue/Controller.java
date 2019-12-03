@@ -376,16 +376,15 @@ public class Controller {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
                         System.out.println(deliveriesMarkers.size());
                         if(i<deliveriesMarkers.size()){
-                            MapLabel l1 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            MapLabel l1 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("blue-label");
                             compteur++;
-                            MapLabel l2 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            MapLabel l2 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("red-label");
                             compteur++;
                             deliveriesMarkers.get(i).getKey().attachLabel( l1);
                             deliveriesMarkers.get(i).getValue().attachLabel(l2);
                             mapView.addLabel(l1);
                             mapView.addLabel(l2);
                         }
-                         System.out.println("origine trajet : "+t.getTrajets().get(i));
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
