@@ -46,6 +46,17 @@ class LectureXMLTest {
         assertTrue(Graphe.shared.getIntersectionMap().containsKey(idTest));
         assertTrue(Graphe.shared.getIntersectionMap().size()==1448);
     }
+    void chargerPlan() throws Exception {
+        lectureXML.chargerPlan("../datas/GrandPlan.xml");
+        System.out.println(Graphe.shared.getIntersectionMap().values().size());
+        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
+        Tournee t = Computations.getTourneeFromDemande(demande);
+        System.out.println(t.getHeureArrivee());
+        System.out.println(t.getDemande().getHeureDepart());
+        System.out.println(t.getTotalDistance());
+        System.out.println(t.getTotalDuration());
+        System.out.println(t.getTrajets().get(0).toString());
+    }
 
     @Test
     void chargerGrandPlan_shouldSucceed() throws Exception {
