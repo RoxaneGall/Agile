@@ -32,9 +32,6 @@ public class Service {
         //Linearisation de la demande
         Intersection[] intersDemande = getSommetsDemande(demande);
 
-        //Remplissage tableau sommets avec les id d'intersection
-        //long[] sommets = getIdSommetsDemande(intersDemande);
-
         //Remplissage tableau de couts avec les longueurs des trajets entre les sommets
         double[][] couts = getCoutsDemande(intersDemande);
 
@@ -60,16 +57,6 @@ public class Service {
         }
         return intersDemande;
     }
-
-    /*private static long[] getIdSommetsDemande(Intersection[] intersDemande) {
-        long[] sommets = new long[intersDemande.length];
-
-        for(int i = 0; i<intersDemande.length; i++ ) {
-            sommets[i] = intersDemande[i].getId();
-        }
-
-        return sommets;
-    }*/
 
     private static double[][] getCoutsDemande(Intersection[] intersDemande) {
         int nbSommets = intersDemande.length;
