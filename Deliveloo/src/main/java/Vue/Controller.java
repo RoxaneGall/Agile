@@ -128,7 +128,7 @@ public class Controller {
     /* Livraisons */
     public List<Pair<Coordinate, Coordinate>> deliveries = new ArrayList<>();
     public List<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<>();
-    public List<MapLabel> deliveriesNumbers;
+    public List<MapLabel> deliveriesNumbers = new ArrayList<>();
 
     /**
      * Attributs pour le trajet/la tournee
@@ -303,18 +303,17 @@ public class Controller {
     private void setButtonSupprLivraison() {
         supprLivraison.setOnAction(event -> {
             // récupérer le point cliqué
-            System.out.println("deliveries before removal : "+deliveries.size());
-            Coordinate c= new Coordinate(45.762653,4.875565);
+            Coordinate c = new Coordinate(45.762653, 4.875565);
+            deleteMarkerByCoord(c);
+            deleteLabelByCoord(c);
             demande.removeLivraison(c);
-            for (int i=0;i<deliveries.size();i++){
-                System.out.println("Key : "+deliveries.get(i).getKey()+ " Coordinate to remove : "+c);
-                System.out.println("Value : "+deliveries.get(i).getValue());
-                System.out.println("Coordinate to remove : "+c);
-                if(deliveries.get(i).getKey()==c||deliveries.get(i).getValue()==c){
-                    deliveries.remove(new Pair<Coordinate,Coordinate>(deliveries.get(i).getKey(),deliveries.get(i).getValue()));
+            for (int i = 0; i < deliveries.size(); i++) {
+                if (deliveries.get(i).getKey().equals(c) || deliveries.get(i).getValue().equals(c)) {
+                    System.out.println("here");
+                    deliveries.remove(new Pair<Coordinate, Coordinate>(deliveries.get(i).getKey(), deliveries.get(i).getValue()));
                 }
             }
-            System.out.println("deliveries after removal : "+deliveries.size());
+            System.out.println("deliveries after removal : " + deliveries.size());
         });
     }
 
@@ -340,6 +339,10 @@ public class Controller {
                 mapView.removeMarker(deliveriesMarkers.get(i).getKey());
                 mapView.removeMarker(deliveriesMarkers.get(i).getValue());
             }
+            for (int i = 0; i < deliveriesNumbers.size(); i++) {
+                mapView.removeLabel(deliveriesNumbers.get(i));
+            }
+
             deliveriesMarkers.clear();
             System.out.println("****** " + deliveriesMarkers.size());
 
@@ -415,16 +418,17 @@ public class Controller {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
                         MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
                         mapView.addLabel(l);
+                        deliveriesNumbers.add(l);
                         compteur++;
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
 
 
-                        detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
+                        detailsLivraisons.getChildren().add(new Text("Livraison " + i + 1 + "\n Arrivée à :"));
                     }
 
-                    for( int i=0; i < 10; i++) {
+                    for (int i = 0; i < 10; i++) {
                     }
                     System.out.println("LINE :" + trackTrajet);
                     trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
@@ -451,6 +455,23 @@ public class Controller {
         topControls.setDisable(flag);
     }
 
+    public void deleteMarkerByCoord(Coordinate c) {
+        for (int i = 0; i < deliveriesMarkers.size(); i++) {
+            if (deliveriesMarkers.get(i).getKey().getPosition().equals(c) || deliveriesMarkers.get(i).getValue().getPosition().equals(c)) {
+                mapView.removeMarker(deliveriesMarkers.get(i).getKey());
+                mapView.removeMarker(deliveriesMarkers.get(i).getValue());
+                deliveriesMarkers.remove(new Pair<Marker, Marker>(deliveriesMarkers.get(i).getKey(), deliveriesMarkers.get(i).getValue()));
+            }
+        }
+    }
+
+    public void deleteLabelByCoord(Coordinate c) {
+        for (int i = 0; i < deliveriesNumbers.size(); i++) {
+            if (deliveriesNumbers.get(i).getPosition().equals(c)) {
+                mapView.removeLabel(deliveriesNumbers.get(i));
+            }
+        }
+    }
 
 
 }
