@@ -9,7 +9,14 @@ public class Computations {
 
     public static Tournee getTourneeFromDemande(Demande demande)
     {
+        //return tsp.tempsSolution();
         return VoyageurDeCommerce.voyageurDeCommerceALaCon(demande);
+    }
+
+    public static Tournee getTourneeFromDemande(double[][] couts)
+    {
+        //return tsp.tempsSolution(couts);
+        return null;
     }
 
     public static Trajet getMeilleurTrajet(Intersection origine,
