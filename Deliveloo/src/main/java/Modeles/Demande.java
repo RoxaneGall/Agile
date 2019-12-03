@@ -21,12 +21,17 @@ public class Demande {
         return livraisons;
     }
 
-   /*
-    public void deleteLivraison(Coordinate coord) {
-        // recherche de la livraison qui contient la coordinate
-        // suppression de cette livraison
+
+    public void removeLivraison(Coordinate coord) {
+        for (Livraison l : livraisons) {
+            // recherche de la livraison qui contient la coordinate
+            if (l.getDelivery().getCoordinate().equals(coord) || l.getPickup().getCoordinate().equals(coord)) {
+                // suppression de cette livraison
+                livraisons.remove(l);
+            }
+        }
     }
-    */
+
 
     public void setLivraisons(ArrayList<Livraison> livraisons) {
         this.livraisons = livraisons;
