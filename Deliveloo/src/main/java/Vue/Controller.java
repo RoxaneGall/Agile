@@ -388,22 +388,15 @@ public class Controller {
                 if (demande != null) {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                    MapLabel l0= new MapLabel(Integer.toString(0), 10, -10).setVisible(true).setCssClass("green-label");
+                    MapLabel l0 = new MapLabel(Integer.toString(0), 10, -10).setVisible(true).setCssClass("green-label");
                     entrepotMarker.attachLabel(l0);
                     mapView.addLabel(l0);
                     int compteur = 1;
                     for (int i = 0; i < t.getTrajets().size(); i++) {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-                        System.out.println(deliveriesMarkers.size());
-                        if (i < deliveriesMarkers.size()) {
-                            MapLabel l1 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("orange-label");
+                        while(compteur<t.getTrajets().size()) {
+                            addOrderMarkers(t.getTrajets().get(compteur).getOrigine().getCoordinate(), compteur);
                             compteur++;
-                            MapLabel l2 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("red-label");
-                            compteur++;
-                            deliveriesMarkers.get(i).getKey().attachLabel(l1);
-                            deliveriesMarkers.get(i).getValue().attachLabel(l2);
-                            mapView.addLabel(l1);
-                            mapView.addLabel(l2);
                         }
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
@@ -450,6 +443,23 @@ public class Controller {
      */
     private void setTopControlsDisable(boolean flag) {
         topControls.setDisable(flag);
+    }
+
+
+    public void addOrderMarkers(Coordinate c, int compteur) {
+        MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("orange-label");
+        for (int i = 0; i < deliveriesMarkers.size(); i++) {
+            if (deliveriesMarkers.get(i).getKey().getPosition() == c) {
+                deliveriesMarkers.get(i).getKey().attachLabel(l);
+                mapView.addLabel(l);
+
+            }
+            if (deliveriesMarkers.get(i).getValue().getPosition() == c) {
+                deliveriesMarkers.get(i).getValue().attachLabel(l);
+                mapView.addLabel(l);
+
+            }
+        }
     }
 
 }
