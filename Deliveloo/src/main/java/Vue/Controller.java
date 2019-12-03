@@ -268,7 +268,6 @@ public class Controller {
      */
     public void chargerPlan() {
         System.out.println("Chargement du plan");
-        choix.setCurrentDirectory(new File("../datas/"));
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
 
