@@ -18,7 +18,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -82,12 +84,9 @@ public class Controller {
      * FX Elements d'affichage sur la tournée demandée
      * panneau à droite de l'IHM
      */
-    /* Accordion for all the different options */
-    @FXML
-    public Accordion rightControls;
     /* section contenant les infos sur les livraisons  */
     @FXML
-    public TitledPane detailsLivraisons;
+    public VBox detailsLivraisons;
 
     /**
      * FX elements d'affichage pour debug
@@ -398,6 +397,12 @@ public class Controller {
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
+
+
+                        detailsLivraisons.getChildren().add( new Text( "Item " + t.getTrajets().get(i).toString()));
+                    }
+
+                    for( int i=0; i < 10; i++) {
                     }
                     System.out.println("LINE :" + trackTrajet);
                     trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);

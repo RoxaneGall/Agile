@@ -62,7 +62,7 @@
         </VBox>
     </bottom>
     <right>
-        <VBox prefWidth="350.0" alignment="CENTER" spacing="10.0">
+        <VBox fx:id="detailsLivraisons" prefWidth="350.0" alignment="CENTER" spacing="10.0">
             <children>
 
             </children>
