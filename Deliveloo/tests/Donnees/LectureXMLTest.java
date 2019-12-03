@@ -21,7 +21,7 @@ class LectureXMLTest {
     LectureXML lectureXML;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         lectureXML = new LectureXML();
     }
 
@@ -84,7 +84,7 @@ class LectureXMLTest {
     }
 
     @Test
-    void getLimitesPlan_shouldSucceed() {
+    void getLimitesPlan_shouldSucceed() throws Exception {
         ArrayList<Coordinate> testList = new ArrayList<>();
         testList = lectureXML.getLimitesPlan();
         int compteur = 1;

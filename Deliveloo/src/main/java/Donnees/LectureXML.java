@@ -55,9 +55,7 @@ public class LectureXML {
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        if(nbRootNodes==0){
-            throw new Exception("Le fichier ne contient aucune information.");
-        }
+        if(nbRootNodes==0) throw new Exception("Le fichier ne contient aucune information.");
 
         int countInter=0, countTroncon=0;
         for(int i=0; i<nbRootNodes; i++) {
@@ -72,7 +70,7 @@ public class LectureXML {
                     lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
                     idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
                 }catch (Exception e){
-                    throw new Exception("Les attributs du noeud correspondant à l'intersection "+ ++countInter + "sont mals renseignés. " +
+                    throw new Exception("Les attributs du noeud correspondant à l'intersection "+ ++countInter + "sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
                                     " latitude et longitude sont des Double et id est un long.",e);
                 }
@@ -101,13 +99,13 @@ public class LectureXML {
                                 " Veuillez rectifier cette longueur erronée.");
                     }
                 }catch(Exception e){
-                    throw new Exception("Les attributs du noeud correspondant au tronçon "+ countTroncon++ + " sont mals renseignés. " +
+                    throw new Exception("Les attributs du noeud correspondant au tronçon "+ countTroncon++ + " sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
                             " origine et destination sont des long, nomRue est un String et longueur est un Double.",e);
                 }
                 destination = Graphe.shared.getIntersectionMap().get(idDestination);
                 if (destination == null) {
-                    throw new Exception("L'intersection d'origine du " + countTroncon++ + "eme troncon n'existe pas....");
+                    throw new Exception("L'intersection d'origine du troncon " + countTroncon++ + " n'existe pas dans le graphe du plan.");
                 }
                 Troncon myTroncon = new Troncon(destination,nomRue,longueur);
                 countTroncon++;
@@ -129,14 +127,17 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 - Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur*/
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
-        System.out.println("Lecture du XML ");
-        Document document = null;
+        if(!cheminFichier.substring(cheminFichier.lastIndexOf('.')+1).equals("xml")){
+            throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
+        }
 
+        Document document = null;
         try {
             document = parser.parse(new File(cheminFichier));
         } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+            throw new Exception(e.getMessage(),e);
+        } catch (SAXException e){
+            throw new Exception(e.getMessage(),e);
         }
 
         final Element root = document.getDocumentElement();
@@ -147,47 +148,76 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
+
+        if(nbRootNodes==0) throw new Exception("Le fichier ne contient aucune information.");
+
         ArrayList<Livraison> deliveries= new ArrayList<>();
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
+        int countDeliveries=0;
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
 
+            long idEnlevement, idLivraison;
+            Intersection enlevement, livraison;
+            int dureeEnlevement, dureeLivraison;
+            long idEntrepot;
+
             if(node.getNodeName().equals("livraison")){
-                long idEnlevement = Long.parseLong(attributes.getNamedItem("adresseEnlevement").getNodeValue());
-                Intersection enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
-                long idLivraison = Long.parseLong(attributes.getNamedItem("adresseLivraison").getNodeValue());
-                Intersection livraison = Graphe.shared.getIntersectionMap().get(idLivraison);
-                int dureeEnlevement = Integer.parseInt(attributes.getNamedItem("dureeEnlevement").getNodeValue());
-                int dureeLivraison = Integer.parseInt(attributes.getNamedItem("dureeLivraison").getNodeValue());
+                try {
+                    idEnlevement = Long.parseLong(attributes.getNamedItem("adresseEnlevement").getNodeValue());
+                    idLivraison = Long.parseLong(attributes.getNamedItem("adresseLivraison").getNodeValue());
+                    dureeEnlevement = Integer.parseInt(attributes.getNamedItem("dureeEnlevement").getNodeValue());
+                    dureeLivraison = Integer.parseInt(attributes.getNamedItem("dureeLivraison").getNodeValue());
+                }catch(Exception e){
+                    throw new Exception("Les attributs du noeud correspondant à une livraison "+ ++countDeliveries + "sont mal renseignés. " +
+                            "Veuillez respecter le format des attributs suivant : \n" +
+                            " adresseEnlevement et adresseLivraison sont des long, et dureeEnlevement et dureeLivraison sont des int.",e);
+                }
+                enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
+                if(enlevement==null){
+                    throw new Exception("L'intersection d'enlevement " + countDeliveries++ + " n'existe pas dans le graphe du plan.");
+                }
+                livraison = Graphe.shared.getIntersectionMap().get(idLivraison);
+                if(livraison==null){
+                    throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
+                }
                 Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
+                countDeliveries++;
                 deliveries.add(myDelivery);
 
             } else if(node.getNodeName().equals("entrepot")){
-                long idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
+                try {
+                    idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
+                    SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
+                    myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
+                }catch(Exception e){
+                    throw new Exception("Les attributs de l'entrepot sont mal renseignés. \n"+
+                            "Veuillez respecter le format des attributs suivant : \n"+
+                            "adresse est un long et heureDepart est une String de syntaxe \"H:m:s\"");
+                }
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-                SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
-                myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
+                if (entrepot == null|| myDate==null){
+                    String message ="";
+                    if(myDate == null){
+                        message = "La date de la demande de livraisons n'est pas définie.";
+                    }
+                    if (entrepot == null){
+                        message = "L'entrepot de la demande de livraisons n'est pas défini.";
+                    }
+                    throw new Exception(message);
+                }
             }
         }
-        if (entrepot == null|| myDate==null){
-            String message ="";
-            if(myDate == null){
-                message = "La date de la demande de livraisons n'est pas définie.";
-            }
-            if (entrepot == null){
-                message = "L'entrepot de la demande de livraisons n'est pas défini.";
-            }
-            throw new Exception(message);
-        }
+        if(countDeliveries==0) throw new Exception("La demande ne contient aucune livraison.");
 
         Demande demande = new Demande(deliveries,entrepot, myDate);
         return demande;
     }
 
-    public ArrayList<Coordinate> getLimitesPlan(){
+    public ArrayList<Coordinate> getLimitesPlan() throws Exception {
         ArrayList<Coordinate> myList = new ArrayList<>();
 
         double minLatitude = 100;
@@ -215,9 +245,10 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
        myList.add(maxLatminLong);
        myList.add(maxLatmaxLong);
 
-       if(myList.isEmpty()){
-           System.out.println("test list empty");
-           //exception ?
+       if(myList.size()<4){
+           throw new Exception("La liste des points d'extrémités est vide");
+       }else if(myList.size()>4){
+           throw new Exception("La liste des points d'extrémités contient plus de 4 points");
        }
        return myList;
     }
