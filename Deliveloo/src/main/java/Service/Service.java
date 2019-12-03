@@ -24,7 +24,6 @@ public class Service {
     public Demande chargerDemande(String path) throws Exception {
         Demande d = lec.chargerDemande(path);
         return d;
-
     }
 
     public Tournee calculerTournee(Demande demande) throws Exception {

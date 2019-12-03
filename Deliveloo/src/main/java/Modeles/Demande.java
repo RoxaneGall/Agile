@@ -1,5 +1,7 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,6 +20,18 @@ public class Demande {
     public ArrayList<Livraison> getLivraisons() {
         return livraisons;
     }
+
+
+    public void removeLivraison(Coordinate coord) {
+        for (Livraison l : livraisons) {
+            // recherche de la livraison qui contient la coordinate
+            if (l.getDelivery().getCoordinate() == coord || l.getPickup().getCoordinate() == coord) {
+                // suppression de cette livraison
+                livraisons.remove(l);
+            }
+        }
+    }
+
 
     public void setLivraisons(ArrayList<Livraison> livraisons) {
         this.livraisons = livraisons;
