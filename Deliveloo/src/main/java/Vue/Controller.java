@@ -352,7 +352,6 @@ public class Controller {
                     mapView.addMarker(deliveriesMarkers.get(i).getValue());
                 }
 
-                System.out.println(deliveriesMarkers.size());
 
 
             } catch (Exception ex) {
@@ -371,9 +370,22 @@ public class Controller {
                 if (demande != null) {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                    for (Trajet trajet : t.getTrajets()) {
-                        tournee.add(trajet.getOrigine().getCoordinate());
-                        for (Troncon troncon : trajet.getTroncons()) {
+                    int compteur =1;
+                    for (int i=0;i<t.getTrajets().size();i++) {
+                        tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
+                        System.out.println(deliveriesMarkers.size());
+                        if(i<deliveriesMarkers.size()){
+                            MapLabel l1 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            compteur++;
+                            MapLabel l2 =new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            compteur++;
+                            deliveriesMarkers.get(i).getKey().attachLabel( l1);
+                            deliveriesMarkers.get(i).getValue().attachLabel(l2);
+                            mapView.addLabel(l1);
+                            mapView.addLabel(l2);
+                        }
+                         System.out.println("origine trajet : "+t.getTrajets().get(i));
+                        for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
                     }
@@ -394,6 +406,22 @@ public class Controller {
         });
     }
 
+    public Marker getMarkerByCoord(Coordinate coord) {
+        for (int i = 0; i < deliveriesMarkers.size(); i++) {
+            System.out.println(deliveriesMarkers.get(i).getKey().getPosition() + " " + coord);
+            if (deliveriesMarkers.get(i).getKey().getPosition() == coord) {
+                return deliveriesMarkers.get(i).getKey();
+            } else if (deliveriesMarkers.get(i).getValue().getPosition() == coord) {
+                return deliveriesMarkers.get(i).getValue();
+            } else {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param flag
+     */
     private void setTopControlsDisable(boolean flag) {
         topControls.setDisable(flag);
     }
