@@ -399,6 +399,7 @@ public class Controller {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
                     int compteur = 1;
+                    t.getTotalDistance();
                     for (int i = 0; i < t.getTrajets().size(); i++) {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
                         MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
@@ -407,9 +408,11 @@ public class Controller {
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
+                    }
 
-
-                        detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
+                    ArrayList<String> horaires = t.getHeuresLivraisons();
+                    for(String str : horaires) {
+                        detailsLivraisons.getChildren().add( new Text(str));
                     }
 
                     for( int i=0; i < 10; i++) {
