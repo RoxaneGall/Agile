@@ -1,5 +1,7 @@
 package Algo;
 
+import Modeles.Trajet;
+
 public interface TSP {
 
     /**
@@ -13,13 +15,13 @@ public interface TSP {
      * @param nbSommets : nombre de sommets du graphe
      * @param cout : cout[i][j] = longueur pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
      */
-    public void chercheSolution(int tpsLimite, int nbSommets, Double[][] cout);
+    public void chercheSolution(int tpsLimite, int nbSommets, Trajet[][] cout);
 
     /**
      * @param i
      * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
      */
-    public Double getMeilleureSolution(int i);
+    public Integer[] getMeilleureSolution();
 
     /**
      * @return la duree de la solution calculee par chercheSolution

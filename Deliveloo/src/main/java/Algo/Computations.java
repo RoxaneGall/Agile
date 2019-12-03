@@ -1,9 +1,6 @@
 package Algo;
 
 import Modeles.*;
-import javafx.util.Pair;
-
-import java.util.*;
 
 public class Computations {
 
@@ -13,10 +10,24 @@ public class Computations {
         return VoyageurDeCommerce.voyageurDeCommerceALaCon(demande);
     }
 
-    public static Tournee getTourneeFromDemande(double[][] couts)
+    public static Tournee getTourneeFromDemande(Trajet[][] couts, Demande demande)
     {
         //return tsp.tempsSolution(couts);
-        return null;
+        TSP1 tsp1 = new TSP1();
+
+        tsp1.chercheSolution(Integer.MAX_VALUE, couts.length,couts);
+
+        Tournee tournee = new Tournee(demande);
+        Integer lastIntersectionId = null;
+
+        for(Integer trajetId : tsp1.getMeilleureSolution()) {
+            if( lastIntersectionId != null) {
+                tournee.addTrajet(couts[lastIntersectionId][trajetId]);
+            }
+            lastIntersectionId = trajetId;
+        }
+        tournee.addTrajet((couts[lastIntersectionId][0]));
+        return tournee;
     }
 
     public static Trajet getMeilleurTrajet(Intersection origine,
