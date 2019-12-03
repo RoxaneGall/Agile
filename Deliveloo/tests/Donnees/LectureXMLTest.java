@@ -36,6 +36,7 @@ class LectureXMLTest {
         System.out.println(t.getDemande().getHeureDepart());
         System.out.println(t.getTotalDistance());
         System.out.println(t.getTotalDuration());
+        System.out.println(t.getTrajets().get(0).toString());
     }
 
     @Test

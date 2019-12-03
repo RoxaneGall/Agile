@@ -320,7 +320,26 @@ public class Controller {
             }
             deliveriesMarkers.clear();
             System.out.println("****** " + deliveriesMarkers.size());
+          
+            try {
 
+                EventQueue.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (choix.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                System.out.println("Chargement d'une demande");
+                                demande = service.chargerDemande(choix.getSelectedFile().getAbsolutePath());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+                entrepot = demande.getEntrepot().getCoordinate();
+                chargerDemande(demande);
+                System.out.println(demande);
 
             entrepot = demande.getEntrepot().getCoordinate();
             setDeliveriesFromLivraisons(demande.getLivraisons());

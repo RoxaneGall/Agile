@@ -1,6 +1,11 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static java.lang.StrictMath.atan2;
 
 
 public class Trajet {
@@ -44,15 +49,58 @@ public class Trajet {
         this.longueur += troncon.getLongueur();
     }
 
+    private double computeAngle(Coordinate P1, Coordinate P2, Coordinate P3) {
+        return atan2(P3.getLatitude() - P1.getLatitude(), P3.getLongitude() - P1.getLongitude()) -
+                atan2(P2.getLatitude() - P1.getLatitude(), P2.getLongitude() - P1.getLongitude());
+    }
+
+    public ArrayList<InstructionLivraison> getInstructions() {
+        ArrayList<InstructionLivraison> instructions = new ArrayList<>();
+        Intersection lastLocation = origine;
+        Troncon lastTroncon = null;
+        double distanceSinceLastInstruction = 0;
+
+        for (Troncon troncon : troncons) {
+
+            InstructionLivraison.Direction direction = InstructionLivraison.Direction.TOUTDROIT;
+
+            if (lastTroncon == null) {
+                direction = InstructionLivraison.Direction.NONE;
+                InstructionLivraison newInstruction = new InstructionLivraison(troncon.getNom(), direction, 0.0);
+                instructions.add(newInstruction);
+            } else {
+                double angle = computeAngle(lastLocation.getCoordinate(), lastTroncon.getDestination().getCoordinate(), troncon.getDestination().getCoordinate());
+                distanceSinceLastInstruction += lastTroncon.getLongueur();
+
+                if (angle>0.65) {
+                    direction = InstructionLivraison.Direction.GAUCHE;
+                } else if (angle<-0.65) {
+                    direction = InstructionLivraison.Direction.DROITE;
+                } else if (angle>0.1) {
+                    direction = InstructionLivraison.Direction.LEGERGAUCHE;
+                } else if (angle<-0.1) {
+                    direction = InstructionLivraison.Direction.LEGERDROIT;
+                }
+
+                if (angle>0.1||angle<-0.1||!lastTroncon.getNom().equals(troncon.getNom())) {
+                    InstructionLivraison newInstruction = new InstructionLivraison(troncon.getNom(), direction, distanceSinceLastInstruction);
+                    instructions.add(newInstruction);
+                    distanceSinceLastInstruction = 0;
+                }
+
+                lastLocation = lastTroncon.getDestination();
+            }
+
+            lastTroncon = troncon;
+        }
+        return instructions;
+    }
+
     @Override
     public String toString() {
-        String troncontxt = "";
-        for (Troncon troncon: troncons) troncontxt += "\n" + troncon.toString();
-        return "Trajet{" +
-                "troncons="+ troncontxt +
-                "\nlongueur=" + getLongueur() +
-                ", origine=" + origine +
-                ", arrivee=" + getArrivee() +
-                '}'+'\n';
+        String result = "";
+        ArrayList<InstructionLivraison> instructions = getInstructions();
+        for (InstructionLivraison instruction: instructions) result += instruction.toString() + "\n" ;
+        return result;
     }
 }
