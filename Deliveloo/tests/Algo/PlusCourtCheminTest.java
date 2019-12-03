@@ -5,11 +5,11 @@ import Modeles.Intersection;
 import Modeles.Trajet;
 import Modeles.Troncon;
 import com.sothawo.mapjfx.Coordinate;
+//import com.sun.tools.corba.se.idl.constExpr.Plus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

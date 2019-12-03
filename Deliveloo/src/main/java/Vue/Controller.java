@@ -18,7 +18,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -47,7 +49,6 @@ public class Controller {
     public Service service = new Service();
 
     public JFileChooser choix = new JFileChooser();
-
 
     @FXML
     public Button chargerPlan;
@@ -82,12 +83,11 @@ public class Controller {
      * FX Elements d'affichage sur la tournée demandée
      * panneau à droite de l'IHM
      */
-    /* Accordion for all the different options */
-    @FXML
-    public Accordion rightControls;
     /* section contenant les infos sur les livraisons  */
     @FXML
-    public TitledPane detailsLivraisons;
+    public VBox detailsLivraisons;
+    @FXML
+    public Button supprLivraison;
 
     /**
      * FX elements d'affichage pour debug
@@ -189,6 +189,7 @@ public class Controller {
         labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
+        setButtonSupprLivraison();
 
         setButtonChargerDemande();
         // enable le bouton calculer une tournée avec l'event correspondant
@@ -299,6 +300,27 @@ public class Controller {
     /**
      *
      */
+    private void setButtonSupprLivraison() {
+        supprLivraison.setOnAction(event -> {
+            // récupérer le point cliqué
+            System.out.println("deliveries before removal : "+deliveries.size());
+            Coordinate c= new Coordinate(45.762653,4.875565);
+            demande.removeLivraison(c);
+            for (int i=0;i<deliveries.size();i++){
+                System.out.println("Key : "+deliveries.get(i).getKey()+ " Coordinate to remove : "+c);
+                System.out.println("Value : "+deliveries.get(i).getValue());
+                System.out.println("Coordinate to remove : "+c);
+                if(deliveries.get(i).getKey()==c||deliveries.get(i).getValue()==c){
+                    deliveries.remove(new Pair<Coordinate,Coordinate>(deliveries.get(i).getKey(),deliveries.get(i).getValue()));
+                }
+            }
+            System.out.println("deliveries after removal : "+deliveries.size());
+        });
+    }
+
+    /**
+     *
+     */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
@@ -320,9 +342,8 @@ public class Controller {
             }
             deliveriesMarkers.clear();
             System.out.println("****** " + deliveriesMarkers.size());
-          
-            try {
 
+            try {
                 EventQueue.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
@@ -338,40 +359,41 @@ public class Controller {
                 });
 
                 entrepot = demande.getEntrepot().getCoordinate();
-                chargerDemande(demande);
                 System.out.println(demande);
 
-            entrepot = demande.getEntrepot().getCoordinate();
-            setDeliveriesFromLivraisons(demande.getLivraisons());
-            System.out.println("Demande : " + demande);
+                entrepot = demande.getEntrepot().getCoordinate();
+                setDeliveriesFromLivraisons(demande.getLivraisons());
+                System.out.println("Demande : " + demande);
 
-            entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
-            mapView.addMarker(entrepotMarker);
+                entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+                mapView.addMarker(entrepotMarker);
 
-            for (int i = 0; i < demande.getLivraisons().size(); i++) {
-                Marker markerPickUp;
-                Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                    Marker markerPickUp;
+                    Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                   /*  URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
                     markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);*/
-                markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
+                    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
-                Marker markerDelivery;
-                Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                System.out.println(pickUp + "/////" + delivery);
+                    Marker markerDelivery;
+                    Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                    System.out.println(pickUp + "/////" + delivery);
 
-                markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-                deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
+                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
+                    deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
+                }
+
+                for (int i = 0; i < deliveriesMarkers.size(); i++) {
+                    deliveriesMarkers.get(i).getKey().setVisible(true);
+                    deliveriesMarkers.get(i).getValue().setVisible(true);
+                    mapView.addMarker(deliveriesMarkers.get(i).getKey());
+                    mapView.addMarker(deliveriesMarkers.get(i).getValue());
+                }
+
+                System.out.println(deliveriesMarkers.size());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            for (int i = 0; i < deliveriesMarkers.size(); i++) {
-                deliveriesMarkers.get(i).getKey().setVisible(true);
-                deliveriesMarkers.get(i).getValue().setVisible(true);
-                mapView.addMarker(deliveriesMarkers.get(i).getKey());
-                mapView.addMarker(deliveriesMarkers.get(i).getValue());
-            }
-
-            System.out.println(deliveriesMarkers.size());
-
 
         });
     }
@@ -388,14 +410,21 @@ public class Controller {
                 if (demande != null) {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                    int i=0;
-                    for (Trajet trajet : t.getTrajets()) {
-                        tournee.add(trajet.getOrigine().getCoordinate());
-                       // entrepotMarker.attachLabel( new MapLabel("Integer.toString(i)", 10, -10).setVisible(true).setCssClass("green-label"));
-                       // System.out.println(trajet.getOrigine().getCoordinate()+" "+entrepot);
-                        for (Troncon troncon : trajet.getTroncons()) {
+                    int compteur = 1;
+                    for (int i = 0; i < t.getTrajets().size(); i++) {
+                        tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
+                        MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+                        mapView.addLabel(l);
+                        compteur++;
+                        for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
+
+
+                        detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
+                    }
+
+                    for( int i=0; i < 10; i++) {
                     }
                     System.out.println("LINE :" + trackTrajet);
                     trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
@@ -414,18 +443,6 @@ public class Controller {
         });
     }
 
-    public Marker getMarkerByCoord(Coordinate coord) {
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            System.out.println(deliveriesMarkers.get(i).getKey().getPosition()+" "+coord);
-            if (deliveriesMarkers.get(i).getKey().getPosition() == coord) {
-                return deliveriesMarkers.get(i).getKey();
-            } else if (deliveriesMarkers.get(i).getValue().getPosition() == coord) {
-                return deliveriesMarkers.get(i).getValue();
-            } else{
-            }
-        }
-        return null;
-    }
 
     /**
      * @param flag
@@ -433,5 +450,7 @@ public class Controller {
     private void setTopControlsDisable(boolean flag) {
         topControls.setDisable(flag);
     }
+
+
 
 }
