@@ -59,11 +59,8 @@ public class LectureXML {
             NamedNodeMap attributes = node.getAttributes();
 
             if (node.getNodeName().equals("noeud")) {
-
                 double lat = Double.parseDouble(attributes.getNamedItem("latitude").getNodeValue());
-
                 double lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
-
                 long idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
 
                 Coordinate myPoint = new Coordinate(lat, lg);
@@ -91,7 +88,6 @@ public class LectureXML {
     }
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
-
         System.out.println("Lecture du XML ");
         Document document = null;
 
@@ -180,8 +176,8 @@ public class LectureXML {
 
        if(myList.isEmpty()){
            System.out.println("test list empty");
+           //exception ?
        }
-
-        return myList;
+       return myList;
     }
 }

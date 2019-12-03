@@ -46,17 +46,6 @@ class LectureXMLTest {
         assertTrue(Graphe.shared.getIntersectionMap().containsKey(idTest));
         assertTrue(Graphe.shared.getIntersectionMap().size()==1448);
     }
-    void chargerPlan() throws Exception {
-        lectureXML.chargerPlan("../datas/GrandPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-        System.out.println(t.getTrajets().get(0).toString());
-    }
 
     @Test
     void chargerGrandPlan_shouldSucceed() throws Exception {
@@ -105,108 +94,6 @@ class LectureXMLTest {
             System.out.println("longitude : "+ c.getLongitude());
             compteur++;
         }
+        assertTrue(!testList.equals(null));
     }
-
-    @Test
-    void realiserTourneeDepuisPetitPlanEtPetiteDemande_shouldSucceed() throws Exception {
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisMoyenPlanEtPetiteDemande_shouldSucceed() throws Exception {
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisGrandPlanEtPetiteDemande_shouldSucceed() throws Exception {
-        lectureXML.chargerPlan("../datas/grandPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandePetit1.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisMoyenPlanEtMoyenneDemande_shouldSucceed() throws Exception {
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisGrandPlanEtGrandeDemande_shouldSucceed() throws Exception {
-        lectureXML.chargerPlan("../datas/grandPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisPetitPlanEtMoyenneDemande_shouldFail() throws Exception {
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisPetitPlanEtGrandeDemande_shouldFail() throws Exception {
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = Computations.getTourneeFromDemande(demande,Graphe.shared);
-        System.out.println(t.getHeureArrivee());
-        System.out.println(t.getDemande().getHeureDepart());
-        System.out.println(t.getTotalDistance());
-        System.out.println(t.getTotalDuration());
-    }
-
-    @Test
-    void realiserTourneeDepuisMoyenPlanEtGrandeDemande_shouldFail() throws Exception {
-        try {
-            lectureXML.chargerPlan("../datas/moyenPlan.xml");
-            System.out.println(Graphe.shared.getIntersectionMap().values().size());
-            Demande demande = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-            Tournee t = Computations.getTourneeFromDemande(demande, Graphe.shared);
-            System.out.println(t.getHeureArrivee());
-            System.out.println(t.getDemande().getHeureDepart());
-            System.out.println(t.getTotalDistance());
-            System.out.println(t.getTotalDuration());
-        }catch(Exception e){
-            throw new NotImplementedException();
-        }
-
-    }
-
-
 }
