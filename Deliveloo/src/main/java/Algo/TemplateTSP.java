@@ -10,6 +10,11 @@ public abstract class TemplateTSP implements TSP {
     private Integer[] meilleureSolution;
     private Double coutMeilleureSolution = 0.0;
     private Boolean tempsLimiteAtteint;
+    private Boolean end;
+
+    public void setEnd(Boolean end) {
+        this.end = end;
+    }
 
     public Boolean getTempsLimiteAtteint() {
         return tempsLimiteAtteint;
@@ -17,6 +22,7 @@ public abstract class TemplateTSP implements TSP {
 
     public void chercheSolution(int tpsLimite, int nbSommets, Trajet[][] cout) {
         tempsLimiteAtteint = false;
+        end = false;
         coutMeilleureSolution = Double.MAX_VALUE;
         meilleureSolution = new Integer[nbSommets];
         ArrayList<Integer> nonVus = new ArrayList<Integer>();
@@ -24,6 +30,7 @@ public abstract class TemplateTSP implements TSP {
         ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
         vus.add(0); // le premier sommet visite est 0
         branchAndBound(0, nonVus, vus, 0.0, cout, System.currentTimeMillis(), tpsLimite);
+        Computations.lastResultIsBestResult();
     }
 
     public Integer[] getMeilleureSolution() {
@@ -68,7 +75,7 @@ public abstract class TemplateTSP implements TSP {
      * @param tpsLimite : limite de temps pour la resolution
      */
     void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, Double coutVus, Trajet[][] cout, long tpsDebut, int tpsLimite) {
-        if (System.currentTimeMillis() - tpsDebut > tpsLimite) {
+        if (end || System.currentTimeMillis() - tpsDebut > tpsLimite) {
             tempsLimiteAtteint = true;
             return;
         }
@@ -77,6 +84,7 @@ public abstract class TemplateTSP implements TSP {
             if (coutVus < coutMeilleureSolution) { // on a trouve une solution meilleure que meilleureSolution
                 vus.toArray(meilleureSolution);
                 coutMeilleureSolution = coutVus;
+                Computations.betterResultFound();
             }
         } else if (coutVus + bound(sommetCrt, nonVus, cout) < coutMeilleureSolution) {
             Iterator<Integer> it = iterator(sommetCrt, nonVus, cout);

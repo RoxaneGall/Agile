@@ -13,6 +13,9 @@ public class Service {
 
     private LectureXML lec = new LectureXML();
 
+    private Trajet[][] couts;
+    private Demande demandeEnCours;
+
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = lec.getLimitesPlan();
@@ -24,7 +27,9 @@ public class Service {
         return d;
     }
 
-    public Tournee calculerTournee(Demande demande) throws Exception {
+    public void calculerTournee(Demande demande){
+
+        demandeEnCours = demande;
         //METHODE 1 :
         //Tournee t = Computations.getTourneeFromDemande(demande);
 
@@ -33,11 +38,14 @@ public class Service {
         Intersection[] intersDemande = getSommetsDemande(demande);
 
         //Remplissage tableau de couts avec les longueurs des trajets entre les sommets
-        Trajet[][] couts = getCoutsDemande(intersDemande);
-
-        Tournee t = Computations.getTourneeFromDemande(couts, demande);
-        return t;
+        couts = getCoutsDemande(intersDemande);
+        Computations.runTSP(couts, demande);
     }
+
+    public Tournee recupererTournee() {
+        return Computations.getTourneeFromDemande(couts,demandeEnCours);
+    }
+
 
     private static Intersection[] getSommetsDemande(Demande demande) {
         int nbSommets = 2*demande.getLivraisons().size()+1;

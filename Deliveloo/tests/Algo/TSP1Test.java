@@ -26,8 +26,9 @@ class TSP1Test {
         Service service = new Service();
         service.chargerPlan("../datas/GrandPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = service.chargerDemande("../datas/demandeGrand7.xml");
-        Tournee t = service.calculerTournee(demande);
+        Demande demande = service.chargerDemande("../datas/demandeGrand9.xml");
+        service.calculerTournee(demande);
+        Tournee t = service.recupererTournee();
         System.out.println(t.getHeureArrivee());
         System.out.println(t.getDemande().getHeureDepart());
         System.out.println(t.getTotalDistance());
