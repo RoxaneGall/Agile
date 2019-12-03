@@ -24,68 +24,109 @@ public class LectureXML {
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder parser;
 
-    public LectureXML(){
+    public LectureXML() throws Exception {
         try{
             parser = factory.newDocumentBuilder();
         } catch(final ParserConfigurationException e){
-            e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
     }
 
     public void chargerPlan(String cheminFichier) throws Exception {
+        if(!cheminFichier.substring(cheminFichier.lastIndexOf('.')+1).equals("xml")){
+            throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
+        }
 
-        System.out.println("Lecture du XML plan");
         Document document = null;
-
         try {
             document = parser.parse(new File(cheminFichier));
         } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+            throw new Exception(e.getMessage(),e);
+        } catch (SAXException e){
+            throw new Exception(e.getMessage(),e);
         }
 
         final Element root = document.getDocumentElement();
 
         if(!root.getNodeName().equals("reseau")){
-            throw new Exception("Le fichier ne représente pas un plan...");
+            throw new Exception("Le fichier ne représente pas un plan... Veuillez charger un fichier .xml correspondant à un plan.");
         }
 
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        int countNodes=0;
+        if(nbRootNodes==0){
+            throw new Exception("Le fichier ne contient aucune information.");
+        }
+
+        int countInter=0, countTroncon=0;
         for(int i=0; i<nbRootNodes; i++) {
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
 
+            Double lat,lg;
+            long idIntersection;
             if (node.getNodeName().equals("noeud")) {
-                double lat = Double.parseDouble(attributes.getNamedItem("latitude").getNodeValue());
-                double lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
-                long idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
+                try {
+                    lat = Double.parseDouble(attributes.getNamedItem("latitude").getNodeValue());
+                    lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
+                    idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
+                }catch (Exception e){
+                    throw new Exception("Les attributs du noeud correspondant à l'intersection "+ ++countInter + "sont mals renseignés. " +
+                            "Veuillez respecter le format des attributs suivant : \n" +
+                                    " latitude et longitude sont des Double et id est un long.",e);
+                }
 
                 Coordinate myPoint = new Coordinate(lat, lg);
                 Intersection myIntersection = new Intersection(idIntersection, myPoint);
-                countNodes++;
+                ++countInter;
                 Graphe.shared.addIntersection(myIntersection);
             }
 
+            String nomRue;
+            long idOrigine, idDestination;
+            Double longueur;
+            Intersection destination;
             if(rootNodes.item(i).getNodeName().equals("troncon")){
-                if(countNodes==0){
-                    throw new Exception("Aucune intersection n'est présente dans le plan. Veuillez charger les noeuds.");
+                if(countInter==0){
+                    throw new Exception("Aucune intersection n'est présente dans le plan. Veuillez charger les noeuds d'intersection avant.");
                 }
-                String nomRue = attributes.getNamedItem("nomRue").getNodeValue();
-                long idOrigine = Long.parseLong(attributes.getNamedItem("origine").getNodeValue());
-
-                long idDestination = Long.parseLong(attributes.getNamedItem("destination").getNodeValue());
-                Intersection destination = Graphe.shared.getIntersectionMap().get(idDestination);
-
-                Double longueur=Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
-
+                try {
+                    nomRue = attributes.getNamedItem("nomRue").getNodeValue();
+                    idOrigine = Long.parseLong(attributes.getNamedItem("origine").getNodeValue());
+                    idDestination = Long.parseLong(attributes.getNamedItem("destination").getNodeValue());
+                    longueur=Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
+                    if(longueur<0){
+                        throw new Exception("La longueur du tronçon ne peut pas être négative. \n" +
+                                " Veuillez rectifier cette longueur erronée.");
+                    }
+                }catch(Exception e){
+                    throw new Exception("Les attributs du noeud correspondant au tronçon "+ countTroncon++ + " sont mals renseignés. " +
+                            "Veuillez respecter le format des attributs suivant : \n" +
+                            " origine et destination sont des long, nomRue est un String et longueur est un Double.",e);
+                }
+                destination = Graphe.shared.getIntersectionMap().get(idDestination);
+                if (destination == null) {
+                    throw new Exception("L'intersection d'origine du " + countTroncon++ + "eme troncon n'existe pas....");
+                }
                 Troncon myTroncon = new Troncon(destination,nomRue,longueur);
+                countTroncon++;
                 Graphe.shared.addTroncon(myTroncon,idOrigine);
             }
         }
     }
+
+    /*Charger plan :
+- Le fichier chargé n’est pas un .xml
+- Le fichier chargé est vide ou ne correspond pas au format requis
+- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur
+Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on affiche un message d'erreur à l'utilisateur*/
+
+    /*Charger demande :
+- Le fichier chargé n’est pas un .xml
+- Le fichier chargé est vide ou ne correspond pas au format requis
+- Un point d’intersection n’est pas compris dans la zone du plan de Lyon et ne peut donc pas être pris en compte
+- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur*/
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
         System.out.println("Lecture du XML ");
