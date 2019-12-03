@@ -302,7 +302,19 @@ public class Controller {
      */
     private void setButtonSupprLivraison() {
         supprLivraison.setOnAction(event -> {
-
+            // récupérer le point cliqué
+            System.out.println("deliveries before removal : "+deliveries.size());
+            Coordinate c= new Coordinate(45.762653,4.875565);
+            demande.removeLivraison(c);
+            for (int i=0;i<deliveries.size();i++){
+                System.out.println("Key : "+deliveries.get(i).getKey()+ " Coordinate to remove : "+c);
+                System.out.println("Value : "+deliveries.get(i).getValue());
+                System.out.println("Coordinate to remove : "+c);
+                if(deliveries.get(i).getKey()==c||deliveries.get(i).getValue()==c){
+                    deliveries.remove(new Pair<Coordinate,Coordinate>(deliveries.get(i).getKey(),deliveries.get(i).getValue()));
+                }
+            }
+            System.out.println("deliveries after removal : "+deliveries.size());
         });
     }
 
@@ -431,18 +443,6 @@ public class Controller {
         });
     }
 
-    public Marker getMarkerByCoord(Coordinate coord) {
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            System.out.println(deliveriesMarkers.get(i).getKey().getPosition() + " " + coord);
-            if (deliveriesMarkers.get(i).getKey().getPosition() == coord) {
-                return deliveriesMarkers.get(i).getKey();
-            } else if (deliveriesMarkers.get(i).getValue().getPosition() == coord) {
-                return deliveriesMarkers.get(i).getValue();
-            } else {
-            }
-        }
-        return null;
-    }
 
     /**
      * @param flag
