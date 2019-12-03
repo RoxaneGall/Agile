@@ -389,16 +389,12 @@ public class Controller {
                 if (demande != null) {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                    MapLabel l0 = new MapLabel(Integer.toString(0), 10, -10).setVisible(true).setCssClass("green-label");
-                    entrepotMarker.attachLabel(l0);
-                    mapView.addLabel(l0);
                     int compteur = 1;
                     for (int i = 0; i < t.getTrajets().size(); i++) {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-                        while(compteur<t.getTrajets().size()) {
-                            addOrderMarkers(t.getTrajets().get(compteur).getOrigine().getCoordinate(), compteur);
-                            compteur++;
-                        }
+                        MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+                        mapView.addLabel(l);
+                        compteur++;
                         for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                             tournee.add(troncon.getDestination().getCoordinate());
                         }
@@ -441,20 +437,5 @@ public class Controller {
     }
 
 
-    public void addOrderMarkers(Coordinate c, int compteur) {
-        MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("orange-label");
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            if (deliveriesMarkers.get(i).getKey().getPosition() == c) {
-                deliveriesMarkers.get(i).getKey().attachLabel(l);
-                mapView.addLabel(l);
-
-            }
-            if (deliveriesMarkers.get(i).getValue().getPosition() == c) {
-                deliveriesMarkers.get(i).getValue().attachLabel(l);
-                mapView.addLabel(l);
-
-            }
-        }
-    }
 
 }
