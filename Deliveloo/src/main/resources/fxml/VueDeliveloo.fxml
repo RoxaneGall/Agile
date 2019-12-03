@@ -64,11 +64,7 @@
     <right>
         <VBox prefWidth="350.0" alignment="CENTER" spacing="10.0">
             <children>
-                <CheckBox prefHeight="60.0" fx:id="livraison1" text="Livraison 1" maxWidth="Infinity"/>
-                <CheckBox prefHeight="60.0" fx:id="livraison2" text="Livraison 2" maxWidth="Infinity"/>
-                <CheckBox prefHeight="60.0" fx:id="livraison3" text="Livraison 3" maxWidth="Infinity"/>
-                <CheckBox prefHeight="60.0" fx:id="livraison4" text="Livraison 4" maxWidth="Infinity"/>
-                <CheckBox prefHeight="60.0" fx:id="checkClickMarker" text="click location" maxWidth="Infinity"/>
+
             </children>
             <padding>
                 <Insets bottom="5.0" left="20.0" right="10.0" top="5.0"/>
