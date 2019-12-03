@@ -352,7 +352,7 @@ public class Controller {
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                   /*  URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
                     markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);*/
-                    markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
+                    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
@@ -389,14 +389,17 @@ public class Controller {
                 if (demande != null) {
                     Tournee t = service.calculerTournee(demande);
                     // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+                    MapLabel l0= new MapLabel(Integer.toString(0), 10, -10).setVisible(true).setCssClass("green-label");
+                    entrepotMarker.attachLabel(l0);
+                    mapView.addLabel(l0);
                     int compteur = 1;
                     for (int i = 0; i < t.getTrajets().size(); i++) {
                         tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
                         System.out.println(deliveriesMarkers.size());
                         if (i < deliveriesMarkers.size()) {
-                            MapLabel l1 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            MapLabel l1 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("orange-label");
                             compteur++;
-                            MapLabel l2 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("green-label");
+                            MapLabel l2 = new MapLabel(Integer.toString(compteur), 10, -10).setVisible(true).setCssClass("red-label");
                             compteur++;
                             deliveriesMarkers.get(i).getKey().attachLabel(l1);
                             deliveriesMarkers.get(i).getValue().attachLabel(l2);
