@@ -1,5 +1,7 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +10,7 @@ public class Tournee {
 
     private ArrayList<Trajet> trajets;
     private Demande demande;
+    private ArrayList<Coordinate> coordTournee;
 
     public Tournee(Demande demande) {
         this.demande=demande;
