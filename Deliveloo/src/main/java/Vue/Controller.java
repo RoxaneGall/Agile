@@ -50,7 +50,6 @@ public class Controller {
 
     public JFileChooser choix = new JFileChooser();
 
-
     @FXML
     public Button chargerPlan;
     @FXML
@@ -87,6 +86,8 @@ public class Controller {
     /* section contenant les infos sur les livraisons  */
     @FXML
     public VBox detailsLivraisons;
+    @FXML
+    public Button supprLivraison;
 
     /**
      * FX elements d'affichage pour debug
@@ -188,6 +189,7 @@ public class Controller {
         labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
+        setButtonSupprLivraison();
 
         setButtonChargerDemande();
         // enable le bouton calculer une tournée avec l'event correspondant
@@ -299,6 +301,15 @@ public class Controller {
     /**
      *
      */
+    private void setButtonSupprLivraison() {
+        supprLivraison.setOnAction(event -> {
+
+        });
+    }
+
+    /**
+     *
+     */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
@@ -403,7 +414,7 @@ public class Controller {
                         }
 
 
-                        detailsLivraisons.getChildren().add( new Text( "Item " + t.getTrajets().get(i).toString()));
+                        detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
                     }
 
                     for( int i=0; i < 10; i++) {
