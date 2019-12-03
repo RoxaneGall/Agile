@@ -13,16 +13,16 @@ public interface TSP {
      * @param nbSommets : nombre de sommets du graphe
      * @param cout : cout[i][j] = longueur pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
      */
-    public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout);
+    public void chercheSolution(int tpsLimite, int nbSommets, Double[][] cout);
 
     /**
      * @param i
      * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
      */
-    public Integer getMeilleureSolution(int i);
+    public Double getMeilleureSolution(int i);
 
     /**
      * @return la duree de la solution calculee par chercheSolution
      */
-    public int getCoutMeilleureSolution();
+    public Double getCoutMeilleureSolution();
 }
