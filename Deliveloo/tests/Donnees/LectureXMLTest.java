@@ -29,6 +29,25 @@ class LectureXMLTest {
     void tearDown() {
     }
 
+
+    @Test
+    void chargerFichierNonXML_shouldThrowException() throws Exception {
+        Graphe.shared.clearGraph();
+        try {
+            lectureXML.chargerPlan("../datas/petitPlan");
+            fail("The test should throw an exception because the file is not an XML file.");
+        }catch(Exception e){}
+    }
+
+    @Test
+    void chargerFichierInexistant_shouldThrowException() throws Exception {
+        Graphe.shared.clearGraph();
+        try {
+            lectureXML.chargerPlan("../datas/fichierInexistant");
+            fail("The test should throw an exception because the file does not exist.");
+        }catch(Exception e){}
+    }
+
     @Test
     void chargerPetitPlan_shouldLoadMap() throws Exception {
         Graphe.shared.clearGraph();
