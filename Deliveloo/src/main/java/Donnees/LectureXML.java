@@ -18,7 +18,6 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 public class LectureXML {
-    //map(idIntersection,Intersection);
 
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder parser;
