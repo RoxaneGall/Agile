@@ -13,6 +13,9 @@ public class Service {
 
     private LectureXML lec = new LectureXML();
 
+    private Trajet[][] couts;
+    private Demande demandeEnCours;
+
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = lec.getLimitesPlan();
@@ -24,7 +27,9 @@ public class Service {
         return d;
     }
 
-    public Tournee calculerTournee(Demande demande) throws Exception {
+    public void calculerTournee(Demande demande){
+
+        demandeEnCours = demande;
         //METHODE 1 :
         //Tournee t = Computations.getTourneeFromDemande(demande);
 
@@ -33,11 +38,14 @@ public class Service {
         Intersection[] intersDemande = getSommetsDemande(demande);
 
         //Remplissage tableau de couts avec les longueurs des trajets entre les sommets
-        double[][] couts = getCoutsDemande(intersDemande);
-
-        Tournee t = Computations.getTourneeFromDemande(couts);
-        return t;
+        couts = getCoutsDemande(intersDemande);
+        Computations.runTSP(couts, demande);
     }
+
+    public Tournee recupererTournee() {
+        return Computations.getTourneeFromDemande(couts,demandeEnCours);
+    }
+
 
     private static Intersection[] getSommetsDemande(Demande demande) {
         int nbSommets = 2*demande.getLivraisons().size()+1;
@@ -58,16 +66,16 @@ public class Service {
         return intersDemande;
     }
 
-    private static double[][] getCoutsDemande(Intersection[] intersDemande) {
+    private static Trajet[][] getCoutsDemande(Intersection[] intersDemande) {
         int nbSommets = intersDemande.length;
-        double [][] couts = new double[nbSommets][nbSommets];
+        Trajet [][] couts = new Trajet[nbSommets][nbSommets];
 
         for(int i = 0; i<nbSommets; i++) {
             for(int j = 0; j<nbSommets; j++) {
                 if(i==j) {
-                    couts[i][j] = 0.0; //Meme intersection
+                    couts[i][j] = new Trajet(intersDemande[i]); //Meme intersection
                 } else {
-                    couts[i][j] = Computations.getMeilleurTrajet(intersDemande[i],intersDemande[j]).getLongueur(); //Calcul du cout
+                    couts[i][j] = Computations.getMeilleurTrajet(intersDemande[i],intersDemande[j]); //Calcul du cout
                 }
             }
         }
