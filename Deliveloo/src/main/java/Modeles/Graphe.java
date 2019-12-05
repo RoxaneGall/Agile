@@ -27,4 +27,8 @@ public class Graphe {
             intersectionMap.put(intersection.getId(),intersection);
         }
     }
+
+    public void clearGraph(){
+        this.intersectionMap.clear();
+    }
 }

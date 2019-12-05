@@ -13,6 +13,7 @@ public class Trajet {
     private Intersection origine;
     private Intersection arrivee;
     private Double longueur;
+    private Double heureArrivee;
 
     public Trajet(Intersection origine) {
         this.origine = origine;
@@ -59,6 +60,7 @@ public class Trajet {
         Intersection lastLocation = origine;
         Troncon lastTroncon = null;
         double distanceSinceLastInstruction = 0;
+
         for (Troncon troncon : troncons) {
 
             InstructionLivraison.Direction direction = InstructionLivraison.Direction.TOUTDROIT;
@@ -81,12 +83,10 @@ public class Trajet {
                     direction = InstructionLivraison.Direction.LEGERDROIT;
                 }
 
-                if (angle>0.1||angle<-0.1) {
+                if (angle>0.1||angle<-0.1||!lastTroncon.getNom().equals(troncon.getNom())) {
                     InstructionLivraison newInstruction = new InstructionLivraison(troncon.getNom(), direction, distanceSinceLastInstruction);
                     instructions.add(newInstruction);
                     distanceSinceLastInstruction = 0;
-                } else if (lastTroncon.getNom() == troncon.getNom()) {
-                    distanceSinceLastInstruction += lastTroncon.getLongueur();
                 }
 
                 lastLocation = lastTroncon.getDestination();
