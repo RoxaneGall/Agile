@@ -439,8 +439,8 @@ public class Controller {
                     }
                     detailsLivraisons.getChildren().clear();
                     for (int i=0; i<livrButtons.size();i++) {
-
                         detailsLivraisons.getChildren().add(livrButtons.get(i));
+                    }
 
                 System.out.println("LINE :" + trackTrajet);
                 trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
