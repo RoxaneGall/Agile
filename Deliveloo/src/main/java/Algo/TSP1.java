@@ -3,6 +3,7 @@ package Algo;
 import Modeles.Trajet;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class TSP1 extends TemplateTSP {
@@ -30,6 +31,12 @@ public class TSP1 extends TemplateTSP {
                 }
             }
         }
+        //Trier les sommets Possibles par Distance Relative au sommet courant
+        sommetsPossibles.sort(new Comparator<Integer>() {
+            public int compare(Integer trajet1, Integer trajet2) {
+                return (cout[sommetCrt][trajet1].getLongueur().intValue() - cout[sommetCrt][trajet2].getLongueur().intValue());
+            }
+        });
         return sommetsPossibles.iterator();
     }
 
