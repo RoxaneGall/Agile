@@ -185,7 +185,7 @@ public class Controller implements ActionListener {
     public void initializeView(Projection projection, Stage primaryStageFromMain) {
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        loading.toFront();
+        //loading.toFront();
         primaryStage = primaryStageFromMain;
 
         // init MapView-Cache
