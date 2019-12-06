@@ -8,7 +8,7 @@ import com.sothawo.mapjfx.Coordinate;
 import java.util.*;
 
 public class Service {
-    public Service() throws Exception {
+    public Service() {
     }
 
     private LectureXML lec = new LectureXML();

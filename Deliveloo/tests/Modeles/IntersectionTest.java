@@ -37,6 +37,7 @@ class IntersectionTest {
 
         //Assert
         assertEquals(1,inter.getTroncons().size());
+
     }
 
     @Test
@@ -53,7 +54,6 @@ class IntersectionTest {
 
         //Assert
         assertEquals(1,c.size());
-        assertTrue(c.toArray()[0] instanceof Troncon );
     }
 
     @Test
@@ -68,19 +68,5 @@ class IntersectionTest {
 
         //Assert
         assertEquals(p,actualp);
-    }
-
-    @Test
-    void toStringTest_ShouldReturnTronconsMap() {
-        //Arrange
-        Coordinate p = new Coordinate(4.112233, 5.32404);
-        long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
-
-        //Act
-        String actualt = inter.toString();
-
-        //Assert
-        assertEquals("Intersection{c="+p.toString()+"nbTroncons=0}",actualt);
     }
 }
