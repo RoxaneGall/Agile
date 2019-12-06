@@ -1,11 +1,14 @@
 package Donnees;
 
+import Modeles.InstructionLivraison;
 import Modeles.Tournee;
+import Modeles.Trajet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class EcritureXML {
 
@@ -34,6 +37,16 @@ public class EcritureXML {
         if(chemin.equals("")) {
             throw new Exception("Le fichier doit avoir un nom pour être créé.");
         }else return chemin;
+    }
+
+    public String genererInstructionsPourTournee(Tournee tournee){
+        String instructions="";
+        ArrayList<Trajet> trajets = new ArrayList<>();
+        trajets = tournee.getTrajets();
+        for (Trajet t : trajets){
+            instructions = t.getInstructions().toString();
+        }
+        return instructions;
     }
 
     public void ecrireFichier(Tournee tournee) throws Exception {
