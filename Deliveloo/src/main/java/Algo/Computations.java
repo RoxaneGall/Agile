@@ -43,13 +43,17 @@ public class Computations {
         Integer lastIntersectionId = null;
         Integer[] solution = tsp1.getMeilleureSolution();
 
+        Calendar calendar
+
         if (solution == null || solution[0] == null) {
             return null;
         }
 
         for(Integer trajetId : solution) {
             if( lastIntersectionId != null) {
-                tournee.addTrajet(couts[lastIntersectionId][trajetId]);
+                Trajet trajet = couts[lastIntersectionId][trajetId];
+                trajet.
+                tournee.addTrajet(trajet);
             }
             lastIntersectionId = trajetId;
         }

@@ -3,15 +3,16 @@ package Modeles;
 import com.sothawo.mapjfx.Coordinate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
 public class Demande {
     private ArrayList<Livraison> livraisons;
     private Intersection entrepot;
-    private Date heureDepart;
+    private Calendar heureDepart;
 
-    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Date heureDepart) {
+    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Calendar heureDepart) {
         this.livraisons = livraisons;
         this.entrepot = entrepot;
         this.heureDepart = heureDepart;
