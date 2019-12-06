@@ -62,6 +62,8 @@ public class Controller implements ActionListener {
     public Button chargerDemande;
     @FXML
     public Button calculTournee;
+    @FXML
+    public Button stopTournee;
 
     /**
      * Carte
@@ -207,8 +209,11 @@ public class Controller implements ActionListener {
         setButtonSupprLivraison();
 
         setButtonChargerDemande();
+
+        setButtonStopTournee();
+
         // enable le bouton calculer une tournée avec l'event correspondant
-        setCalculerTournee();
+        setButtonCalculerTournee();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -312,6 +317,12 @@ public class Controller implements ActionListener {
         }
     }
 
+    private void setButtonStopTournee() {
+        stopTournee.setOnAction(event -> {
+            arreterChargementMeilleureTournee();
+        });
+    }
+
     /**
      *
      */
@@ -405,7 +416,7 @@ public class Controller implements ActionListener {
 
 
 
-    private void setCalculerTournee() {
+    private void setButtonCalculerTournee() {
         calculTournee.setOnAction(event -> {
             calculerTournee();
         });
