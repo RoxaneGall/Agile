@@ -407,6 +407,9 @@ public class Controller {
     private void setCalculerTournee() {
         calculTournee.setOnAction(event -> {
             mapView.removeCoordinateLine(trackTrajet);
+            for (int i = 0; i < deliveriesNumbers.size(); i++) {
+                mapView.removeLabel(deliveriesNumbers.get(i));
+            }
             tournee.clear();
             System.out.println("Calcul d'une tournée");
             try {
@@ -467,11 +470,26 @@ public class Controller {
     }
 
     public void deleteLabelByCoord(Coordinate c) {
+        Coordinate c2 = null;
+        for (int i = 0; i < deliveries.size(); i++) {
+            if (deliveries.get(i).getKey().equals(c)) {
+                c2 = deliveries.get(i).getValue();
+            }
+            if (deliveries.get(i).getValue().equals(c)) {
+                c2 = deliveries.get(i).getKey();
+            }
+        }
         for (int i = 0; i < deliveriesNumbers.size(); i++) {
             if (deliveriesNumbers.get(i).getPosition().equals(c)) {
                 mapView.removeLabel(deliveriesNumbers.get(i));
             }
         }
+        for (int i = 0; i < deliveriesNumbers.size(); i++) {
+            if (deliveriesNumbers.get(i).getPosition().equals(c2)) {
+                mapView.removeLabel(deliveriesNumbers.get(i));
+            }
+        }
+
     }
 
 
