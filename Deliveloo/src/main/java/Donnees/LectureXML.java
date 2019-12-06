@@ -157,6 +157,9 @@ public class LectureXML {
                     idLivraison = Long.parseLong(attributes.getNamedItem("adresseLivraison").getNodeValue());
                     dureeEnlevement = Integer.parseInt(attributes.getNamedItem("dureeEnlevement").getNodeValue());
                     dureeLivraison = Integer.parseInt(attributes.getNamedItem("dureeLivraison").getNodeValue());
+                    if(dureeEnlevement <0 || dureeLivraison <0){
+                        throw new Exception("Attention les durées ne peuvent pas être négatives.");
+                    }
                 }catch(Exception e){
                     throw new Exception("Les attributs du noeud correspondant à une livraison "+ ++countDeliveries + "sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
