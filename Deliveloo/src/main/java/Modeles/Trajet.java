@@ -13,7 +13,6 @@ public class Trajet {
     private Intersection origine;
     private Intersection arrivee;
     private Double longueur;
-    private Double heureArrivee;
 
     public Trajet(Intersection origine) {
         this.origine = origine;

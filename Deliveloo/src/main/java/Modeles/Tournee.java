@@ -5,12 +5,15 @@ import com.sothawo.mapjfx.Coordinate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Tournee {
 
     private ArrayList<Trajet> trajets;
     private Demande demande;
     private ArrayList<Coordinate> coordTournee;
+    private double heureActuelle;
+    private double vitesse = 15.0/3600.0; //En m/millis
 
     public Tournee(Demande demande) {
         this.demande=demande;
@@ -28,6 +31,7 @@ public class Tournee {
     public double getTotalDistance() {
         Double longueur = 0.0;
         for(Trajet trajet: trajets) {
+            System.out.println("Trajet de longueur : "+trajet.getLongueur());
             longueur+=trajet.getLongueur();
         }
         return longueur;
@@ -38,7 +42,6 @@ public class Tournee {
         for(Livraison livraison: demande.getLivraisons()) {
             livraisonsTotalDurationSeconds+=livraison.getDureeEnlevement()+livraison.getDureeLivraison();
         }
-        double vitesse = 14 * 1000 / 60; //En m/min
         double bicycleTotalMinutes = getTotalDistance()/vitesse;
         return bicycleTotalMinutes+livraisonsTotalDurationSeconds/60;
     }
@@ -50,6 +53,30 @@ public class Tournee {
         depart.add(Calendar.MINUTE, (int) getTotalDuration());
         Date dateArrivee = depart.getTime();
         return dateArrivee;
+    }
+
+    public ArrayList<String> getHeuresLivraisons() {
+        ArrayList<String>  horairesLivr = new ArrayList<String>();
+
+        double millis = System.currentTimeMillis();
+        horairesLivr.add("Entrepôt"+"\nDépart à : "+getHourArrival(millis)); // le premier horaire de livraison
+
+        for (int i=0; i<trajets.size(); i++) {
+            millis += Math.round(trajets.get(i).getLongueur()/vitesse);
+            horairesLivr.add("Etape "+i+"\n Arrivée à :"+getHourArrival(millis)+"\n Temps nécessaire :");
+        }
+
+        return horairesLivr;
+    }
+
+    public String getHourArrival(double millis) {
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        Date today = new Date((long) millis);
+        calendar.setTime(today);  // assigns calendar to given date
+        int heure = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+        int minutes = calendar.get(Calendar.MINUTE);
+
+        return heure+"h"+minutes+"min";
     }
 
     public void addTrajets(ArrayList<Trajet> trajets){
