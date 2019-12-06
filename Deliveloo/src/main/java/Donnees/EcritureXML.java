@@ -44,7 +44,11 @@ public class EcritureXML {
         ArrayList<Trajet> trajets = new ArrayList<>();
         trajets = tournee.getTrajets();
         for (Trajet t : trajets){
-            instructions = t.getInstructions().toString();
+            instructions += "Trajet entre "+ t.getOrigine().toString() + " et " + t.getArrivee().toString()+"\n";
+            instructions += "Heure de départ : " + t.getHeureDepart().toString() + "\n \n";
+            instructions += "Instructions : \n" + t.getInstructions().toString() + "\n";
+            instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().toString() + "\n";
+            // ajouter aussi des lignes pour les temps d'attente aux intersections
         }
         return instructions;
     }
@@ -63,7 +67,7 @@ public class EcritureXML {
                 file.createNewFile();
             }
 
-            byte[] contentInBytes = tournee.toString().getBytes();
+            byte[] contentInBytes = genererInstructionsPourTournee(tournee).getBytes();
 
             fop.write(contentInBytes);
             fop.flush();
