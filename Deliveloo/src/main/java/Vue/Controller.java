@@ -457,6 +457,9 @@ public class Controller implements ActionListener {
             if (demande != null) {
                 livrButtons.clear();
 
+                for (int i = 0; i < deliveriesNumbers.size(); i++) {
+                    mapView.removeLabel(deliveriesNumbers.get(i));
+                }
                 detailsLivraisons.getChildren().clear();
                 scroll.setVisible(true);
                 scroll.setContent(detailsLivraisons);
@@ -497,9 +500,6 @@ public class Controller implements ActionListener {
                 mapView.addCoordinateLine(trackTrajet);
                 System.out.println("Tournee: " + trackTrajet.toString());
 
-                for (int i = 0; i < deliveriesNumbers.size(); i++) {
-                    mapView.removeLabel(deliveriesNumbers.get(i));
-                }
             } else {
                 System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
             }
