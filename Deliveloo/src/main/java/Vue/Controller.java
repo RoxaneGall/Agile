@@ -431,7 +431,7 @@ public class Controller {
 
                     ArrayList<String> horaires = t.getHeuresLivraisons();
                     for(int i=0; i<horaires.size(); i++) {
-                        detailsLivraisons.getChildren().add(new Text("Livraison " + i + 1 + "\n Arrivée à :"));
+                        detailsLivraisons.getChildren().add(new Button("Livraison " + i + 1 + "\n Arrivée à :"));
                     }
                     
                     System.out.println("LINE :" + trackTrajet);
