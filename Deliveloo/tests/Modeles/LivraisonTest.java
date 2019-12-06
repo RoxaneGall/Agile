@@ -18,11 +18,11 @@ class LivraisonTest {
         liv= new Livraison(i1,i2,30,160);
 
         //Act
-        Intersection ActualI = liv.getPickup();
+        Intersection actualI = liv.getPickup();
 
         //Assert
-        assertNotNull(ActualI);
-        assertEquals(i1,ActualI);
+        assertNotNull(actualI);
+        assertEquals(i1,actualI);
     }
 
     @Test
@@ -39,10 +39,10 @@ class LivraisonTest {
         liv.setPickup(i3);
 
         //Assert
-        Intersection ActualI = liv.getPickup();
-        assertNotNull(ActualI);
-        assertNotEquals(i1,ActualI);
-        assertEquals(i3,ActualI);
+        Intersection actualI = liv.getPickup();
+        assertNotNull(actualI);
+        assertNotEquals(i1,actualI);
+        assertEquals(i3,actualI);
     }
 
     @Test
@@ -54,11 +54,11 @@ class LivraisonTest {
         liv= new Livraison(i1,i2,30,160);
 
         //Act
-        Intersection ActualI = liv.getDelivery();
+        Intersection actualI = liv.getDelivery();
 
         //Assert
-        assertNotNull(ActualI);
-        assertEquals(i2,ActualI);
+        assertNotNull(actualI);
+        assertEquals(i2,actualI);
     }
 
     @Test
@@ -75,10 +75,10 @@ class LivraisonTest {
         liv.setDelivery(i3);
 
         //Assert
-        Intersection ActualI = liv.getDelivery();
-        assertNotNull(ActualI);
-        assertNotEquals(i2,ActualI);
-        assertEquals(i3,ActualI);
+        Intersection actualI = liv.getDelivery();
+        assertNotNull(actualI);
+        assertNotEquals(i2,actualI);
+        assertEquals(i3,actualI);
     }
 
     @Test
@@ -90,11 +90,11 @@ class LivraisonTest {
         liv= new Livraison(i1,i2,30,160);
 
         //Act
-        int ActualT = liv.getDureeEnlevement();
+        int actualT = liv.getDureeEnlevement();
 
         //Assert
-        assertNotNull(ActualT);
-        assertEquals(30,ActualT);
+        assertNotNull(actualT);
+        assertEquals(30,actualT);
     }
 
     @Test
@@ -106,11 +106,11 @@ class LivraisonTest {
         liv= new Livraison(i1,i2,30,160);
 
         //Act
-        int ActualT = liv.getDureeLivraison();
+        int actualT = liv.getDureeLivraison();
 
         //Assert
-        assertNotNull(ActualT);
-        assertEquals(160,ActualT);
+        assertNotNull(actualT);
+        assertEquals(160,actualT);
     }
 
     @Test
@@ -125,11 +125,11 @@ class LivraisonTest {
         liv.setDureeEnlevement(10);
 
         //Assert
-        int ActualT = liv.getDureeEnlevement();
+        int actualT = liv.getDureeEnlevement();
 
-        assertNotNull(ActualT);
-        assertNotEquals(30,ActualT);
-        assertEquals(10,ActualT);
+        assertNotNull(actualT);
+        assertNotEquals(30,actualT);
+        assertEquals(10,actualT);
     }
 
     @Test
@@ -144,10 +144,10 @@ class LivraisonTest {
         liv.setDureeLivraison(10);
 
         //Assert
-        int ActualT = liv.getDureeLivraison();
+        int actualT = liv.getDureeLivraison();
 
-        assertNotNull(ActualT);
-        assertNotEquals(160,ActualT);
-        assertEquals(10,ActualT);
+        assertNotNull(actualT);
+        assertNotEquals(160,actualT);
+        assertEquals(10,actualT);
     }
 }
