@@ -12,6 +12,7 @@ public class Tournee {
     private ArrayList<Trajet> trajets;
     private Demande demande;
     private ArrayList<Coordinate> coordTournee;
+    private double heureActuelle;
     private double vitesse = 15.0/3600.0; //En m/millis
 
     public Tournee(Demande demande) {

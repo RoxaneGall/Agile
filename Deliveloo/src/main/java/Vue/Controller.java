@@ -427,12 +427,10 @@ public class Controller {
                     }
 
                     ArrayList<String> horaires = t.getHeuresLivraisons();
-                    for(String str : horaires) {
+                    for(int i=0; i<horaires.size(); i++) {
                         detailsLivraisons.getChildren().add(new Text("Livraison " + i + 1 + "\n Arrivée à :"));
                     }
-
-                    for (int i = 0; i < 10; i++) {
-                    }
+                    
                     System.out.println("LINE :" + trackTrajet);
                     trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
                     trackTrajet.setVisible(true);
