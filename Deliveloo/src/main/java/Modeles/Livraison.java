@@ -17,6 +17,10 @@ public class Livraison {
         this.id = id;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Intersection getPickup() {
         return pickup;
     }

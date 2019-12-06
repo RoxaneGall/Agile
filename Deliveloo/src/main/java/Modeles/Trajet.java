@@ -32,6 +32,7 @@ public class Trajet {
         this.longueur = 0.0;
     }
 
+
     public Date getHeureDepart() {
         return heureDepart;
     }

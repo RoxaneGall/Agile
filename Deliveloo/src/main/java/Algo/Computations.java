@@ -66,12 +66,12 @@ public class Computations {
                     trajet.setType(Trajet.Type.DELIVERY);
                     Livraison livraison = demande.getLivraisons().get((int) (trajetId.doubleValue()/2.0+0.6)-1);
                     trajet.setLivraison(livraison);
-                    calendar.add(Calendar.MINUTE, (int) livraison.getDureeLivraison());
+                    calendar.add(Calendar.SECOND, (int) livraison.getDureeLivraison());
                 } else {
                     trajet.setType(Trajet.Type.PICKUP);
                     Livraison livraison = demande.getLivraisons().get((int) (trajetId.doubleValue()/2.0+0.6)-1);
                     trajet.setLivraison(livraison);
-                    calendar.add(Calendar.MINUTE, (int) livraison.getDureeEnlevement());
+                    calendar.add(Calendar.SECOND, (int) livraison.getDureeEnlevement());
                 }
                 tournee.addTrajet(trajet);
             }

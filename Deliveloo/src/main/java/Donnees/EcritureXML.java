@@ -45,9 +45,28 @@ public class EcritureXML {
         trajets = tournee.getTrajets();
         for (Trajet t : trajets){
             instructions += "Trajet entre "+ t.getOrigine().toString() + " et " + t.getArrivee().toString()+"\n";
-            instructions += "Heure de départ : " + t.getHeureDepart().toString() + "\n \n";
+            instructions += "Heure de départ : " + t.getHeureDepart().toString() + "\n";
+            switch (t.getType()) {
+                case COMEBACKHOME:
+                    instructions += "OBJECTIF : RETOUR À L'ENTREPOT \n";
+                    break;
+                case PICKUP:
+                    instructions += "OBJECTIF : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    break;
+                case DELIVERY:
+                    instructions += "OBJECTIF : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    break;
+            }
             instructions += "Instructions : \n" + t.getInstructions().toString() + "\n";
             instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().toString() + "\n";
+            switch (t.getType()) {
+                case PICKUP:
+                    instructions += "Temps sur place : " + t.getLivraison().getDureeEnlevement() + " secondes \n";
+                    break;
+                case DELIVERY:
+                    instructions += "Temps sur place : " + t.getLivraison().getDureeLivraison() + " secondes \n";
+                    break;
+            }
             // ajouter aussi des lignes pour les temps d'attente aux intersections
         }
         return instructions;
