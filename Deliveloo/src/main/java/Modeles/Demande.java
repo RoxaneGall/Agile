@@ -10,9 +10,9 @@ import java.util.Date;
 public class Demande {
     private ArrayList<Livraison> livraisons;
     private Intersection entrepot;
-    private Calendar heureDepart;
+    private Date heureDepart;
 
-    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Calendar heureDepart) {
+    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Date heureDepart) {
         this.livraisons = livraisons;
         this.entrepot = entrepot;
         this.heureDepart = heureDepart;
