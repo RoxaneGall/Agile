@@ -434,9 +434,17 @@ public class Controller {
                     livrButtons.add(button);
                 }
                 detailsLivraisons.getChildren().clear();
+                scroll.setVisible(true);
+                scroll.setContent(detailsLivraisons);
+         //       scroll.setContent(supprLivraison);
+
                 for (int i = 0; i < livrButtons.size(); i++) {
                     detailsLivraisons.getChildren().add(livrButtons.get(i));
+                    detailsLivraisons.getChildren().get(i).setVisible(true);
                 }
+                detailsLivraisons.getChildren().add(supprLivraison);
+                detailsLivraisons.setVisible(true);
+                System.out.println(scroll.getContent());
 
                 System.out.println("****************"+detailsLivraisons.getChildren().toString());
 
