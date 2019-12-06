@@ -88,11 +88,12 @@ public class Controller {
      */
     /* section contenant les infos sur les livraisons  */
     @FXML
-    ScrollPane scroll = new ScrollPane();
-    @FXML
     public VBox detailsLivraisons;
     @FXML
     public Button supprLivraison;
+    @FXML
+    public ScrollPane scroll;
+
     public ArrayList<ToggleButton> livrButtons = new ArrayList<>();
 
     /**
@@ -420,7 +421,7 @@ public class Controller {
                 livrButtons.clear();
                 // PARCOURS DES HEURES DARRIVEE A FAIRE DIRECT DANS TRAJET WOLA
                 for (int i = 0; i < horaires.size(); i++) {
-                    ToggleButton button = new ToggleButton("Livraison " + i + 1 + "\n Arrivée à :");
+                    ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
                     button.setId("" + i);
                     livrButtons.add(button);
                 }
@@ -428,6 +429,8 @@ public class Controller {
                 for (int i = 0; i < livrButtons.size(); i++) {
                     detailsLivraisons.getChildren().add(livrButtons.get(i));
                 }
+
+                System.out.println("****************"+detailsLivraisons.getChildren().toString());
 
                 System.out.println("LINE :" + trackTrajet);
                 trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
