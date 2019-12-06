@@ -19,7 +19,7 @@ public class Trajet {
     private Type type;
     private Livraison livraison;
 
-    enum Type {
+    public enum Type {
         PICKUP,
         DELIVERY,
         COMEBACKHOME;
