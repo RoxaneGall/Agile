@@ -10,24 +10,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.text.Text?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0"
             prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
     <top>
-        <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0" />
-                <Button fx:id="buttonZoom" text="Zoom initial"/>
-                <Slider fx:id="sliderZoom" blockIncrement="1.0" majorTickUnit="7.0" max="28.0" minorTickCount="6"
-                        showTickLabels="true" showTickMarks="true" snapToTicks="true" value="14.0" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="buttonResetExtent" text="Recadrer la carte"/>
+                <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0"/>
+                        <Button fx:id="buttonZoom" text="Zoom initial"/>
+                        <Slider fx:id="sliderZoom" blockIncrement="1.0" majorTickUnit="7.0" max="28.0"
+                                minorTickCount="6"
+                                showTickLabels="true" showTickMarks="true" snapToTicks="true" value="14.0"
+                                HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="buttonResetExtent" text="Recadrer la carte"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                    </padding>
+                </HBox>
+                <Text fx:id="ajoutPickUp">  </Text>
             </children>
-            <padding>
-                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-            </padding>
-        </HBox>
+        </VBox>
     </top>
 
 
@@ -74,7 +82,16 @@
                         <Insets bottom="5.0" left="20.0" right="10.0" top="5.0"/>
                     </padding>
                 </VBox>
-                <Button fx:id="supprLivraison" text="Supprimer"/>
+                <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="supprLivraison" text="Supprimer"/>
+                        <Button fx:id="ajoutLivraison" text="Ajouter"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                    </padding>
+                </HBox>
+
             </content>
         </ScrollPane>
 
