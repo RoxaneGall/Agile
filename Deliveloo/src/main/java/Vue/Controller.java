@@ -304,7 +304,15 @@ public class Controller {
     private void setButtonSupprLivraison() {
         supprLivraison.setOnAction(event -> {
             // récupérer le point cliqué
-            Coordinate c = new Coordinate(45.762653, 4.875565);
+            Coordinate c= null;
+            for (int i=0;i<livrButtons.size();i++){
+                if(livrButtons.get(i).isSelected()){
+                    int ordre= Integer.parseInt(livrButtons.get(i).getId());
+                    c=deliveriesNumbers.get(ordre).getPosition();
+                }
+            }
+            System.out.println("coorrrddddd : "+c);
+            System.out.println(deliveries.toString());
             deleteMarkerByCoord(c);
             deleteLabelByCoord(c);
             demande.removeLivraison(c);
