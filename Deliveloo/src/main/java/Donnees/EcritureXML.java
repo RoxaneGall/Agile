@@ -44,8 +44,8 @@ public class EcritureXML {
         ArrayList<Trajet> trajets = new ArrayList<>();
         trajets = tournee.getTrajets();
         for (Trajet t : trajets){
-            instructions += "Trajet entre "+ t.getOrigine().toString() + " et " + t.getArrivee().toString()+"\n";
-            instructions += "Heure de départ : " + t.getHeureDepart().toString() + "\n";
+            instructions += "TRAJET\n";
+            instructions += "Heure de départ : " + t.getHeureDepart().getHours() + ":" + t.getHeureDepart().getMinutes() + "\n";
             switch (t.getType()) {
                 case COMEBACKHOME:
                     instructions += "OBJECTIF : RETOUR À L'ENTREPOT \n";
@@ -57,8 +57,8 @@ public class EcritureXML {
                     instructions += "OBJECTIF : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
                     break;
             }
-            instructions += "Instructions : \n" + t.getInstructions().toString() + "\n";
-            instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().toString() + "\n";
+            instructions += "\nInstructions : \n" + t.toString() + "\n";
+            instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().getHours() + ":" + t.getHeureArrivee().getMinutes() + "\n";
             switch (t.getType()) {
                 case PICKUP:
                     instructions += "Temps sur place : " + t.getLivraison().getDureeEnlevement() + " secondes \n";

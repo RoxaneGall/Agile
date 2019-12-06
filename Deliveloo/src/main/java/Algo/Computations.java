@@ -45,6 +45,8 @@ public class Computations {
         Integer[] solution = tsp1.getMeilleureSolution();
 
         Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR, demande.getHeureDepart().getHours());
+        calendar.set(Calendar.MINUTE, demande.getHeureDepart().getMinutes());
 
         if (solution == null || solution[0] == null) {
             return null;
@@ -77,7 +79,15 @@ public class Computations {
             }
             lastIntersectionId = trajetId;
         }
-        tournee.addTrajet((couts[lastIntersectionId][0]));
+
+        Trajet trajet = (couts[lastIntersectionId][0]);
+        trajet.setHeureDepart(calendar.getTime());
+        double vitesse = 14 * 1000 / 60; //En m/min
+        double cyclingTime = trajet.getLongueur()/vitesse;
+        calendar.add(Calendar.MINUTE, (int) cyclingTime);
+        trajet.setHeureArrivee(calendar.getTime());
+        trajet.setType(Trajet.Type.COMEBACKHOME);
+        tournee.addTrajet(trajet);
 
         return tournee;
     }
