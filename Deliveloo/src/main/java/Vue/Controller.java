@@ -358,10 +358,6 @@ public class Controller {
                 }
 
                 deliveriesMarkers.clear();
-                System.out.println("****** " + deliveriesMarkers.size());
-
-                entrepot = demande.getEntrepot().getCoordinate();
-                System.out.println(demande);
 
                 entrepot = demande.getEntrepot().getCoordinate();
                 setDeliveriesFromLivraisons(demande.getLivraisons());
