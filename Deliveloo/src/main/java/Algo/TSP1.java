@@ -34,7 +34,7 @@ public class TSP1 extends TemplateTSP {
         //Trier les sommets Possibles par Distance Relative au sommet courant
         sommetsPossibles.sort(new Comparator<Integer>() {
             public int compare(Integer trajet1, Integer trajet2) {
-                return (cout[sommetCrt][trajet1].getLongueur().intValue() - cout[sommetCrt][trajet2].getLongueur().intValue());
+                return ((int)(bound(trajet1,nonVus,cout) - bound(trajet2,nonVus, cout)));
             }
         });
         return sommetsPossibles.iterator();

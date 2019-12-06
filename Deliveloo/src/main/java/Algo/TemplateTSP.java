@@ -11,7 +11,7 @@ public abstract class TemplateTSP implements TSP {
     private Double coutMeilleureSolution = 0.0;
     private Boolean tempsLimiteAtteint;
     private Boolean end;
-    private int limitDiscrepancy = 10;
+    private int limitDiscrepancy = 25;
 
     public void setEnd(Boolean end) {
         this.end = end;
@@ -98,6 +98,7 @@ public abstract class TemplateTSP implements TSP {
                 vus.remove(prochainSommet);
                 nonVus.add(prochainSommet);
                 d++;
+                //System.out.println(d);
             }
         }
     }

@@ -24,9 +24,9 @@ class TSP1Test {
     @Test
     void realiserTourneeDepuisPetitPlanEtPetiteDemande_shouldSucceed() throws Exception {
         Service service = new Service();
-        service.chargerPlan("../datas/GrandPlan.xml");
+        service.chargerPlan("datas/grandPlan.xml");
         System.out.println(Graphe.shared.getIntersectionMap().values().size());
-        Demande demande = service.chargerDemande("../datas/demandeGrand9.xml");
+        Demande demande = service.chargerDemande("datas/demandeGrand9.xml");
         service.calculerTournee(demande);
         Tournee t = service.recupererTournee();
         System.out.println(t.getHeureArrivee());
