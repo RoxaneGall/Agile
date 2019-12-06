@@ -318,7 +318,7 @@ public class Controller {
             for (int i = 0; i < deliveries.size(); i++) {
                 if (deliveries.get(i).getKey().equals(c) || deliveries.get(i).getValue().equals(c)) {
                     System.out.println("here");
-                    deliveries.remove(new Pair<Coordinate, Coordinate>(deliveries.get(i).getKey(), deliveries.get(i).getValue()));
+                    deliveries.remove(new Pair<>(deliveries.get(i).getKey(), deliveries.get(i).getValue()));
                 }
             }
             calculerTournee();
