@@ -4,6 +4,7 @@ import com.sothawo.mapjfx.Coordinate;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static java.lang.StrictMath.atan2;
 
@@ -13,13 +14,54 @@ public class Trajet {
     private Intersection origine;
     private Intersection arrivee;
     private Double longueur;
-    private Double heureArrivee;
+    private Date heureDepart;
+    private Date heureArrivee;
+    private Type type;
+    private Livraison livraison;
+
+    enum Type {
+        PICKUP,
+        DELIVERY,
+        COMEBACKHOME;
+    }
 
     public Trajet(Intersection origine) {
         this.origine = origine;
         this.troncons = new ArrayList<Troncon>();
         this.arrivee = origine;
         this.longueur = 0.0;
+    }
+
+    public Date getHeureDepart() {
+        return heureDepart;
+    }
+
+    public void setHeureDepart(Date heureDepart) {
+        this.heureDepart = heureDepart;
+    }
+
+    public Date getHeureArrivee() {
+        return heureArrivee;
+    }
+
+    public void setHeureArrivee(Date heureArrivee) {
+        this.heureArrivee = heureArrivee;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Livraison getLivraison() {
+        return livraison;
+    }
+
+    public void setLivraison(Livraison livraison) {
+        this.livraison = livraison;
     }
 
     public Double getLongueur() {
