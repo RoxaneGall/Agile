@@ -1,11 +1,14 @@
 package Donnees;
 
+import Modeles.InstructionLivraison;
 import Modeles.Tournee;
+import Modeles.Trajet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class EcritureXML {
 
@@ -36,6 +39,39 @@ public class EcritureXML {
         }else return chemin;
     }
 
+    public String genererInstructionsPourTournee(Tournee tournee){
+        String instructions="";
+        ArrayList<Trajet> trajets = new ArrayList<>();
+        trajets = tournee.getTrajets();
+        for (Trajet t : trajets){
+            instructions += "TRAJET\n";
+            instructions += "Heure de départ : " + t.getHeureDepart().getHours() + ":" + t.getHeureDepart().getMinutes() + "\n";
+            switch (t.getType()) {
+                case COMEBACKHOME:
+                    instructions += "OBJECTIF : RETOUR À L'ENTREPOT \n";
+                    break;
+                case PICKUP:
+                    instructions += "OBJECTIF : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    break;
+                case DELIVERY:
+                    instructions += "OBJECTIF : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    break;
+            }
+            instructions += "\nInstructions : \n" + t.toString() + "\n";
+            instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().getHours() + ":" + t.getHeureArrivee().getMinutes() + "\n";
+            switch (t.getType()) {
+                case PICKUP:
+                    instructions += "Temps sur place : " + t.getLivraison().getDureeEnlevement() + " secondes \n";
+                    break;
+                case DELIVERY:
+                    instructions += "Temps sur place : " + t.getLivraison().getDureeLivraison() + " secondes \n";
+                    break;
+            }
+            // ajouter aussi des lignes pour les temps d'attente aux intersections
+        }
+        return instructions;
+    }
+
     public void ecrireFichier(Tournee tournee) throws Exception {
 
         String chemin = genererNomFichierDeTournee(tournee,"");
@@ -50,7 +86,7 @@ public class EcritureXML {
                 file.createNewFile();
             }
 
-            byte[] contentInBytes = tournee.toString().getBytes();
+            byte[] contentInBytes = genererInstructionsPourTournee(tournee).getBytes();
 
             fop.write(contentInBytes);
             fop.flush();
