@@ -334,14 +334,14 @@ public class Controller implements ActionListener {
     private void setButtonSupprLivraison() {
         supprLivraison.setOnAction(event -> {
             // récupérer le point cliqué
-            Coordinate c= null;
-            for (int i=0;i<livrButtons.size();i++){
-                if(livrButtons.get(i).isSelected()){
-                    int ordre= Integer.parseInt(livrButtons.get(i).getId());
-                    c=deliveriesNumbers.get(ordre).getPosition();
+            Coordinate c = null;
+            for (int i = 0; i < livrButtons.size(); i++) {
+                if (livrButtons.get(i).isSelected()) {
+                    int ordre = Integer.parseInt(livrButtons.get(i).getId());
+                    c = deliveriesNumbers.get(ordre).getPosition();
                 }
             }
-            System.out.println("coorrrddddd : "+c);
+            System.out.println("coorrrddddd : " + c);
             System.out.println(deliveries.toString());
             deleteMarkerByCoord(c);
             deleteLabelByCoord(c);
@@ -393,9 +393,9 @@ public class Controller implements ActionListener {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                   URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
+                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
                     markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);
-                   // markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
+                    // markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
@@ -419,7 +419,6 @@ public class Controller implements ActionListener {
 
         });
     }
-
 
 
     private void setButtonCalculerTournee() {
@@ -461,8 +460,9 @@ public class Controller implements ActionListener {
 
     private void afficherTourneeCalculee() {
         Tournee t = service.recupererTournee();
-        Platform.runLater(new Runnable(){
-            @Override public void run() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
                 mapView.removeCoordinateLine(trackTrajet);
                 tournee.clear();
                 afficherTournee(t);
@@ -470,56 +470,56 @@ public class Controller implements ActionListener {
         });
     }
 
-    private void afficherTournee(Tournee t){
-            if (demande != null) {
-                livrButtons.clear();
+    private void afficherTournee(Tournee t) {
+        if (demande != null) {
+            livrButtons.clear();
 
-                for (int i = 0; i < deliveriesNumbers.size(); i++) {
-                    mapView.removeLabel(deliveriesNumbers.get(i));
-                }
-                detailsLivraisons.getChildren().clear();
-                scroll.setVisible(true);
-                scroll.setContent(detailsLivraisons);
-                // scroll.setContent(supprLivraison);
-
-                // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                int compteur = 1;
-                for (int i = 0; i < t.getTrajets().size(); i++) {
-                    tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-                    MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
-                    mapView.addLabel(l);
-                    deliveriesNumbers.add(l);
-                    compteur++;
-                    for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                        tournee.add(troncon.getDestination().getCoordinate());
-                    }
-
-                    ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
-                    button.setId("" + i);
-                    livrButtons.add(button);
-                }
-
-                for (int i = 0; i < livrButtons.size(); i++) {
-                    detailsLivraisons.getChildren().add(livrButtons.get(i));
-                    detailsLivraisons.getChildren().get(i).setVisible(true);
-                }
-                detailsLivraisons.getChildren().add(supprLivraison);
-                detailsLivraisons.setVisible(true);
-                System.out.println(scroll.getContent());
-
-                System.out.println("****************"+detailsLivraisons.getChildren().toString());
-
-                System.out.println("LINE :" + trackTrajet);
-                trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
-                trackTrajet.setVisible(true);
-                // add the tracks
-                System.out.println("ADD TRACK TO MAP");
-                mapView.addCoordinateLine(trackTrajet);
-                System.out.println("Tournee: " + trackTrajet.toString());
-
-            } else {
-                System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+            for (int i = 0; i < deliveriesNumbers.size(); i++) {
+                mapView.removeLabel(deliveriesNumbers.get(i));
             }
+            detailsLivraisons.getChildren().clear();
+            scroll.setVisible(true);
+            scroll.setContent(detailsLivraisons);
+            // scroll.setContent(supprLivraison);
+
+            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+            int compteur = 1;
+            for (int i = 0; i < t.getTrajets().size(); i++) {
+                tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
+                MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+                mapView.addLabel(l);
+                deliveriesNumbers.add(l);
+                compteur++;
+                for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                    tournee.add(troncon.getDestination().getCoordinate());
+                }
+
+                ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
+                button.setId("" + i);
+                livrButtons.add(button);
+            }
+
+            for (int i = 0; i < livrButtons.size(); i++) {
+                detailsLivraisons.getChildren().add(livrButtons.get(i));
+                detailsLivraisons.getChildren().get(i).setVisible(true);
+            }
+            detailsLivraisons.getChildren().add(supprLivraison);
+            detailsLivraisons.setVisible(true);
+            System.out.println(scroll.getContent());
+
+            System.out.println("****************" + detailsLivraisons.getChildren().toString());
+
+            System.out.println("LINE :" + trackTrajet);
+            trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
+            trackTrajet.setVisible(true);
+            // add the tracks
+            System.out.println("ADD TRACK TO MAP");
+            mapView.addCoordinateLine(trackTrajet);
+            System.out.println("Tournee: " + trackTrajet.toString());
+
+        } else {
+            System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+        }
     }
 
 
