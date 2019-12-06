@@ -393,7 +393,7 @@ public class Controller implements ActionListener {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
+                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_"+i+".png");
                     markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);
                     // markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
