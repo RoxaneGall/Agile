@@ -88,6 +88,7 @@ public class Controller {
     public VBox detailsLivraisons;
     @FXML
     public Button supprLivraison;
+    public ArrayList<Button> livrButtons;
 
     /**
      * FX elements d'affichage pour debug
@@ -430,8 +431,9 @@ public class Controller {
                     }
 
                     ArrayList<String> horaires = t.getHeuresLivraisons();
+                    livrButtons.clear();
                     for(int i=0; i<horaires.size(); i++) {
-                        detailsLivraisons.getChildren().add(new Button("Livraison " + i + 1 + "\n Arrivée à :"));
+                        detailsLivraisons.getChildren().add(new ToggleButton("Livraison " + i + 1 + "\n Arrivée à :"));
                     }
                     
                     System.out.println("LINE :" + trackTrajet);
