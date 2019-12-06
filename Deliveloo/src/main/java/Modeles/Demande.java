@@ -24,11 +24,14 @@ public class Demande {
 
 
     public void removeLivraison(Coordinate coord) {
+        System.out.println(coord);
+        System.out.println(livraisons);
         for (Livraison l : livraisons) {
             // recherche de la livraison qui contient la coordinate
-            if (l.getDelivery().getCoordinate() == coord || l.getPickup().getCoordinate() == coord) {
+            if (l.getDelivery().getCoordinate().equals(coord) || l.getPickup().getCoordinate().equals(coord)) {
                 // suppression de cette livraison
                 livraisons.remove(l);
+                break;
             }
         }
     }
