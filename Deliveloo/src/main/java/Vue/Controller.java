@@ -185,6 +185,7 @@ public class Controller implements ActionListener {
     public void initializeView(Projection projection, Stage primaryStageFromMain) {
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
+        loading.toFront();
         primaryStage = primaryStageFromMain;
 
         // init MapView-Cache
@@ -193,6 +194,7 @@ public class Controller implements ActionListener {
 
         // set the custom css file for the MapView
         mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
+        mapView.toBack();
 
         // set the controls to disabled, this will be changed when the MapView is initialized
         setTopControlsDisable(true);
