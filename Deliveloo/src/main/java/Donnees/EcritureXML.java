@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class EcritureXML {
@@ -44,32 +45,36 @@ public class EcritureXML {
         ArrayList<Trajet> trajets = new ArrayList<>();
         trajets = tournee.getTrajets();
         for (Trajet t : trajets){
-            instructions += "TRAJET\n";
-            instructions += "Heure de départ : " + t.getHeureDepart().getHours() + ":" + t.getHeureDepart().getMinutes() + "\n";
             switch (t.getType()) {
                 case COMEBACKHOME:
-                    instructions += "OBJECTIF : RETOUR À L'ENTREPOT \n";
+                    instructions += "• TRAJET : RETOUR À L'ENTREPOT \n";
                     break;
                 case PICKUP:
-                    instructions += "OBJECTIF : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    instructions += "• TRAJET : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
                     break;
                 case DELIVERY:
-                    instructions += "OBJECTIF : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    instructions += "• TRAJET : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
                     break;
             }
-            instructions += "\nInstructions : \n" + t.toString() + "\n";
-            instructions += "Heure d'arrivée : \n" + t.getHeureArrivee().getHours() + ":" + t.getHeureArrivee().getMinutes() + "\n";
+            String pattern = "HH:mm";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            instructions += "  Heure de départ : " + simpleDateFormat.format(t.getHeureDepart()) + "\n";
+            instructions += "  Heure d'arrivée : " + simpleDateFormat.format(t.getHeureArrivee()) + "\n";
+            instructions += "  Durée du trajet : " + (t.getHeureArrivee().getTime()-t.getHeureDepart().getTime())/(60*1000) + " minutes\n";
             switch (t.getType()) {
                 case PICKUP:
-                    instructions += "Temps sur place : " + t.getLivraison().getDureeEnlevement() + " secondes \n";
+                    instructions += "  Temps sur place : " + t.getLivraison().getDureeEnlevement()/(60) + " minutes \n";
                     break;
                 case DELIVERY:
-                    instructions += "Temps sur place : " + t.getLivraison().getDureeLivraison() + " secondes \n";
+                    instructions += "  Temps sur place : " + t.getLivraison().getDureeLivraison()/(60) + " minutes \n";
                     break;
             }
+            instructions += "  Itineraire : \n" + t.toString() + "\n";
+
             // ajouter aussi des lignes pour les temps d'attente aux intersections
         }
-        return instructions;
+        return instructions+"\n";
     }
 
     public void ecrireFichier(Tournee tournee) throws Exception {

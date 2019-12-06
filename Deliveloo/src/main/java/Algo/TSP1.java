@@ -4,6 +4,7 @@ import Modeles.Trajet;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class TSP1 extends TemplateTSP {
@@ -31,10 +32,9 @@ public class TSP1 extends TemplateTSP {
                 }
             }
         }
-        //Trier les sommets Possibles par Distance Relative au sommet courant
         sommetsPossibles.sort(new Comparator<Integer>() {
             public int compare(Integer trajet1, Integer trajet2) {
-                return ((int)(bound(trajet1,nonVus,cout) - bound(trajet2,nonVus, cout)));
+                return ((int)(cout[sommetCrt][trajet1].getLongueur() - cout[sommetCrt][trajet2].getLongueur()));
             }
         });
         return sommetsPossibles.iterator();
@@ -51,25 +51,26 @@ public class TSP1 extends TemplateTSP {
      */
     protected Double bound(Integer sommetCourant, ArrayList<Integer> nonVus, Trajet[][] cout) {
 
-        Double cout_min = Double.MAX_VALUE;
+        Double cout_min = 0.0;
         Double sommetLePlusProcheDeLEntrepotDesNonsVus = Double.MAX_VALUE;
         for(int i = 0; i < nonVus.size(); i ++){
 
             double cout_act = cout[sommetCourant][nonVus.get(i)].getLongueur();
-            if (cout_act < cout_min)
-                cout_min = cout_act;
+            double min = cout_act;
 
             for(int j = 0; j < nonVus.size(); j++){
                 if (j!=i) {
                     cout_act = cout[nonVus.get(i)][nonVus.get(j)].getLongueur();
-                    if (cout_act < cout_min)
-                        cout_min = cout_act;
+                    if (cout_act < min)
+                        min = cout_act;
                 }
             }
+
+            cout_min+=min;
 
             if (cout[nonVus.get(i)][0].getLongueur() < sommetLePlusProcheDeLEntrepotDesNonsVus)
                 sommetLePlusProcheDeLEntrepotDesNonsVus = cout[nonVus.get(i)][0].getLongueur();
         }
-        return cout_min*nonVus.size() + sommetLePlusProcheDeLEntrepotDesNonsVus;
+        return cout_min + sommetLePlusProcheDeLEntrepotDesNonsVus;
     }
 }
