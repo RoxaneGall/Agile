@@ -155,6 +155,9 @@ public class Controller implements ActionListener {
             .withAttributions(
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
 
+    public Controller() throws Exception {
+    }
+
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
         for (Livraison livr : livraisons) {
             Pair delivery = new Pair(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
