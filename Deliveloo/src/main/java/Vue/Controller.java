@@ -360,8 +360,7 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             try {
                 System.out.println("Chargement d'une demande");
-                File selectedFile = fileChooser.showOpenDialog(primaryStage);
-                demande = service.chargerDemande(selectedFile.getAbsolutePath());
+                demande = service.chargerDemande("../datas/demandeGrand9.xml");
 
                 mapView.removeCoordinateLine(trackTrajet);
                 if (entrepotMarker != null) {

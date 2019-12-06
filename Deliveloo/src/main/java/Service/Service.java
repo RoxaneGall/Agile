@@ -39,7 +39,7 @@ public class Service {
 
         //Remplissage tableau de couts avec les longueurs des trajets entre les sommets
         couts = getCoutsDemande(intersDemande);
-        Computations.runTSP(couts, demande);
+        Computations.runTSP(couts);
     }
 
     public Tournee recupererTournee() {
