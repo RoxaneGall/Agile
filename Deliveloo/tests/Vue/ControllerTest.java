@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
     @Test
-    public void mapExtentTest() {
+    public void mapExtentTest() throws Exception {
         // ArrayList<Coordinate> col = new ArrayList<>();
         Coordinate c1 = new Coordinate(45.778579, 4.852096);
         Coordinate c2 = new Coordinate(45.781901, 4.791063);

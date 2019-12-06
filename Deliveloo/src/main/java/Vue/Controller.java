@@ -11,6 +11,7 @@ import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import com.sun.java.swing.plaf.windows.WindowsFileChooserUI;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -28,6 +29,8 @@ import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +45,7 @@ import java.util.stream.Stream;
 
 import Service.Service;
 
-public class Controller {
+public class Controller implements ActionListener {
 
     /**
      * FX Elements pour charger les plans et demandes
@@ -158,6 +161,9 @@ public class Controller {
             .withUrl("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x})")
             .withAttributions(
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
+
+    public Controller() throws Exception {
+    }
 
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
         for (Livraison livr : livraisons) {
@@ -423,7 +429,6 @@ public class Controller {
                     for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
                         tournee.add(troncon.getDestination().getCoordinate());
                     }
-                }
 
                 ArrayList<String> horaires = t.getHeuresLivraisons();
                 livrButtons.clear();
@@ -460,6 +465,49 @@ public class Controller {
         calculTournee.setOnAction(event -> {
             calculerTournee();
         });
+    }
+
+    //TODO: FAIRE UN BOUTON APPELANT CETTE METHODE
+    private void arreterChargementMeilleureTournee() {
+        Computations.endComputations();
+    }
+
+    private void afficherTourneeCalculee() {
+        Tournee t = service.recupererTournee();
+        Platform.runLater(new Runnable(){
+            @Override public void run() {
+                mapView.removeCoordinateLine(trackTrajet);
+                tournee.clear();
+                afficherTournee(t);
+            }
+        });
+    }
+
+    private void afficherTournee(Tournee t){
+        // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+        int compteur = 1;
+        for (int i = 0; i < t.getTrajets().size(); i++) {
+            tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
+            MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+            mapView.addLabel(l);
+            compteur++;
+            for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                tournee.add(troncon.getDestination().getCoordinate());
+            }
+
+
+            detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
+        }
+
+        for( int i=0; i < 10; i++) {
+        }
+        System.out.println("LINE :" + trackTrajet);
+        trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
+        trackTrajet.setVisible(true);
+        // add the tracks
+        System.out.println("ADD TRACK TO MAP");
+        mapView.addCoordinateLine(trackTrajet);
+        System.out.println("Tournee: " + trackTrajet.toString());
     }
 
 
@@ -503,5 +551,12 @@ public class Controller {
 
     }
 
-
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("ended")) {
+            //TODO: CHARGMENT DES TRAJETS TERMINÉS
+        } else if (e.getActionCommand().equals("newResultFound")) {
+            afficherTourneeCalculee();
+        }
+    }
 }
