@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javafx.scene.control.ProgressIndicator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,6 +65,8 @@ public class Controller implements ActionListener {
     public Button calculTournee;
     @FXML
     public Button stopTournee;
+    @FXML
+    public ProgressIndicator loading = new ProgressIndicator();
 
     /**
      * Carte
@@ -181,7 +184,8 @@ public class Controller implements ActionListener {
      */
     public void initializeView(Projection projection, Stage primaryStageFromMain) {
         fileChooser.setInitialDirectory(new File("../datas"));
-
+        loading.visibleProperty().setValue(false);
+        loading.toFront();
         primaryStage = primaryStageFromMain;
 
         // init MapView-Cache
@@ -190,6 +194,7 @@ public class Controller implements ActionListener {
 
         // set the custom css file for the MapView
         mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
+        mapView.toBack();
 
         // set the controls to disabled, this will be changed when the MapView is initialized
         setTopControlsDisable(true);
@@ -432,6 +437,7 @@ public class Controller implements ActionListener {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
                 //TODO: DEBUT CHARGEMENT TRAJET
+                loading.visibleProperty().setValue(true);
                 Thread t1 = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -449,7 +455,6 @@ public class Controller implements ActionListener {
         }
     }
 
-    //TODO: FAIRE UN BOUTON APPELANT CETTE METHODE
     private void arreterChargementMeilleureTournee() {
         Computations.endComputations();
     }
@@ -561,6 +566,7 @@ public class Controller implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ended")) {
+            loading.visibleProperty().setValue(false);
             //TODO: CHARGMENT DES TRAJETS TERMINÉS
         } else if (e.getActionCommand().equals("newResultFound")) {
             afficherTourneeCalculee();
