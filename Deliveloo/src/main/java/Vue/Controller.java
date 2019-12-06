@@ -403,64 +403,31 @@ public class Controller implements ActionListener {
         });
     }
 
-    /**
-     *
-     */
+
+
+    private void setCalculerTournee() {
+        calculTournee.setOnAction(event -> {
+            calculerTournee();
+        });
+    }
 
     private void calculerTournee() {
         mapView.removeCoordinateLine(trackTrajet);
-        for (int i = 0; i < deliveriesNumbers.size(); i++) {
-            mapView.removeLabel(deliveriesNumbers.get(i));
-        }
         tournee.clear();
         System.out.println("Calcul d'une tournée");
         try {
             if (demande != null) {
-                Tournee t = service.calculerTournee(demande);
-                // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                int compteur = 1;
-                t.getTotalDistance();
-                for (int i = 0; i < t.getTrajets().size(); i++) {
-                    tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-                    MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
-                    mapView.addLabel(l);
-                    deliveriesNumbers.add(l);
-                    compteur++;
-                    for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                        tournee.add(troncon.getDestination().getCoordinate());
+                arreterChargementMeilleureTournee();
+                Computations.setDelegate(this);
+                //TODO: DEBUT CHARGEMENT TRAJET
+                Thread t1 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        service.calculerTournee(demande);
                     }
-                }
+                });
+                t1.start();
 
-                ArrayList<String> horaires = t.getHeuresLivraisons();
-                livrButtons.clear();
-                // PARCOURS DES HEURES DARRIVEE A FAIRE DIRECT DANS TRAJET WOLA
-                for (int i = 0; i < horaires.size(); i++) {
-                    ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
-                    button.setId("" + i);
-                    livrButtons.add(button);
-                }
-                detailsLivraisons.getChildren().clear();
-                scroll.setVisible(true);
-                scroll.setContent(detailsLivraisons);
-         //       scroll.setContent(supprLivraison);
-
-                for (int i = 0; i < livrButtons.size(); i++) {
-                    detailsLivraisons.getChildren().add(livrButtons.get(i));
-                    detailsLivraisons.getChildren().get(i).setVisible(true);
-                }
-                detailsLivraisons.getChildren().add(supprLivraison);
-                detailsLivraisons.setVisible(true);
-                System.out.println(scroll.getContent());
-
-                System.out.println("****************"+detailsLivraisons.getChildren().toString());
-
-                System.out.println("LINE :" + trackTrajet);
-                trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
-                trackTrajet.setVisible(true);
-                // add the tracks
-                System.out.println("ADD TRACK TO MAP");
-                mapView.addCoordinateLine(trackTrajet);
-                System.out.println("Tournee: " + trackTrajet.toString());
             } else {
                 System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
             }
@@ -468,12 +435,6 @@ public class Controller implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    private void setCalculerTournee() {
-        calculTournee.setOnAction(event -> {
-            calculerTournee();
-        });
     }
 
     //TODO: FAIRE UN BOUTON APPELANT CETTE METHODE
@@ -493,30 +454,55 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t){
-        // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-        int compteur = 1;
-        for (int i = 0; i < t.getTrajets().size(); i++) {
-            tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-            MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
-            mapView.addLabel(l);
-            compteur++;
-            for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                tournee.add(troncon.getDestination().getCoordinate());
+            if (demande != null) {
+                livrButtons.clear();
+
+                detailsLivraisons.getChildren().clear();
+                scroll.setVisible(true);
+                scroll.setContent(detailsLivraisons);
+                // scroll.setContent(supprLivraison);
+
+                // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+                int compteur = 1;
+                for (int i = 0; i < t.getTrajets().size(); i++) {
+                    tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
+                    MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+                    mapView.addLabel(l);
+                    deliveriesNumbers.add(l);
+                    compteur++;
+                    for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                        tournee.add(troncon.getDestination().getCoordinate());
+                    }
+
+                    ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
+                    button.setId("" + i);
+                    livrButtons.add(button);
+                }
+
+                for (int i = 0; i < livrButtons.size(); i++) {
+                    detailsLivraisons.getChildren().add(livrButtons.get(i));
+                    detailsLivraisons.getChildren().get(i).setVisible(true);
+                }
+                detailsLivraisons.getChildren().add(supprLivraison);
+                detailsLivraisons.setVisible(true);
+                System.out.println(scroll.getContent());
+
+                System.out.println("****************"+detailsLivraisons.getChildren().toString());
+
+                System.out.println("LINE :" + trackTrajet);
+                trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
+                trackTrajet.setVisible(true);
+                // add the tracks
+                System.out.println("ADD TRACK TO MAP");
+                mapView.addCoordinateLine(trackTrajet);
+                System.out.println("Tournee: " + trackTrajet.toString());
+
+                for (int i = 0; i < deliveriesNumbers.size(); i++) {
+                    mapView.removeLabel(deliveriesNumbers.get(i));
+                }
+            } else {
+                System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
             }
-
-
-            detailsLivraisons.getChildren().add( new Text( "Livraison " + i+1+"\n Arrivée à :"));
-        }
-
-        for( int i=0; i < 10; i++) {
-        }
-        System.out.println("LINE :" + trackTrajet);
-        trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
-        trackTrajet.setVisible(true);
-        // add the tracks
-        System.out.println("ADD TRACK TO MAP");
-        mapView.addCoordinateLine(trackTrajet);
-        System.out.println("Tournee: " + trackTrajet.toString());
     }
 
 
