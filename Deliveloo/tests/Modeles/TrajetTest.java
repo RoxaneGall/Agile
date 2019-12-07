@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrajetTest {
 
+    Trajet trajet;
+
     @Test
     void getLongueurTest_ShouldReturnSumOfTronconLengths() {
         //Arrange
@@ -25,7 +27,7 @@ class TrajetTest {
         Troncon t45 = new Troncon(i5,"",2.0);
         Troncon t51 = new Troncon(i1,"",2.0);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
         trajet.addTroncon(t12);
         trajet.addTroncon(t23);
         trajet.addTroncon(t34);
@@ -56,7 +58,7 @@ class TrajetTest {
         Troncon t45 = new Troncon(i5,"",2.0);
         Troncon t51 = new Troncon(i1,"",2.0);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
         trajet.addTroncon(t12);
         trajet.addTroncon(t23);
         trajet.addTroncon(t34);
@@ -86,7 +88,7 @@ class TrajetTest {
         Troncon t45 = new Troncon(i5,"",2.0);
         Troncon t51 = new Troncon(i1,"",2.0);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
         trajet.addTroncon(t12);
         trajet.addTroncon(t23);
         trajet.addTroncon(t34);
@@ -123,7 +125,7 @@ class TrajetTest {
         ts.add(t45);
         ts.add(t51);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
         trajet.addTroncons(ts);
 
         //Act
@@ -160,7 +162,7 @@ class TrajetTest {
         ts.add(t45);
         ts.add(t51);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
 
         //Act
         trajet.addTroncon(t12);
@@ -192,7 +194,7 @@ class TrajetTest {
         ts.add(t45);
         ts.add(t51);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
 
         //Act
         trajet.addTroncons(ts);
@@ -230,7 +232,7 @@ class TrajetTest {
         ts.add(t45);
         ts.add(t51);
 
-        Trajet trajet = new Trajet(i1);
+        trajet = new Trajet(i1);
         trajet.addTroncons(ts);
 
         //Act
