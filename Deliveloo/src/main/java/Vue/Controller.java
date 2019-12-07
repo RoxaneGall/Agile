@@ -68,6 +68,8 @@ public class Controller implements ActionListener {
     public Button stopTournee;
     @FXML
     public ProgressIndicator loading = new ProgressIndicator();
+    @FXML
+    public Text ajoutPickUp;
 
     /**
      * Carte
@@ -100,6 +102,8 @@ public class Controller implements ActionListener {
     public VBox detailsLivraisons;
     @FXML
     public Button supprLivraison;
+    @FXML
+    public Button ajoutLivraison;
     @FXML
     public ScrollPane scroll;
     @FXML
@@ -217,6 +221,7 @@ public class Controller implements ActionListener {
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
+        setButtonAjoutLivraison();
 
         setButtonChargerDemande();
 
@@ -360,6 +365,11 @@ public class Controller implements ActionListener {
             System.out.println("deliveries after removal : " + deliveries);
         });
     }
+    private void setButtonAjoutLivraison() {
+        ajoutLivraison.setOnAction(event -> {
+            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up");
+        });
+    }
 
     /**
      *
@@ -395,15 +405,15 @@ public class Controller implements ActionListener {
                 for (int i = 0; i < demande.getLivraisons().size(); i++) {
                     Marker markerPickUp;
                     Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                   /* URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_"+i+".png");
+                 /*   URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_"+i+".png");
                     markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);*/
                     markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
                     Marker markerDelivery;
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                  /*  URL imageURL2 = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_"+i+".png");
+                 /*   URL imageURL2 = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
                     markerDelivery = new Marker(imageURL2, 0, 0).setPosition(delivery);*/
-                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
+                   markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
 
 
                     deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
@@ -505,8 +515,6 @@ public class Controller implements ActionListener {
             detailsLivraisons.getChildren().clear();
             scroll.setVisible(true);
             scroll.setContent(detailsLivraisons);
-            // scroll.setContent(supprLivraison);
-
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             for (int i = 0; i < t.getTrajets().size(); i++) {
@@ -537,6 +545,8 @@ public class Controller implements ActionListener {
                 detailsLivraisons.getChildren().add(entry.getValue());
             }
             detailsLivraisons.getChildren().add(supprLivraison);
+            detailsLivraisons.getChildren().add(ajoutLivraison);
+
             detailsLivraisons.setVisible(true);
 
             trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
