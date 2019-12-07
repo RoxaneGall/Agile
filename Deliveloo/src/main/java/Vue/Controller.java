@@ -367,6 +367,10 @@ public class Controller implements ActionListener {
                     deliveriesMarkers.put(m.getPosition(), m);
                     ajouterLivraison(interLivraison);
                 }
+            if(interLivraison.size()==2) {
+                ajoutPickUp.setText("Livraison ajoutée !");
+
+            }
 
         });
     }
@@ -386,13 +390,6 @@ public class Controller implements ActionListener {
             ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
             ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
             addRightClickEvent(interLivraison);
-            System.out.println("*****"+ interLivraison.size());
-
-
-
-            // dès qu'on sort de addEventHandler interPickUp redevient nulle wtf
-
-
         });
     }
 
