@@ -374,6 +374,7 @@ public class Controller implements ActionListener {
         if(interLivraison.size()==2) {
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
+            //reste à demander à l'utilisateur de rentrer la durée d'enlèvement et de livraison
             Livraison l = new Livraison (interPickUp,interDelivery,0,0);
             demande.getLivraisons().add(l);
             calculerTournee();
@@ -382,7 +383,7 @@ public class Controller implements ActionListener {
     }
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
-            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up");
+            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
             ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
             addRightClickEvent(interLivraison);
             System.out.println("*****"+ interLivraison.size());
