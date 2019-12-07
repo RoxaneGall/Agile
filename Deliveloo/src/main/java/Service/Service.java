@@ -83,5 +83,10 @@ public class Service {
         return couts;
     }
 
+    public Intersection intersectionPlusProche(Coordinate coord){
+        Intersection inter = lec.getIntersectionPlusProche(coord);
+        return inter;
+    }
+
 
 }

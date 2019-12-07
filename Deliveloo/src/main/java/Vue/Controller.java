@@ -1,20 +1,16 @@
 package Vue;
 
 import Algo.Computations;
-import Donnees.LectureXML;
 import Modeles.*;
 
-import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
-import com.sun.java.swing.plaf.windows.WindowsFileChooserUI;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -26,24 +22,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import javafx.scene.control.ProgressIndicator;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.CookieHandler;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicReference;
 
 import Service.Service;
 
@@ -275,10 +260,6 @@ public class Controller implements ActionListener {
             labelExtent.setText(event.getExtent().toString());
         });
 
-        mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: map right clicked at: " + event.getCoordinate());
-        });
         mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, event -> {
             event.consume();
             labelEvent.setText("Event: marker clicked: " + event.getMarker().getId());
@@ -377,7 +358,23 @@ public class Controller implements ActionListener {
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
             ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up");
+            AtomicReference<Intersection> interPickUp = new AtomicReference<Intersection>();
+            AtomicReference<Intersection> interDelivery = new AtomicReference<Intersection>();
+
+
+            mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
+                eventClick.consume();
+                labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
+                Coordinate pickUp=eventClick.getCoordinate();
+                interPickUp.set(service.intersectionPlusProche(pickUp));
+                System.out.println("pickup : "+interPickUp);
+
+
+            });
+
+
         });
+
     }
 
     /**
