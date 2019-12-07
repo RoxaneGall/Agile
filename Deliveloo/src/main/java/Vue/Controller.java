@@ -355,18 +355,29 @@ public class Controller implements ActionListener {
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
             ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up");
-            Intersection interPickUp = new Intersection();
+            ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
 
             mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
                 eventClick.consume();
                 labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
                 Coordinate pickUp=eventClick.getCoordinate();
-                interPickUp.setIntersection(service.intersectionPlusProche(pickUp));
-                System.out.println("pickup : "+interPickUp); // interPickUp est bien récupérée
-                Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(interPickUp.getCoordinate()).setVisible(true);
+                Intersection i= service.intersectionPlusProche(pickUp);
+                interLivraison.add(i);
+                System.out.println("pickup : "+i); // interPickUp est bien récupérée
+                Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(i.getCoordinate()).setVisible(true);
                 mapView.addMarker(m);
-
+                deliveriesMarkers.put(m.getPosition(), m);
             });
+            System.out.println("*****"+ interLivraison.size());
+            if(interLivraison.size()>=2) {
+                Intersection interPickUp = interLivraison.get(0);
+                Intersection interDelivery = interLivraison.get(1);
+                Livraison l = new Livraison (interPickUp,interDelivery,0,0);
+                demande.getLivraisons().add(l);
+                calculerTournee();
+                afficherTourneeCalculee();
+            }
+
 
             // dès qu'on sort de addEventHandler interPickUp redevient nulle wtf
 
