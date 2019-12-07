@@ -17,6 +17,8 @@ import java.util.*;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import static java.lang.Math.abs;
+
 public class LectureXML {
 
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -259,12 +261,15 @@ public class LectureXML {
 
         while(it.hasNext()){
             Intersection i = (Intersection) it.next();
-            Double longi = i.getCoordinate().getLongitude() - c.getLongitude();
+            Double longi = abs(i.getCoordinate().getLongitude() - c.getLongitude());
 
-            Double lati = i.getCoordinate().getLatitude() - c.getLatitude();
+            Double lati = abs(i.getCoordinate().getLatitude() - c.getLatitude());
 
 
-            if (longi < longMin && lati < latMin) {
+            if (longi <= longMin && lati <= latMin) {
+                System.out.println("longi : " + longi+". longMin : "+longMin);
+                System.out.println("lati : " + longi+". latMin : "+longMin);
+
                 longMin = longi;
                 latMin = lati;
                 res = i;
