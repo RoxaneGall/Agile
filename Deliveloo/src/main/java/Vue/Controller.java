@@ -363,6 +363,8 @@ public class Controller implements ActionListener {
                 Coordinate pickUp=eventClick.getCoordinate();
                 interPickUp.setIntersection(service.intersectionPlusProche(pickUp));
                 System.out.println("pickup : "+interPickUp); // interPickUp est bien récupérée
+                Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(interPickUp.getCoordinate()).setVisible(true);
+                mapView.addMarker(m);
 
             });
 
