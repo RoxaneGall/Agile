@@ -15,7 +15,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         Intersection actualI = liv.getPickup();
@@ -31,7 +31,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
@@ -51,7 +51,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         Intersection actualI = liv.getDelivery();
@@ -67,7 +67,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
@@ -87,7 +87,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         int actualT = liv.getDureeEnlevement();
@@ -103,7 +103,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         int actualT = liv.getDureeLivraison();
@@ -119,7 +119,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         liv.setDureeEnlevement(10);
@@ -138,7 +138,7 @@ class LivraisonTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
 
-        liv= new Livraison(i1,i2,30,160);
+        liv= new Livraison((long)23,i1,i2,30,160);
 
         //Act
         liv.setDureeLivraison(10);

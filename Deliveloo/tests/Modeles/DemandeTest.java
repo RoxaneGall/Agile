@@ -20,7 +20,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison(i1,i2,30,160);
+        Livraison l = new Livraison((long)23,i1,i2,30,160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -78,7 +78,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison(i1,i2,30,160);
+        Livraison l = new Livraison((long)23,i1,i2,30,160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -89,7 +89,7 @@ class DemandeTest {
         dmd = new Demande(liv, inter, d);
 
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Livraison livraison = new Livraison(inter,i3,45,450);
+        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
         liv.add(livraison);
 
         //Act
@@ -114,7 +114,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison(i1,i2,30,160);
+        Livraison l = new Livraison((long)23,i1,i2,30,160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -138,7 +138,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison(i1,i2,30,160);
+        Livraison l = new Livraison((long)23,i1,i2,30,160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -164,7 +164,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
         Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
         ArrayList<Livraison> liv = new ArrayList<>();
-        Livraison l = new Livraison(i1, i2, 30, 160);
+        Livraison l = new Livraison((long)23,i1, i2, 30, 160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -188,7 +188,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
         Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
         ArrayList<Livraison> liv = new ArrayList<>();
-        Livraison l = new Livraison(i1, i2, 30, 160);
+        Livraison l = new Livraison((long)23,i1, i2, 30, 160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
