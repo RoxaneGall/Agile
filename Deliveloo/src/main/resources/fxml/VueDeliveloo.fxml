@@ -21,7 +21,6 @@
             <children>
                 <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                     <children>
-                        <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0"/>
                         <Button fx:id="buttonZoom" text="Zoom initial"/>
                         <Slider fx:id="sliderZoom" blockIncrement="1.0" majorTickUnit="7.0" max="28.0"
                                 minorTickCount="6"

@@ -348,11 +348,20 @@ public class Controller implements ActionListener {
             for (Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
                 if (entry.getValue().isSelected()) {
                     c1 = entry.getKey();
+                    break;
                 }
             }
 
             c2 = deliveries.get(c1);
-            System.out.println("COORD TO REMOVE :" + c1 + " et " + c2);
+            if (c2 == null) {
+                for (Map.Entry<Coordinate,Coordinate> entry : deliveries.entrySet()) {
+                    if (c1 == entry.getValue()) {
+                        c2 = entry.getKey();
+                    }
+                }
+            }
+
+
             deleteMarkerByCoord(c1);
             deleteMarkerByCoord(c2);
             deleteLabelByCoord(c1);
@@ -484,19 +493,27 @@ public class Controller implements ActionListener {
         });
     }
 
-    private void livraisonSelected(ToggleButton button, Coordinate coord) {
+    private void livraisonSelected(ToggleButton button) {
         lastSelected.setStyle(null);
+        lastSelected = button;
+
         mapView.removeCoordinateLine(trackPart);
         tourneePart.clear();
 
-        lastSelected = button;
-
         button.setStyle("-fx-background-color: MediumSeaGreen");
-        int i = 0;
-        while (tournee.get(i) != coord) {
-            tourneePart.add(tournee.get(i));
-            i++;
+
+        Coordinate coord;
+        for(Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
+            if (entry.getValue() == button) {
+                int i = 0;
+                while (tournee.get(i) != entry.getKey()) {
+                    tourneePart.add(tournee.get(i));
+                    i++;
+                }
+                break;
+            }
         }
+
         trackPart = new CoordinateLine(tourneePart).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
@@ -511,14 +528,18 @@ public class Controller implements ActionListener {
     private void afficherTournee(Tournee t) {
         if (demande != null) {
             livrButtons.clear();
+            for (Map.Entry<Coordinate,MapLabel> entry : deliveriesNumbers.entrySet()) {
+                mapView.removeLabel(entry.getValue());
+            }
             deliveriesNumbers.clear();
             detailsLivraisons.getChildren().clear();
             scroll.setVisible(true);
             scroll.setContent(detailsLivraisons);
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
-            for (int i = 0; i < t.getTrajets().size(); i++) {
-                Coordinate coord = t.getTrajets().get(i).getOrigine().getCoordinate();
+            Coordinate coord;
+            for (int i = 0; i < t.getTrajets().size(); i++) {;
+                coord = t.getTrajets().get(i).getOrigine().getCoordinate();
                 tournee.add(coord);
                 MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
                 mapView.addLabel(l);
@@ -531,7 +552,7 @@ public class Controller implements ActionListener {
                 ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
                 button.setOnAction(event -> {
                     if (button.isSelected()) {
-                        livraisonSelected(button, coord);
+                        livraisonSelected(button);
                     } else {
                         livraisonDeselected(button);
                     }
@@ -539,11 +560,9 @@ public class Controller implements ActionListener {
                 button.setId("" + i);
                 button.setToggleGroup(groupButtons);
                 livrButtons.put(coord, button);
+                detailsLivraisons.getChildren().add(button);
             }
 
-            for (Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
-                detailsLivraisons.getChildren().add(entry.getValue());
-            }
             detailsLivraisons.getChildren().add(supprLivraison);
             detailsLivraisons.getChildren().add(ajoutLivraison);
 
@@ -574,9 +593,9 @@ public class Controller implements ActionListener {
     }
 
     public void deleteLabelByCoord(Coordinate c) {
-        Coordinate c2 = null;
         System.out.println("LABEL A SUPPR " + deliveriesNumbers.get(c));
         mapView.removeLabel(deliveriesNumbers.get(c));
+        deliveriesNumbers.remove(c);
     }
 
     @Override
