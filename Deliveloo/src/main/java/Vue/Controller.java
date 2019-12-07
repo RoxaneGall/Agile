@@ -355,24 +355,27 @@ public class Controller implements ActionListener {
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
             ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up");
-            AtomicReference<Intersection> interPickUp = new AtomicReference<Intersection>();
-            AtomicReference<Intersection> interDelivery = new AtomicReference<Intersection>();
-
+            Intersection interPickUp = new Intersection();
 
             mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
                 eventClick.consume();
                 labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
                 Coordinate pickUp=eventClick.getCoordinate();
-                interPickUp.set(service.intersectionPlusProche(pickUp));
-                System.out.println("pickup : "+interPickUp);
-
+                interPickUp.setIntersection(service.intersectionPlusProche(pickUp));
+                System.out.println("pickup : "+interPickUp); // interPickUp est bien récupérée
 
             });
 
+            // dès qu'on sort de addEventHandler interPickUp redevient nulle wtf
+
 
         });
-
     }
+
+
+
+
+
 
     /**
      *

@@ -22,6 +22,11 @@ public class Intersection {
     public Intersection() {
 
     }
+    public void setIntersection(Intersection i){
+        this.coord=i.coord;
+        this.id=i.id;
+        this.troncons=i.troncons;
+    }
 
     public long getId() {
         return id;
