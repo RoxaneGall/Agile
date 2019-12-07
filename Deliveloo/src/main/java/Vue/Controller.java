@@ -3,6 +3,8 @@ package Vue;
 import Algo.Computations;
 import Modeles.*;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
@@ -38,7 +40,7 @@ public class Controller implements ActionListener {
      * FX Elements pour charger les plans et demandes
      * partie en bas de l'IHM
      */
-
+    public  Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
@@ -94,7 +96,7 @@ public class Controller implements ActionListener {
     @FXML
     public ToggleGroup groupButtons = new ToggleGroup();
     @FXML
-    public ToggleButton lastSelected = new ToggleButton();
+    public Pair<ToggleButton,ToggleButton> lastSelected;
     public HashMap<Coordinate, ToggleButton> livrButtons = new HashMap<>();
 
     /**
@@ -168,6 +170,7 @@ public class Controller implements ActionListener {
         deliveries.clear();
         for (Livraison livr : livraisons) {
             deliveries.put(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
+            deliveries.put(livr.getDelivery().getCoordinate(), livr.getPickup().getCoordinate());
         }
     }
 
@@ -176,7 +179,8 @@ public class Controller implements ActionListener {
      *
      * @param projection
      */
-    public void initializeView(Projection projection, Stage primaryStageFromMain) {
+    public void initializeView(Scene mainScene, Projection projection, Stage primaryStageFromMain) {
+        scene = mainScene;
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
         //loading.toFront();
@@ -334,14 +338,6 @@ public class Controller implements ActionListener {
             }
 
             c2 = deliveries.get(c1);
-            if (c2 == null) {
-                for (Map.Entry<Coordinate,Coordinate> entry : deliveries.entrySet()) {
-                    if (c1 == entry.getValue()) {
-                        c2 = entry.getKey();
-                    }
-                }
-            }
-
 
             deleteMarkerByCoord(c1);
             deleteMarkerByCoord(c2);
@@ -491,15 +487,24 @@ public class Controller implements ActionListener {
     }
 
     private void livraisonSelected(ToggleButton button) {
-        lastSelected.setStyle(null);
-        lastSelected = button;
-
+        if (lastSelected != null) {
+            lastSelected.getKey().setStyle(null);
+            lastSelected.getValue().setStyle(null);
+        }
         mapView.removeCoordinateLine(trackPart);
         tourneePart.clear();
 
-        button.setStyle("-fx-background-color: MediumSeaGreen");
+        ToggleButton pairedButton;
+        for(Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
+            if (entry.getValue() == button) {
+                pairedButton = livrButtons.get(deliveries.get(entry.getKey()));
+                lastSelected = new Pair<>(button, pairedButton);
+                button.setStyle("-fx-base: lightblue;");
+                pairedButton.setStyle("-fx-base: lightblue;");
+                break;
+            }
+        }
 
-        Coordinate coord;
         for(Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
             if (entry.getValue() == button) {
                 int i = 0;
