@@ -30,22 +30,26 @@ public class Service {
     public void calculerTournee(Demande demande){
 
         demandeEnCours = demande;
-        //METHODE 1 :
-        //Tournee t = Computations.getTourneeFromDemande(demande);
-
-        //METHODE 2 :
-        //Linearisation de la demande
         Intersection[] intersDemande = getSommetsDemande(demande);
 
         //Remplissage tableau de couts avec les longueurs des trajets entre les sommets
         couts = getCoutsDemande(intersDemande);
-        Computations.runTSP(couts, demande);
+        Computations.runTSP(couts);
+    }
+
+    public void recalculerTournee(Tournee tournee, Demande demande) {
+        int index = 0;
+        //Connaitre les livraisons ajoutées
+        //Connaitre les livraisons supprimées
+        //Regarder jusqu'ou on peut utiliser l'ancienne tournée
+
+        //En creer une nouvelle a parti de l'ancienne et calculer la suite de la tournée.
     }
 
     public Tournee recupererTournee() {
+        //Verifier que l'on veut recuperer une nouvelle tournée ou une tounrée depuis une ancienne
         return Computations.getTourneeFromDemande(couts,demandeEnCours);
     }
-
 
     private static Intersection[] getSommetsDemande(Demande demande) {
         int nbSommets = 2*demande.getLivraisons().size()+1;

@@ -1,5 +1,6 @@
 package Algo;
 
+import Donnees.EcritureXML;
 import Donnees.LectureXML;
 import Modeles.Demande;
 import Modeles.Graphe;
@@ -24,15 +25,14 @@ class TSP1Test {
     @Test
     void realiserTourneeDepuisPetitPlanEtPetiteDemande_shouldSucceed() throws Exception {
         Service service = new Service();
-        service.chargerPlan("../datas/GrandPlan.xml");
-        System.out.println(Graphe.shared.getIntersectionMap().values().size());
+        service.chargerPlan("../datas/grandPlan.xml");
         Demande demande = service.chargerDemande("../datas/demandeGrand9.xml");
         service.calculerTournee(demande);
         Tournee t = service.recupererTournee();
-        System.out.println(t.getHeureArrivee());
         System.out.println(t.getDemande().getHeureDepart());
+        System.out.println(t.getHeureArrivee());
         System.out.println(t.getTotalDistance());
         System.out.println(t.getTotalDuration());
-        System.out.println(t.getTrajets().get(0).toString());
+        System.out.println((new EcritureXML()).genererInstructionsPourTournee(t));
     }
 }

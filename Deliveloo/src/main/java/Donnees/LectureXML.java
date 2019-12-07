@@ -154,7 +154,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
-        int countDeliveries=0;
+        Long countDeliveries= new Long(0);
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
@@ -183,7 +183,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                 if(livraison==null){
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
-                Livraison myDelivery = new Livraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
+                Livraison myDelivery = new Livraison(countDeliveries, enlevement,livraison,dureeEnlevement,dureeLivraison);
                 countDeliveries++;
                 deliveries.add(myDelivery);
 
