@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d79d79ae-8d0f-4e42-ac21-01eb7fbe2ff1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/com_sothawo_mapjfx_1_29_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_collections_commons_collections_3_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_junit_4_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_slf4j_slf4j_api_1_7_25.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Agile.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Agile.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TSP1.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TSP1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deliveloo/tests/Algo/TSP1Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/tests/Algo/TSP1Test.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,9 +25,17 @@
   </component>
   <component name="ProjectId" id="1U99pr1m80R0QSfq048EA5VXWbf" />
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Deliveloo" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -31,6 +49,28 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="TSP1Test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Agile" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Algo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Algo" />
+      <option name="MAIN_CLASS_NAME" value="Algo.TSP1Test" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.TSP1Test" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -43,6 +83,8 @@
       <updated>1574758129077</updated>
       <workItem from="1574758130352" duration="3582000" />
       <workItem from="1574763276544" duration="232000" />
+      <workItem from="1575626953600" duration="57000" />
+      <workItem from="1575627090457" duration="3594000" />
     </task>
     <servers />
   </component>

@@ -143,8 +143,8 @@ public class LectureXML {
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
-        int countDeliveries = 0;
-        for (int i = 0; i < nbRootNodes; i++) {
+        Long countDeliveries= new Long(0);
+        for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
 
@@ -175,7 +175,7 @@ public class LectureXML {
                 if (livraison == null) {
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
-                Livraison myDelivery = new Livraison(enlevement, livraison, dureeEnlevement, dureeLivraison);
+                Livraison myDelivery = new Livraison(countDeliveries, enlevement,livraison,dureeEnlevement,dureeLivraison);
                 countDeliveries++;
                 deliveries.add(myDelivery);
 
