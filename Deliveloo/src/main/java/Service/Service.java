@@ -8,13 +8,14 @@ import com.sothawo.mapjfx.Coordinate;
 import java.util.*;
 
 public class Service {
-    public Service() throws Exception {
-    }
 
-    private LectureXML lec = new LectureXML();
-
-    private Trajet[][] couts;
+    private LectureXML lec;
     private Demande demandeEnCours;
+    private Trajet[][] couts;
+
+    public Service() throws Exception {
+        lec = new LectureXML();
+    }
 
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
         lec.chargerPlan(path);
