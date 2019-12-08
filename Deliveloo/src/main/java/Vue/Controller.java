@@ -3,6 +3,7 @@ package Vue;
 import Algo.Computations;
 import Modeles.*;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
@@ -18,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -41,7 +43,7 @@ public class Controller implements ActionListener {
      * FX Elements pour charger les plans et demandes
      * partie en bas de l'IHM
      */
-    public  Scene scene;
+    public Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
@@ -97,7 +99,7 @@ public class Controller implements ActionListener {
     @FXML
     public ToggleGroup groupButtons = new ToggleGroup();
     @FXML
-    public Pair<ToggleButton,ToggleButton> lastSelected;
+    public Pair<ToggleButton, ToggleButton> lastSelected;
     public HashMap<Coordinate, ToggleButton> livrButtons = new HashMap<>();
 
     /**
@@ -184,6 +186,9 @@ public class Controller implements ActionListener {
         scene = mainScene;
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
+        ajoutLivraison.visibleProperty().setValue(false);
+        supprLivraison.visibleProperty().setValue(false);
+
         //loading.toFront();
         primaryStage = primaryStageFromMain;
 
@@ -331,7 +336,7 @@ public class Controller implements ActionListener {
             // récupérer le point cliqué
             Coordinate c1 = null;
             Coordinate c2 = null;
-            for (Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
+            for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
                 if (entry.getValue().isSelected()) {
                     c1 = entry.getKey();
                     break;
@@ -352,39 +357,80 @@ public class Controller implements ActionListener {
             System.out.println("deliveries after removal : " + deliveries);
         });
     }
-    private void addRightClickEvent(ArrayList<Intersection> interLivraison){
+
+    private void addRightClickEvent(ArrayList<Intersection> interLivraison) {
 
         mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
             eventClick.consume();
             labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
-                Coordinate pickUp = eventClick.getCoordinate();
-                Intersection i = service.intersectionPlusProche(pickUp);
-                if(interLivraison.size()<2) {
-                    interLivraison.add(i);
-                    System.out.println("pickup : " + i); // interPickUp est bien récupérée
-                    Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(i.getCoordinate()).setVisible(true);
-                    mapView.addMarker(m);
-                    deliveriesMarkers.put(m.getPosition(), m);
-                    ajouterLivraison(interLivraison);
-                }
-            if(interLivraison.size()==2) {
+            Coordinate pickUp = eventClick.getCoordinate();
+            Intersection i = service.intersectionPlusProche(pickUp);
+            if (interLivraison.size() < 2) {
+                interLivraison.add(i);
+                System.out.println("pickup : " + i); // interPickUp est bien récupérée
+                Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(i.getCoordinate()).setVisible(true);
+                mapView.addMarker(m);
+                deliveriesMarkers.put(m.getPosition(), m);
+                ajouterLivraison(interLivraison);
+            }
+            if (interLivraison.size() == 2) {
                 ajoutPickUp.setText("Livraison ajoutée !");
 
             }
 
         });
     }
-    private void ajouterLivraison(ArrayList<Intersection> interLivraison){
-        if(interLivraison.size()==2) {
+
+    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+        if (interLivraison.size() == 2) {
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
             //reste à demander à l'utilisateur de rentrer la durée d'enlèvement et de livraison
-            Livraison l = new Livraison (interPickUp,interDelivery,0,0);
+
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+
+            // Set the button types.
+            ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+            gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+            TextField dEnlevement = new TextField();
+            dEnlevement.setPromptText("Durée d'enlèvement : ");
+            TextField dLivraison = new TextField();
+            dLivraison.setPromptText("Durée de livraison : ");
+
+            gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
+            gridPane.add(dEnlevement, 1, 0);
+            gridPane.add(new Label("Durée de livraison : "), 2, 0);
+            gridPane.add(dLivraison, 3, 0);
+
+            dialog.getDialogPane().setContent(gridPane);
+
+            // Request focus on the username field by default.
+            Platform.runLater(() -> dEnlevement.requestFocus());
+
+            // Convert the result to a username-password-pair when the login button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == loginButtonType) {
+                    return new Pair<>(dEnlevement.getText(), dLivraison.getText());
+                }
+                return null;
+            });
+
+            Optional<Pair<String, String>> result = dialog.showAndWait();
+            Livraison l = new Livraison (interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             demande.getLivraisons().add(l);
             calculerTournee();
             afficherTourneeCalculee();
+            System.out.println(l.getDureeEnlevement()+" "+l.getDureeLivraison());
         }
     }
+
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
             ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
@@ -392,10 +438,6 @@ public class Controller implements ActionListener {
             addRightClickEvent(interLivraison);
         });
     }
-
-
-
-
 
 
     /**
@@ -440,7 +482,7 @@ public class Controller implements ActionListener {
                     Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
                  /*   URL imageURL2 = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
                     markerDelivery = new Marker(imageURL2, 0, 0).setPosition(delivery);*/
-                   markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
+                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
 
 
                     deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
@@ -507,6 +549,7 @@ public class Controller implements ActionListener {
                 mapView.removeCoordinateLine(trackPart);
                 tournee.clear();
                 afficherTournee(t);
+
             }
         });
     }
@@ -520,7 +563,7 @@ public class Controller implements ActionListener {
         tourneePart.clear();
 
         ToggleButton pairedButton;
-        for(Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
+        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
             if (entry.getValue() == button) {
                 pairedButton = livrButtons.get(deliveries.get(entry.getKey()));
                 lastSelected = new Pair<>(button, pairedButton);
@@ -530,7 +573,7 @@ public class Controller implements ActionListener {
             }
         }
 
-        for(Map.Entry<Coordinate,ToggleButton> entry : livrButtons.entrySet()) {
+        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
             if (entry.getValue() == button) {
                 int i = 0;
                 while (tournee.get(i) != entry.getKey()) {
@@ -555,7 +598,7 @@ public class Controller implements ActionListener {
     private void afficherTournee(Tournee t) {
         if (demande != null) {
             livrButtons.clear();
-            for (Map.Entry<Coordinate,MapLabel> entry : deliveriesNumbers.entrySet()) {
+            for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
                 mapView.removeLabel(entry.getValue());
             }
             deliveriesNumbers.clear();
@@ -565,7 +608,8 @@ public class Controller implements ActionListener {
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate coord;
-            for (int i = 0; i < t.getTrajets().size(); i++) {;
+            for (int i = 0; i < t.getTrajets().size(); i++) {
+                ;
                 coord = t.getTrajets().get(i).getOrigine().getCoordinate();
                 tournee.add(coord);
                 MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
@@ -597,6 +641,9 @@ public class Controller implements ActionListener {
 
             trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
             trackTrajet.setVisible(true);
+
+            ajoutLivraison.visibleProperty().setValue(true);
+            supprLivraison.visibleProperty().setValue(true);
             // add the tracks
             mapView.addCoordinateLine(trackTrajet);
             // System.out.println("Tournee: " + trackTrajet.toString());
