@@ -31,6 +31,7 @@ import javafx.scene.control.ProgressIndicator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,6 +48,7 @@ public class Controller implements ActionListener {
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
+    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");;
 
     @FXML
     public Button chargerPlan;
@@ -423,11 +425,11 @@ public class Controller implements ActionListener {
             });
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            Livraison l = new Livraison (interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
+            /* Livraison l = new Livraison (interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             demande.getLivraisons().add(l);
             calculerTournee();
             afficherTourneeCalculee();
-            System.out.println(l.getDureeEnlevement()+" "+l.getDureeLivraison());
+            System.out.println(l.getDureeEnlevement()+" "+l.getDureeLivraison()); */
         }
     }
 
@@ -607,9 +609,10 @@ public class Controller implements ActionListener {
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate coord;
+            Trajet trajet;
             for (int i = 0; i < t.getTrajets().size(); i++) {
-                ;
-                coord = t.getTrajets().get(i).getOrigine().getCoordinate();
+                trajet = t.getTrajets().get(i);
+                coord = trajet.getOrigine().getCoordinate();
                 tournee.add(coord);
                 MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
                 mapView.addLabel(l);
@@ -619,7 +622,20 @@ public class Controller implements ActionListener {
                     tournee.add(troncon.getDestination().getCoordinate());
                 }
 
-                ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
+                String infoButton = "";
+                if (trajet.getType() == Trajet.Type.COMEBACKHOME) {
+                    infoButton = "Entrepôt - \n Départ : "+formater.format(trajet.getHeureArrivee());
+                } else if(trajet.getType() == Trajet.Type.COMEBACKHOME) {
+                    infoButton = "Fin de tournée - \n Arrivée : "+formater.format(trajet.getHeureArrivee());
+                } else {
+                    if(trajet.getType() == Trajet.Type.PICKUP){
+                        infoButton = i+1 + " - PICKUP \n Arrivée : "+formater.format(trajet.getHeureArrivee())+"    Départ : "+formater.format(trajet.getHeureDepart());
+                    } else {
+                        infoButton = i+1 + " - DELIVERY \n Arrivée : "+formater.format(trajet.getHeureArrivee())+"    Départ : "+formater.format(trajet.getHeureDepart());
+                    }
+                }
+
+                ToggleButton button = new ToggleButton(infoButton);
                 button.setOnAction(event -> {
                     if (button.isSelected()) {
                         livraisonSelected(button);
