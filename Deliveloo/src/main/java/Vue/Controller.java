@@ -4,6 +4,7 @@ import Algo.Computations;
 import Modeles.*;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
@@ -46,12 +47,10 @@ public class Controller implements ActionListener {
      */
     public Scene scene;
     public Service service = new Service();
-    public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
-    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");;
+    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
+    ;
 
-    @FXML
-    public Button chargerPlan;
     @FXML
     public Button chargerDemande;
     @FXML
@@ -100,8 +99,9 @@ public class Controller implements ActionListener {
     public ScrollPane scroll;
     @FXML
     public ToggleGroup groupButtons = new ToggleGroup();
-    @FXML
-    public Pair<ToggleButton, ToggleButton> lastSelected;
+
+    public ToggleButton lastSelected;
+    public ToggleButton lastPairSelected;
     public HashMap<Coordinate, ToggleButton> livrButtons = new HashMap<>();
 
     /**
@@ -117,13 +117,6 @@ public class Controller implements ActionListener {
     public Label labelZoom;
     @FXML
     public Label labelEvent;
-
-    /**
-     * FX Marker au click pour ajout de livraison (ITERATION 2)
-     */
-    /* Checkbox for click marker */
-    @FXML
-    public CheckBox checkClickMarker;
 
     /**
      * Attributs pour définir le plan
@@ -184,15 +177,13 @@ public class Controller implements ActionListener {
      *
      * @param projection
      */
-    public void initializeView(Scene mainScene, Projection projection, Stage primaryStageFromMain) {
+    public void initializeView(Scene mainScene, Projection projection) {
         scene = mainScene;
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        ajoutLivraison.visibleProperty().setValue(false);
-        supprLivraison.visibleProperty().setValue(false);
-
+        ajoutLivraison.setDisable(true);
+        supprLivraison.setDisable(true);
         //loading.toFront();
-        primaryStage = primaryStageFromMain;
 
         // init MapView-Cache
         final OfflineCache offlineCache = mapView.getOfflineCache();
@@ -449,6 +440,9 @@ public class Controller implements ActionListener {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
             try {
+                ajoutLivraison.setDisable(true);
+                supprLivraison.setDisable(true);
+
                 System.out.println("Chargement d'une demande");
                 demande = service.chargerDemande("../datas/demandeGrand9.xml");
 
@@ -515,10 +509,14 @@ public class Controller implements ActionListener {
         tournee.clear();
         System.out.println("Calcul d'une tournée");
         try {
+            ajoutLivraison.setDisable(true);
+            supprLivraison.setDisable(true);
+            detailsLivraisons.getChildren().clear();
+            scroll.setVisible(true);
+            scroll.setContent(detailsLivraisons);
             if (demande != null) {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
-                //TODO: DEBUT CHARGEMENT TRAJET
                 loading.visibleProperty().setValue(true);
                 Thread t1 = new Thread(new Runnable() {
                     @Override
@@ -555,10 +553,29 @@ public class Controller implements ActionListener {
         });
     }
 
+    private void entrepotSelected(ToggleButton button) {
+        if (lastSelected != null) {
+            lastSelected.setStyle(null);
+        }
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
+        }
+        lastSelected = button;
+        mapView.removeCoordinateLine(trackPart);
+        tourneePart.clear();
+        button.setStyle("-fx-base: lightblue;");
+    }
+
+    private void entrepotDeselected(ToggleButton button) {
+        button.setStyle(null);
+    }
+
     private void livraisonSelected(ToggleButton button) {
         if (lastSelected != null) {
-            lastSelected.getKey().setStyle(null);
-            lastSelected.getValue().setStyle(null);
+            lastSelected.setStyle(null);
+        }
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
         }
         mapView.removeCoordinateLine(trackPart);
         tourneePart.clear();
@@ -567,7 +584,8 @@ public class Controller implements ActionListener {
         for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
             if (entry.getValue() == button) {
                 pairedButton = livrButtons.get(deliveries.get(entry.getKey()));
-                lastSelected = new Pair<>(button, pairedButton);
+                lastSelected = button;
+                lastPairSelected = pairedButton;
                 button.setStyle("-fx-base: lightblue;");
                 pairedButton.setStyle("-fx-base: lightblue;");
                 break;
@@ -592,12 +610,18 @@ public class Controller implements ActionListener {
 
     private void livraisonDeselected(ToggleButton button) {
         button.setStyle(null);
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
+        }
         mapView.removeCoordinateLine(trackPart);
         tourneePart.clear();
     }
 
     private void afficherTournee(Tournee t) {
         if (demande != null) {
+            ajoutLivraison.setDisable(false);
+            supprLivraison.setDisable(false);
+
             livrButtons.clear();
             for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
                 mapView.removeLabel(entry.getValue());
@@ -623,42 +647,46 @@ public class Controller implements ActionListener {
                 }
 
                 String infoButton = "";
-                if (trajet.getType() == Trajet.Type.COMEBACKHOME) {
-                    infoButton = "Entrepôt - \n Départ : "+formater.format(trajet.getHeureArrivee());
-                } else if(trajet.getType() == Trajet.Type.COMEBACKHOME) {
-                    infoButton = "Fin de tournée - \n Arrivée : "+formater.format(trajet.getHeureArrivee());
+                ToggleButton button = new ToggleButton();
+                if (i == 0) {
+                    infoButton = i + 1 + " - Entrepôt \n Départ : " + formater.format(trajet.getHeureArrivee());
+                    button.setOnAction(event -> {
+                        if (button.isSelected()) {
+                            entrepotSelected(button);
+                        } else {
+                            entrepotDeselected(button);
+                        }
+                    });
                 } else {
-                    if(trajet.getType() == Trajet.Type.PICKUP){
-                        infoButton = i+1 + " - PICKUP \n Arrivée : "+formater.format(trajet.getHeureArrivee())+"    Départ : "+formater.format(trajet.getHeureDepart());
+                    if (trajet.getType() == Trajet.Type.PICKUP) {
+                        infoButton = i + 1 + " - PICKUP \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
                     } else {
-                        infoButton = i+1 + " - DELIVERY \n Arrivée : "+formater.format(trajet.getHeureArrivee())+"    Départ : "+formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - DELIVERY \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
                     }
+                    button.setOnAction(event -> {
+                        if (button.isSelected()) {
+                            livraisonSelected(button);
+                        } else {
+                            livraisonDeselected(button);
+                        }
+                    });
                 }
-
-                ToggleButton button = new ToggleButton(infoButton);
-                button.setOnAction(event -> {
-                    if (button.isSelected()) {
-                        livraisonSelected(button);
-                    } else {
-                        livraisonDeselected(button);
-                    }
-                });
+                button.setText(infoButton);
+                button.setPrefWidth(250.0);
+                button.setAlignment(Pos.TOP_LEFT);
                 button.setId("" + i);
                 button.setToggleGroup(groupButtons);
                 livrButtons.put(coord, button);
                 detailsLivraisons.getChildren().add(button);
             }
 
-            detailsLivraisons.getChildren().add(supprLivraison);
-            detailsLivraisons.getChildren().add(ajoutLivraison);
+            //infoButton = "Fin de tournée - \n Arrivée : " + formater.format(trajet.getHeureArrivee());
 
             detailsLivraisons.setVisible(true);
 
             trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
             trackTrajet.setVisible(true);
 
-            ajoutLivraison.visibleProperty().setValue(true);
-            supprLivraison.visibleProperty().setValue(true);
             // add the tracks
             mapView.addCoordinateLine(trackTrajet);
             // System.out.println("Tournee: " + trackTrajet.toString());
@@ -691,7 +719,6 @@ public class Controller implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ended")) {
             loading.visibleProperty().setValue(false);
-            //TODO: CHARGMENT DES TRAJETS TERMINÉS
         } else if (e.getActionCommand().equals("newResultFound")) {
             afficherTourneeCalculee();
         }

@@ -32,7 +32,7 @@
                         <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
                     </padding>
                 </HBox>
-                <Text fx:id="ajoutPickUp">  </Text>
+                <Text fx:id="ajoutPickUp"></Text>
             </children>
         </VBox>
     </top>
@@ -49,7 +49,7 @@
                     <Button fx:id="chargerDemande" text="Charger Demande"/>
                     <Button fx:id="calculTournee" text="Calculer Tournée"/>
                     <Button fx:id="stopTournee" text="STOP"/>
-                    <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0" />
+                    <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0"/>
                 </children>
                 <padding>
                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
@@ -72,28 +72,34 @@
         </VBox>
     </bottom>
     <right>
-        <ScrollPane fx:id="scroll" prefWidth="350.0">
-            <content>
-                <VBox fx:id="detailsLivraisons" alignment="CENTER" spacing="10.0">
-                    <children>
+        <VBox alignment="CENTER">
+            <children>
+                <ScrollPane fx:id="scroll" prefWidth="350.0" prefHeight="800.0">
+                    <content>
+                        <VBox fx:id="detailsLivraisons" spacing="10.0">
+                            <children>
 
-                    </children>
-                    <padding>
-                        <Insets bottom="5.0" left="20.0" right="10.0" top="5.0"/>
-                    </padding>
-                </VBox>
-                <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="30.0" right="2.0" top="10.0"/>
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+                <HBox fx:id="addOrSuppr" prefHeight="40.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button fx:id="supprLivraison" text="Supprimer"/>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
+                        <Button fx:id="supprLivraison" text="Supprimer"/>
                     </children>
                     <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                        <Insets bottom="5.0" left="2.0" right="2.0" top="5.0"/>
                     </padding>
                 </HBox>
-
-            </content>
-        </ScrollPane>
-
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+            </padding>
+        </VBox>
     </right>
 </BorderPane>
