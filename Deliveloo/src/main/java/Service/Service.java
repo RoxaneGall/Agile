@@ -5,6 +5,7 @@ import Donnees.LectureXML;
 import Modeles.*;
 import com.sothawo.mapjfx.Coordinate;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.*;
 
 public class Service {
@@ -224,6 +225,11 @@ public class Service {
         }
 
         return couts;
+    }
+
+    public Intersection intersectionPlusProche(Coordinate coord){
+        Intersection inter = lec.getIntersectionPlusProche(coord);
+        return inter;
     }
 
 

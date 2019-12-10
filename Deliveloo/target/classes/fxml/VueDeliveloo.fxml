@@ -10,23 +10,31 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.text.Text?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0"
             prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
     <top>
-        <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="buttonZoom" text="Zoom initial"/>
-                <Slider fx:id="sliderZoom" blockIncrement="1.0" majorTickUnit="7.0" max="28.0" minorTickCount="6"
-                        showTickLabels="true" showTickMarks="true" snapToTicks="true" value="14.0" HBox.hgrow="ALWAYS"/>
-                <Button fx:id="buttonResetExtent" text="Recadrer la carte"/>
+                <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="buttonZoom" text="Zoom initial"/>
+                        <Slider fx:id="sliderZoom" blockIncrement="1.0" majorTickUnit="7.0" max="28.0"
+                                minorTickCount="6"
+                                showTickLabels="true" showTickMarks="true" snapToTicks="true" value="14.0"
+                                HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="buttonResetExtent" text="Recadrer la carte"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                    </padding>
+                </HBox>
+                <Text fx:id="ajoutPickUp"></Text>
             </children>
-            <padding>
-                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-            </padding>
-        </HBox>
+        </VBox>
     </top>
 
 
@@ -41,6 +49,7 @@
                     <Button fx:id="chargerDemande" text="Charger Demande"/>
                     <Button fx:id="calculTournee" text="Calculer Tournée"/>
                     <Button fx:id="stopTournee" text="STOP"/>
+                    <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0"/>
                 </children>
                 <padding>
                     <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
@@ -63,22 +72,35 @@
         </VBox>
     </bottom>
     <right>
-        <VBox fx:id="rightControls" prefWidth="350.0" alignment="TOP_CENTER" spacing="10.0">
+        <VBox alignment="CENTER">
             <children>
-            <VBox fx:id="detailsLivraisons" alignment="TOP_CENTER" spacing="10.0">
-                <children>
+                <ScrollPane fx:id="scroll" prefWidth="350.0" prefHeight="800.0">
+                    <content>
+                        <VBox fx:id="detailsLivraisons" spacing="10.0">
+                            <children>
 
-                </children>
-                <padding>
-                    <Insets bottom="5.0" left="20.0" right="10.0" top="5.0"/>
-                </padding>
-            </VBox>
-                <Button fx:id="supprLivraison" text="Supprimer"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="30.0" right="2.0" top="10.0"/>
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+                <HBox fx:id="addOrSuppr" prefHeight="40.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="ajoutLivraison" text="Ajouter"/>
+                        <Button fx:id="supprLivraison" text="Supprimer"/>
+                        <Button fx:id="exportFeuille" text="Feuille de route"/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="2.0" right="2.0" top="5.0"/>
+                    </padding>
+                </HBox>
             </children>
-        <padding>
-            <Insets bottom="5.0" left="20.0" right="10.0" top="5.0"/>
-        </padding>
+            <padding>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+            </padding>
         </VBox>
-
     </right>
 </BorderPane>
