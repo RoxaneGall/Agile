@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d79d79ae-8d0f-4e42-ac21-01eb7fbe2ff1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Agile.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Agile.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/Dijkstra.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" afterDir="false" />
@@ -15,7 +17,17 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Colline#1-BranchAndBound" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="master" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="RoxaneGall" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="Agile" />
   </component>
   <component name="ProjectId" id="1U99pr1m80R0QSfq048EA5VXWbf" />
   <component name="PropertiesComponent">
@@ -23,11 +35,18 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+<<<<<<< HEAD
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Deliveloo" />
+    <property name="project.structure.last.edited" value="Libraries" />
+=======
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Deliveloo" />
     <property name="project.structure.last.edited" value="Modules" />
+>>>>>>> aafd0856e0774bf5000e4a6e057f8441198bd8b1
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
@@ -77,8 +96,13 @@
       <updated>1574758129077</updated>
       <workItem from="1574758130352" duration="3582000" />
       <workItem from="1574763276544" duration="232000" />
+<<<<<<< HEAD
+      <workItem from="1575971277753" duration="1747000" />
+      <workItem from="1575973166892" duration="505000" />
+=======
       <workItem from="1575626953600" duration="57000" />
       <workItem from="1575627090457" duration="3594000" />
+>>>>>>> aafd0856e0774bf5000e4a6e057f8441198bd8b1
     </task>
     <servers />
   </component>
