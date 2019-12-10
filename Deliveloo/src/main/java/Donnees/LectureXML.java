@@ -197,6 +197,7 @@ public class LectureXML {
                     }
                     throw new Exception(message);
                 }
+                demande.setEntrepot(entrepot);
             }
         }
         if(countDeliveries==0) throw new Exception("La demande ne contient aucune livraison.");
