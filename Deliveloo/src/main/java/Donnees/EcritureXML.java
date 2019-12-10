@@ -8,8 +8,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class EcritureXML {
 
@@ -17,27 +19,26 @@ public class EcritureXML {
 
     }
 
-    public String genererNomFichierDeTournee(Tournee tournee, String chemin) throws Exception {
-        // methode a un parametre string chemin si jamais je change plus tard et que je connais le chemin du fichier
-        if(chemin.equals("")) {
-            int nbDeliv = tournee.getDemande().getLivraisons().size();
-            String dateDemande = tournee.getDemande().getHeureDepart().toString();
-            if (nbDeliv == 0) {
-                throw new Exception("Cette tournée est réalisée à partir d'une demande composée d'aucune livraison.");
-            } else if (nbDeliv > 0 && nbDeliv < 3) {
-                chemin = "petiteTournee" + nbDeliv;
-            } else if (nbDeliv >= 3 && nbDeliv < 7) {
-                chemin = "moyenneTournee" + nbDeliv;
-            } else if (nbDeliv > 7 && nbDeliv < 10) {
-                chemin = "grandeTournee" + nbDeliv;
-            } else {
-                chemin = "tresGrandeTournee" + nbDeliv;
-            }
+    public String genererNomFichierDeTournee(Tournee tournee) throws Exception {
+
+        String nomFichier="";
+        int nbDeliv = tournee.getDemande().getLivraisons().size();
+        String dateDemande = tournee.getDemande().getHeureDepart().toString();
+        if (nbDeliv == 0) {
+            throw new Exception("Cette tournée est réalisée à partir d'une demande composée d'aucune livraison.");
+        } else if (nbDeliv > 0 && nbDeliv < 3) {
+            nomFichier = "petiteTournee" + nbDeliv+"_"+dateDemande;
+        } else if (nbDeliv >= 3 && nbDeliv < 7) {
+            nomFichier = "moyenneTournee" + nbDeliv+"_"+dateDemande;
+        } else if (nbDeliv > 7 && nbDeliv < 10) {
+            nomFichier = "grandeTournee" + nbDeliv+"_"+dateDemande;
+        } else {
+            nomFichier = "tresGrandeTournee" + nbDeliv+"_"+dateDemande;
         }
 
-        if(chemin.equals("")) {
+        if(nomFichier.equals("")) {
             throw new Exception("Le fichier doit avoir un nom pour être créé.");
-        }else return chemin;
+        }else return nomFichier;
     }
 
     public String genererInstructionsPourTournee(Tournee tournee){
@@ -79,15 +80,27 @@ public class EcritureXML {
 
     public void ecrireFichier(Tournee tournee) throws Exception {
 
-        String chemin = genererNomFichierDeTournee(tournee,"");
+        String nomFichier = genererNomFichierDeTournee(tournee);
+        String chemin = "../datas/feuillesDeRoute/";
+        String extension = ".xml";
+        String fichier = chemin + nomFichier + extension;
+
         FileOutputStream fop = null;
         File file;
 
         try{
-            file = new File(chemin);
+            file = new File(fichier);
             fop = new FileOutputStream(file);
 
-            if (!file.exists()) {
+            if(file.exists()){
+                throw new Exception("Le fichier "+ nomFichier+ " existe déjà dans " + chemin + ". \n" +
+                        " Vérifier que les deux fichiers soient bien différents dans leur contenu. \n " /*+
+                        " Si oui, pour conserver ce nouveau fichier, entrez un autre nom, par exemple "+ nomFichier + "_1" */);
+              /*  Scanner sc = new Scanner(System.in);
+                nomFichier = sc.nextLine();
+                fichier = chemin +nomFichier+".xml";
+                file = new File(fichier);*/
+            }else {
                 file.createNewFile();
             }
 
