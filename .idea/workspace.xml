@@ -2,16 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d79d79ae-8d0f-4e42-ac21-01eb7fbe2ff1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/com_sothawo_mapjfx_1_29_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_collections_commons_collections_3_2_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/junit_junit_4_12.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/org_slf4j_slf4j_api_1_7_25.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Agile.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Agile.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TSP1.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TSP1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/Dijkstra.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/TemplateTSP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Deliveloo/src/main/java/Algo/VoyageurDeCommerce.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Deliveloo/tests/Algo/TSP1Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/Deliveloo/tests/Algo/TSP1Test.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -103,5 +97,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Agile$TSP1Test.ic" NAME="TSP1Test Coverage Results" MODIFIED="1575966941053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>Algo.*</FILTER>
+    </SUITE>
   </component>
 </project>
