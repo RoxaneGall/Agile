@@ -33,9 +33,10 @@ public class Demande {
         }
     }
 
-    public void addLivraison(Intersection pickup,  Intersection delivery, int dureeEnlevement, int dureeLivraison) {
+    public Livraison addLivraison(Intersection pickup,  Intersection delivery, int dureeEnlevement, int dureeLivraison) {
         Livraison livraison = new Livraison( ((Integer) livraisons.size()).longValue(), pickup, delivery, dureeEnlevement, dureeLivraison);
         livraisons.add(livraison);
+        return livraison;
     }
 
     public Intersection getEntrepot() {
