@@ -23,13 +23,10 @@ class TourneeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
-        liv.add(livraison);
 
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         tournee = new Tournee(dmd);
 
@@ -48,17 +45,15 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
+
         Intersection inter = new Intersection(initialId,p);
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
-        liv.add(livraison);
 
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);
@@ -86,17 +81,15 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
+
         Intersection inter = new Intersection(initialId,p);
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
-        liv.add(livraison);
 
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         Trajet t1 = new Trajet(i1);
 
@@ -151,19 +144,15 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
+
         Intersection inter = new Intersection(initialId,p);
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-
-        ArrayList<Livraison> liv= new ArrayList<>();
-        liv.add(l);
-        liv.add(livraison);
-
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         Trajet t1 = new Trajet(i1);
 
@@ -191,13 +180,9 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        ArrayList<Livraison> liv= new ArrayList<>();
-        liv.add(l);
-        liv.add(livraison);
-
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);
@@ -236,13 +221,9 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        ArrayList<Livraison> liv= new ArrayList<>();
-        liv.add(l);
-        liv.add(livraison);
-
-        Demande dmd = new Demande(liv, inter, d);
+        Demande dmd = new Demande( inter, d);
+        dmd.addLivraison(i1,i2,30,160);
+        dmd.addLivraison(inter,i3,45,450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);

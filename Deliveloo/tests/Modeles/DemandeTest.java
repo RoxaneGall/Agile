@@ -19,17 +19,15 @@ class DemandeTest {
         //Arrange
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
+        Livraison l = new Livraison((long)0,i1,i2,30,160);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(liv, inter, d);
-
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,160);
         //Act
         ArrayList<Livraison> actualL = dmd.getLivraisons();
 
@@ -78,7 +76,7 @@ class DemandeTest {
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
+        Livraison l = new Livraison((long)0,i1,i2,30,160);
         liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
@@ -86,14 +84,15 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(liv, inter, d);
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,160);
 
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Livraison livraison = new Livraison((long)23,inter,i3,45,450);
+        Livraison livraison = new Livraison((long)1,inter,i3,45,450);
         liv.add(livraison);
 
         //Act
-        dmd.setLivraisons(liv);
+        dmd.addLivraison(inter,i3,45,450);
 
         //Assert
         ArrayList<Livraison> actualL = dmd.getLivraisons();
@@ -113,16 +112,14 @@ class DemandeTest {
         //Arrange
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(liv, inter, d);
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,60);
 
         //Act
         Intersection actualE = dmd.getEntrepot();
@@ -137,17 +134,14 @@ class DemandeTest {
         //Arrange
         Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1,i2,30,160);
-        liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(liv, inter, d);
-
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,160);
         //Act
         dmd.setEntrepot(i1);
 
@@ -163,16 +157,14 @@ class DemandeTest {
         //Arrange
         Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
         Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
-        ArrayList<Livraison> liv = new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1, i2, 30, 160);
-        liv.add(l);
 
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId, p);
         Date d = new Date();
 
-        dmd = new Demande(liv, inter, d);
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,160);
 
         //Act
         Date actualD = dmd.getHeureDepart();
@@ -187,10 +179,6 @@ class DemandeTest {
         //Arrange
         Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
         Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
-        ArrayList<Livraison> liv = new ArrayList<>();
-        Livraison l = new Livraison((long)23,i1, i2, 30, 160);
-        liv.add(l);
-
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
         Intersection inter = new Intersection(initialId, p);
@@ -201,7 +189,8 @@ class DemandeTest {
         c.add(Calendar.DATE, 1);
         Date newD = c.getTime();
 
-        dmd = new Demande(liv, inter, d);
+        dmd = new Demande(inter, d);
+        dmd.addLivraison(i1,i2,30,160);
 
         //Act
         dmd.setHeureDepart(newD);
