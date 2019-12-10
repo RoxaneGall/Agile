@@ -470,10 +470,9 @@ public class Controller implements ActionListener {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
+            ajoutLivraison.setDisable(true);
+            supprLivraison.setDisable(true);
             try {
-                ajoutLivraison.setDisable(true);
-                supprLivraison.setDisable(true);
-
                 System.out.println("Chargement d'une demande");
                 File selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
@@ -524,6 +523,8 @@ public class Controller implements ActionListener {
                 System.out.println(deliveriesMarkers.size());
             } catch (Exception e) {
                 e.printStackTrace();
+                Dialog<Pair<String, String>> dialog = new Dialog<>();
+                dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
             }
 
         });
