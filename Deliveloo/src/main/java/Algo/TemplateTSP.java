@@ -25,7 +25,7 @@ public abstract class TemplateTSP implements TSP {
         tempsLimiteAtteint = false;
         end = false;
         coutMeilleureSolution = Double.MAX_VALUE;
-        limitDiscrepancy = nbSommets/2+4;
+        limitDiscrepancy = 12;
         meilleureSolution = new Integer[nbSommets];
         ArrayList<Integer> nonVus = new ArrayList<Integer>();
         for (int i = 1; i < nbSommets; i++) nonVus.add(i);
