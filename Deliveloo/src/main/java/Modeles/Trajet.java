@@ -32,6 +32,15 @@ public class Trajet {
         this.longueur = 0.0;
     }
 
+    public Trajet(Trajet trajet) {
+        this.origine = trajet.getOrigine();
+        this.troncons = trajet.getTroncons();
+        this.arrivee = trajet.getArrivee();
+        this.longueur = trajet.getLongueur();
+        this.type = trajet.getType();
+        this.livraison = trajet.getLivraison();
+    }
+
 
     public Date getHeureDepart() {
         return heureDepart;
