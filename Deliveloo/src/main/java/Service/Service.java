@@ -43,16 +43,53 @@ public class Service {
         return Computations.getTourneeFromDemande(couts,demandeEnCours);
     }
 
-    /*public Tournee supprimerLivraison(Tournee tournee, Long idLivraison){
+    public Tournee supprimerLivraison(Tournee tournee, Long idLivraison){
         Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart());
         for (Livraison livraison: tournee.getDemande().getLivraisons()) {
             if (livraison.getId()!=idLivraison) {
-                //nouvelleDemande.addLivraison();
+                nouvelleDemande.addLivraison(livraison.getPickup(), livraison.getDelivery(), livraison.getDureeEnlevement(), livraison.getDureeLivraison());
             }
         }
+        Tournee nouvelleTournee = new Tournee(nouvelleDemande);
+        Intersection lastIntersection = null;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(nouvelleDemande.getHeureDepart());
+
+        double vitesse = 15 * 1000 / 60; //En m/min
+
+        for (Trajet trajet: tournee.getTrajets()) {
+
+            if ((trajet.getLivraison().getId() == idLivraison)&&(lastIntersection==null)) {
+                lastIntersection = trajet.getOrigine();
+            }  else if ((trajet.getLivraison().getId() != idLivraison)) {
+                Trajet nouveauTrajet = new Trajet(trajet);
+                if (lastIntersection!=null) {
+                    nouveauTrajet=Computations.getMeilleurTrajet(lastIntersection, trajet.getArrivee());
+                    lastIntersection=null;
+                }
+
+                nouveauTrajet.setHeureDepart(calendar.getTime());
+
+                double cyclingTime = trajet.getLongueur()/vitesse;
+                calendar.add(Calendar.MINUTE, (int) cyclingTime);
+
+                nouveauTrajet.setHeureArrivee(calendar.getTime());
+
+                nouvelleTournee.addTrajet(nouveauTrajet);
+
+                if (trajet.getType()== Trajet.Type.DELIVERY) {
+                    calendar.add(Calendar.SECOND, (int) trajet.getLivraison().getDureeLivraison());
+                } else if (trajet.getType()== Trajet.Type.PICKUP){
+                    calendar.add(Calendar.SECOND, (int) trajet.getLivraison().getDureeEnlevement());
+                }
+            }
+        }
+
+        return nouvelleTournee;
     }
 
-    public Tournee ajouterLivraison(Tournee tournee, Long idLivraison){
+    /*public Tournee ajouterLivraison(Tournee tournee, Long idLivraison){
 
     }*/
 
