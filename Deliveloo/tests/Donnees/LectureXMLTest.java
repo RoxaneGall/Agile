@@ -50,9 +50,6 @@ class LectureXMLTest {
 
     @Test
     void chargerPetitPlan_shouldLoadMap() throws Exception {
-
-    @Test
-    void chargerPetitPlan_shouldSucceed() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/petitPlan.xml");
         long idTest = 25611760;
@@ -61,7 +58,7 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerMoyenPlan_shouldSucceed() throws Exception {
+    void chargerMoyenPlan_shouldLoadMap() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/moyenPlan.xml");
         long idTest = 2512682687L;
@@ -70,7 +67,7 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerGrandPlan_shouldSucceed() throws Exception {
+    void chargerGrandPlan_shouldLoadMap() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/grandPlan.xml");
         long idTest = 26576932;
