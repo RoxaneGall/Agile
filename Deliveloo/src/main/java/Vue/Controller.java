@@ -419,11 +419,9 @@ public class Controller implements ActionListener {
             });
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
-            /* Livraison l = new Livraison (interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
-            demande.getLivraisons().add(l);
+            demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             calculerTournee();
             afficherTourneeCalculee();
-            System.out.println(l.getDureeEnlevement()+" "+l.getDureeLivraison()); */
         }
     }
 
