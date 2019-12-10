@@ -1,6 +1,7 @@
 package Donnees;
 
 import com.sothawo.mapjfx.Coordinate;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -8,14 +9,15 @@ import java.io.File;
 
 import Modeles.*;
 import org.w3c.dom.*;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
+import static java.lang.Math.abs;
 
 public class LectureXML {
     //map(idIntersection,Intersection);
@@ -24,54 +26,54 @@ public class LectureXML {
     DocumentBuilder parser;
 
     public LectureXML() {
-        try{
+        try {
             parser = factory.newDocumentBuilder();
-        } catch(final ParserConfigurationException e){
+        } catch (final ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
     public void chargerPlan(String cheminFichier) throws Exception {
-        if(!cheminFichier.substring(cheminFichier.lastIndexOf('.')+1).equals("xml")){
-            throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
+        if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
+            throw new Exception(01+"Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
         }
 
         Document document = null;
         try {
             document = parser.parse(new File(cheminFichier));
         } catch (IOException e) {
-            throw new Exception(e.getMessage(),e);
-        } catch (SAXException e){
-            throw new Exception(e.getMessage(),e);
+            throw new Exception(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new Exception(e.getMessage(), e);
         }
 
         final Element root = document.getDocumentElement();
 
-        if(!root.getNodeName().equals("reseau")){
+        if (!root.getNodeName().equals("reseau")) {
             throw new Exception("Le fichier ne représente pas un plan... Veuillez charger un fichier .xml correspondant à un plan.");
         }
 
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        if(nbRootNodes==0) throw new Exception("Le fichier ne contient aucune information.");
+        if (nbRootNodes == 0) throw new Exception("Le fichier ne contient aucune information.");
 
-        int countInter=0, countTroncon=0;
-        for(int i=0; i<nbRootNodes; i++) {
+        int countInter = 0, countTroncon = 0;
+        for (int i = 0; i < nbRootNodes; i++) {
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
 
-            Double lat,lg;
+            Double lat, lg;
             long idIntersection;
             if (node.getNodeName().equals("noeud")) {
                 try {
                     lat = Double.parseDouble(attributes.getNamedItem("latitude").getNodeValue());
                     lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
                     idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
-                }catch (Exception e){
-                    throw new Exception("Les attributs du noeud correspondant à l'intersection "+ ++countInter + "sont mal renseignés. " +
+                } catch (Exception e) {
+                    throw new Exception("Les attributs du noeud correspondant à l'intersection " + ++countInter + "sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
-                                    " latitude et longitude sont des Double et id est un long.",e);
+                            " latitude et longitude sont des Double et id est un long.", e);
                 }
 
                 Coordinate myPoint = new Coordinate(lat, lg);
@@ -84,31 +86,31 @@ public class LectureXML {
             long idOrigine, idDestination;
             Double longueur;
             Intersection destination;
-            if(rootNodes.item(i).getNodeName().equals("troncon")){
-                if(countInter==0){
+            if (rootNodes.item(i).getNodeName().equals("troncon")) {
+                if (countInter == 0) {
                     throw new Exception("Aucune intersection n'est présente dans le plan. Veuillez charger les noeuds d'intersection avant.");
                 }
                 try {
                     nomRue = attributes.getNamedItem("nomRue").getNodeValue();
                     idOrigine = Long.parseLong(attributes.getNamedItem("origine").getNodeValue());
                     idDestination = Long.parseLong(attributes.getNamedItem("destination").getNodeValue());
-                    longueur=Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
-                    if(longueur<0){
+                    longueur = Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
+                    if (longueur < 0) {
                         throw new Exception("La longueur du tronçon ne peut pas être négative. \n" +
                                 " Veuillez rectifier cette longueur erronée.");
                     }
-                }catch(Exception e){
-                    throw new Exception("Les attributs du noeud correspondant au tronçon "+ countTroncon++ + " sont mal renseignés. " +
+                } catch (Exception e) {
+                    throw new Exception("Les attributs du noeud correspondant au tronçon " + countTroncon++ + " sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
-                            " origine et destination sont des long, nomRue est un String et longueur est un Double.",e);
+                            " origine et destination sont des long, nomRue est un String et longueur est un Double.", e);
                 }
                 destination = Graphe.shared.getIntersectionMap().get(idDestination);
                 if (destination == null) {
                     throw new Exception("L'intersection d'origine du troncon " + countTroncon++ + " n'existe pas dans le graphe du plan.");
                 }
-                Troncon myTroncon = new Troncon(destination,nomRue,longueur);
+                Troncon myTroncon = new Troncon(destination, nomRue, longueur);
                 countTroncon++;
-                Graphe.shared.addTroncon(myTroncon,idOrigine);
+                Graphe.shared.addTroncon(myTroncon, idOrigine);
             }
         }
     }
@@ -126,7 +128,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 - Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur*/
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
-        if(!cheminFichier.substring(cheminFichier.lastIndexOf('.')+1).equals("xml")){
+        if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
             throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
         }
 
@@ -134,21 +136,21 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         try {
             document = parser.parse(new File(cheminFichier));
         } catch (IOException e) {
-            throw new Exception(e.getMessage(),e);
-        } catch (SAXException e){
-            throw new Exception(e.getMessage(),e);
+            throw new Exception(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new Exception(e.getMessage(), e);
         }
 
         final Element root = document.getDocumentElement();
 
-        if(!root.getNodeName().equals("demandeDeLivraisons")){
+        if (!root.getNodeName().equals("demandeDeLivraisons")) {
             throw new Exception("Le fichier ne représente pas une demande de livraison...");
         }
 
         NodeList rootNodes = root.getChildNodes();
         int nbRootNodes = rootNodes.getLength();
 
-        if(nbRootNodes==0) throw new Exception("Le fichier ne contient aucune information.");
+        if (nbRootNodes == 0) throw new Exception("Le fichier ne contient aucune information.");
 
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
@@ -164,45 +166,48 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
             int dureeEnlevement, dureeLivraison;
             long idEntrepot;
 
-            if(node.getNodeName().equals("livraison")){
+            if (node.getNodeName().equals("livraison")) {
                 try {
                     idEnlevement = Long.parseLong(attributes.getNamedItem("adresseEnlevement").getNodeValue());
                     idLivraison = Long.parseLong(attributes.getNamedItem("adresseLivraison").getNodeValue());
                     dureeEnlevement = Integer.parseInt(attributes.getNamedItem("dureeEnlevement").getNodeValue());
                     dureeLivraison = Integer.parseInt(attributes.getNamedItem("dureeLivraison").getNodeValue());
-                }catch(Exception e){
-                    throw new Exception("Les attributs du noeud correspondant à une livraison "+ ++countDeliveries + "sont mal renseignés. " +
+                    if (dureeEnlevement < 0 || dureeLivraison < 0) {
+                        throw new Exception("Attention les durées ne peuvent pas être négatives.");
+                    }
+                } catch (Exception e) {
+                    throw new Exception("Les attributs du noeud correspondant à une livraison " + ++countDeliveries + "sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
-                            " adresseEnlevement et adresseLivraison sont des long, et dureeEnlevement et dureeLivraison sont des int.",e);
+                            " adresseEnlevement et adresseLivraison sont des long, et dureeEnlevement et dureeLivraison sont des int.", e);
                 }
                 enlevement = Graphe.shared.getIntersectionMap().get(idEnlevement);
-                if(enlevement==null){
+                if (enlevement == null) {
                     throw new Exception("L'intersection d'enlevement " + countDeliveries++ + " n'existe pas dans le graphe du plan.");
                 }
                 livraison = Graphe.shared.getIntersectionMap().get(idLivraison);
-                if(livraison==null){
+                if (livraison == null) {
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
                 countDeliveries++;
                 demande.addLivraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
 
-            } else if(node.getNodeName().equals("entrepot")){
+            } else if (node.getNodeName().equals("entrepot")) {
                 try {
                     idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                     SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
                     myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
-                }catch(Exception e){
-                    throw new Exception("Les attributs de l'entrepot sont mal renseignés. \n"+
-                            "Veuillez respecter le format des attributs suivant : \n"+
+                } catch (Exception e) {
+                    throw new Exception("Les attributs de l'entrepot sont mal renseignés. \n" +
+                            "Veuillez respecter le format des attributs suivant : \n" +
                             "adresse est un long et heureDepart est une String de syntaxe \"H:m:s\"");
                 }
                 entrepot = Graphe.shared.getIntersectionMap().get(idEntrepot);
-                if (entrepot == null|| myDate==null){
-                    String message ="";
-                    if(myDate == null){
+                if (entrepot == null || myDate == null) {
+                    String message = "";
+                    if (myDate == null) {
                         message = "La date de la demande de livraisons n'est pas définie.";
                     }
-                    if (entrepot == null){
+                    if (entrepot == null) {
                         message = "L'entrepot de la demande de livraisons n'est pas défini.";
                     }
                     throw new Exception(message);
@@ -210,9 +215,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                 demande.setEntrepot(entrepot);
             }
         }
-        if(countDeliveries==0) throw new Exception("La demande ne contient aucune livraison.");
-
-
+        if (countDeliveries == 0) throw new Exception("La demande ne contient aucune livraison.");
         return demande;
     }
 
@@ -224,31 +227,65 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         double maxLatitude = -100;
         double maxLongitude = -100;
 
-       for(HashMap.Entry mapValue : Graphe.shared.getIntersectionMap().entrySet()){
-           Intersection myIntersection = (Intersection) mapValue.getValue();
-           double latitude = myIntersection.getCoordinate().getLatitude();
-           double longitude = myIntersection.getCoordinate().getLongitude();
-           if(latitude<minLatitude){ minLatitude = latitude; }
-           else if(latitude>maxLatitude){ maxLatitude = latitude;}
-           if(longitude<minLongitude){ minLongitude = longitude;}
-           else if(longitude>maxLongitude){ maxLongitude = longitude; }
-       }
+        for (HashMap.Entry mapValue : Graphe.shared.getIntersectionMap().entrySet()) {
+            Intersection myIntersection = (Intersection) mapValue.getValue();
+            double latitude = myIntersection.getCoordinate().getLatitude();
+            double longitude = myIntersection.getCoordinate().getLongitude();
+            if (latitude < minLatitude) {
+                minLatitude = latitude;
+            } else if (latitude > maxLatitude) {
+                maxLatitude = latitude;
+            }
+            if (longitude < minLongitude) {
+                minLongitude = longitude;
+            } else if (longitude > maxLongitude) {
+                maxLongitude = longitude;
+            }
+        }
 
-       Coordinate minLatminLong = new Coordinate(minLatitude,minLongitude);
-       Coordinate minLatmaxLong = new Coordinate(minLatitude,maxLongitude);
-       Coordinate maxLatminLong = new Coordinate(maxLatitude,minLongitude);
-       Coordinate maxLatmaxLong = new Coordinate(maxLatitude,maxLongitude);
+        Coordinate minLatminLong = new Coordinate(minLatitude, minLongitude);
+        Coordinate minLatmaxLong = new Coordinate(minLatitude, maxLongitude);
+        Coordinate maxLatminLong = new Coordinate(maxLatitude, minLongitude);
+        Coordinate maxLatmaxLong = new Coordinate(maxLatitude, maxLongitude);
 
-       myList.add(minLatminLong);
-       myList.add(minLatmaxLong);
-       myList.add(maxLatminLong);
-       myList.add(maxLatmaxLong);
+        myList.add(minLatminLong);
+        myList.add(minLatmaxLong);
+        myList.add(maxLatminLong);
+        myList.add(maxLatmaxLong);
 
-       if(myList.size()<4){
-           throw new Exception("La liste des points d'extrémités est vide");
-       }else if(myList.size()>4){
-           throw new Exception("La liste des points d'extrémités contient plus de 4 points");
-       }
-       return myList;
+        if (myList.size() < 4) {
+            throw new Exception("La liste des points d'extrémités est vide");
+        } else if (myList.size() > 4) {
+            throw new Exception("La liste des points d'extrémités contient plus de 4 points");
+        }
+        return myList;
+    }
+
+
+    public Intersection getIntersectionPlusProche(Coordinate c) {
+
+        Intersection res = new Intersection();
+        Double latMin = 100000.0;
+        Double longMin = 100000.0;
+        Collection<Intersection> inter = Graphe.shared.getIntersectionMap().values();
+        Iterator it = inter.iterator();
+
+        while(it.hasNext()){
+            Intersection i = (Intersection) it.next();
+            Double longi = abs(i.getCoordinate().getLongitude() - c.getLongitude());
+
+            Double lati = abs(i.getCoordinate().getLatitude() - c.getLatitude());
+
+
+            if (longi <= longMin && lati <= latMin) {
+                System.out.println("longi : " + longi+". longMin : "+longMin);
+                System.out.println("lati : " + longi+". latMin : "+longMin);
+
+                longMin = longi;
+                latMin = lati;
+                res = i;
+            }
+        }
+        return res;
     }
 }

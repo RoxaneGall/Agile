@@ -1,49 +1,46 @@
 package Vue;
 
 import Algo.Computations;
-import Donnees.LectureXML;
 import Modeles.*;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
 import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
 import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
-import com.sun.java.swing.plaf.windows.WindowsFileChooserUI;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Pair;
+import javafx.scene.control.ProgressIndicator;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import Service.Service;
+import javafx.util.Pair;
 
 public class Controller implements ActionListener {
 
@@ -51,19 +48,23 @@ public class Controller implements ActionListener {
      * FX Elements pour charger les plans et demandes
      * partie en bas de l'IHM
      */
-
+    public Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
-
-    @FXML
-    public Button chargerPlan;
+    public DirectoryChooser directoryChooser = new DirectoryChooser();
+    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
+    ;
     @FXML
     public Button chargerDemande;
     @FXML
     public Button calculTournee;
     @FXML
     public Button stopTournee;
+    @FXML
+    public ProgressIndicator loading = new ProgressIndicator();
+    @FXML
+    public Text ajoutPickUp;
 
     /**
      * Carte
@@ -97,9 +98,17 @@ public class Controller implements ActionListener {
     @FXML
     public Button supprLivraison;
     @FXML
+    public Button ajoutLivraison;
+    @FXML
+    public Button exportFeuille;
+    @FXML
     public ScrollPane scroll;
+    @FXML
+    public ToggleGroup groupButtons = new ToggleGroup();
 
-    public ArrayList<ToggleButton> livrButtons = new ArrayList<>();
+    public ToggleButton lastSelected;
+    public ToggleButton lastPairSelected;
+    public HashMap<Coordinate, ToggleButton> livrButtons = new HashMap<>();
 
     /**
      * FX elements d'affichage pour debug
@@ -115,12 +124,8 @@ public class Controller implements ActionListener {
     @FXML
     public Label labelEvent;
 
-    /**
-     * FX Marker au click pour ajout de livraison (ITERATION 2)
-     */
-    /* Checkbox for click marker */
-    @FXML
-    public CheckBox checkClickMarker;
+    public String path = System.getProperty("user.home").substring(9);
+
 
     /**
      * Attributs pour définir le plan
@@ -133,24 +138,26 @@ public class Controller implements ActionListener {
     /**
      * Attributs pour la demande
      */
-    public Demande demande;
+    public Demande demande; // demande de départ obtenue avec chargerDemande
+    public Tournee tournee; // tournee calculée, qui contient donc également la demande, utilisée également quand on modifie la demande avec Ajout/Suppr
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
     /* Livraisons */
-    public List<Pair<Coordinate, Coordinate>> deliveries = new ArrayList<>();
-    public List<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<>();
-    public List<MapLabel> deliveriesNumbers = new ArrayList<>();
+    public HashMap<Coordinate, Coordinate> deliveries = new HashMap<>();
+    public HashMap<Coordinate, Marker> deliveriesMarkers = new HashMap<>();
+    public HashMap<Coordinate, MapLabel> deliveriesNumbers = new HashMap<>();
 
     /**
      * Attributs pour le trajet/la tournee
      */
-    public ArrayList<Coordinate> tournee = new ArrayList<>();
+    public ArrayList<Coordinate> tourneeCoordinate = new ArrayList<>();
+    public ArrayList<Coordinate> tourneePartCoordinate = new ArrayList<>();
     /* Ligne du trajet de la tournée (Coordinateline) */
     // Pour les couleurs en JFX : go là https://docs.oracle.com/javase/8/javafx/api/javafx/scene/paint/Color.html
     public CoordinateLine trackTrajet = new CoordinateLine();
     /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
-    public CoordinateLine trackTrajetPart = new CoordinateLine();
+    public CoordinateLine trackPart = new CoordinateLine();
 
     /**
      * Parametres pour le serveur WMS
@@ -168,9 +175,10 @@ public class Controller implements ActionListener {
     }
 
     public void setDeliveriesFromLivraisons(ArrayList<Livraison> livraisons) {
+        deliveries.clear();
         for (Livraison livr : livraisons) {
-            Pair delivery = new Pair(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
-            deliveries.add(delivery);
+            deliveries.put(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
+            deliveries.put(livr.getDelivery().getCoordinate(), livr.getPickup().getCoordinate());
         }
     }
 
@@ -179,10 +187,14 @@ public class Controller implements ActionListener {
      *
      * @param projection
      */
-    public void initializeView(Projection projection, Stage primaryStageFromMain) {
-        fileChooser.setInitialDirectory(new File("../datas"));
-
+    public void initializeView(Scene mainScene, Projection projection, Stage primaryStageFromMain) {
         primaryStage = primaryStageFromMain;
+        scene = mainScene;
+        fileChooser.setInitialDirectory(new File("../datas"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        directoryChooser.setInitialDirectory(new File("../datas"));
+        loading.visibleProperty().setValue(false);
+        //loading.toFront();
 
         // init MapView-Cache
         final OfflineCache offlineCache = mapView.getOfflineCache();
@@ -190,6 +202,7 @@ public class Controller implements ActionListener {
 
         // set the custom css file for the MapView
         mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
+        mapView.toBack();
 
         // set the controls to disabled, this will be changed when the MapView is initialized
         setTopControlsDisable(true);
@@ -207,13 +220,17 @@ public class Controller implements ActionListener {
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
-
+        supprLivraison.setDisable(true);
+        setButtonAjoutLivraison();
+        ajoutLivraison.setDisable(true);
+        setButtonExportFeuille();
+        exportFeuille.setDisable(true);
         setButtonChargerDemande();
 
-        setButtonStopTournee();
+        setButtonStopCalculTourneeOptimale();
 
         // enable le bouton calculer une tournée avec l'event correspondant
-        setButtonCalculerTournee();
+        setButtonCalculerTourneeOptimale();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -260,10 +277,6 @@ public class Controller implements ActionListener {
             labelExtent.setText(event.getExtent().toString());
         });
 
-        mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: map right clicked at: " + event.getCoordinate());
-        });
         mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, event -> {
             event.consume();
             labelEvent.setText("Event: marker clicked: " + event.getMarker().getId());
@@ -292,23 +305,12 @@ public class Controller implements ActionListener {
         System.out.println("Chargement du plan");
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
-
-            // POUR TESTER :
-            Coordinate c1 = new Coordinate(45.778579, 4.852096);
-            Coordinate c2 = new Coordinate(45.781901, 4.791063);
-            Coordinate c3 = new Coordinate(45.730995, 4.859773);
-            Coordinate c4 = new Coordinate(45.714939, 4.901873);
-            limites.add(c1);
-            limites.add(c2);
-            limites.add(c3);
-            limites.add(c4);
             System.out.println("Limites du plan :" + limites);
 
             mapExtent = Extent.forCoordinates(limites);
             if (mapView != null) {
                 mapView.setExtent(mapExtent);
             }
-
 
             setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
 
@@ -317,7 +319,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void setButtonStopTournee() {
+    private void setButtonStopCalculTourneeOptimale() {
         stopTournee.setOnAction(event -> {
             arreterChargementMeilleureTournee();
         });
@@ -329,27 +331,162 @@ public class Controller implements ActionListener {
     private void setButtonSupprLivraison() {
         supprLivraison.setOnAction(event -> {
             // récupérer le point cliqué
-            Coordinate c= null;
-            for (int i=0;i<livrButtons.size();i++){
-                if(livrButtons.get(i).isSelected()){
-                    int ordre= Integer.parseInt(livrButtons.get(i).getId());
-                    c=deliveriesNumbers.get(ordre).getPosition();
+            Coordinate c1 = null;
+            Coordinate c2 = null;
+            for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
+                if (entry.getValue().isSelected()) {
+                    c1 = entry.getKey();
+                    break;
                 }
             }
-            System.out.println("coorrrddddd : "+c);
-            System.out.println(deliveries.toString());
-            deleteMarkerByCoord(c);
-            deleteLabelByCoord(c);
-            demande.removeLivraison(c);
-            for (int i = 0; i < deliveries.size(); i++) {
-                if (deliveries.get(i).getKey().equals(c) || deliveries.get(i).getValue().equals(c)) {
-                    System.out.println("here");
-                    deliveries.remove(new Pair<>(deliveries.get(i).getKey(), deliveries.get(i).getValue()));
-                }
-            }
-            calculerTournee();
-            System.out.println("deliveries after removal : " + deliveries.size());
+
+            c2 = deliveries.get(c1);
+            deleteMarkerByCoord(c1);
+            deleteMarkerByCoord(c2);
+            deleteLabelByCoord(c1);
+            deleteLabelByCoord(c2);
+            /* demande.removeLivraison(c1);
+            deliveries.remove(c1); */
+
+            //demande.removeLivraison(c1);
+
+            //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
+            //TODO : remplacer cette méthode calculerTournee Optimale
+            calculerTourneeOptimale();
+
+
+            afficherTourneeCalculee();
+            System.out.println("deliveries after removal : " + deliveries);
         });
+    }
+
+    private void addRightClickEvent(ArrayList<Intersection> interLivraison) {
+
+        mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
+            eventClick.consume();
+            labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
+            Coordinate pickUp = eventClick.getCoordinate();
+            Intersection i = service.intersectionPlusProche(pickUp);
+            int size = demande.getLivraisons().size() + 1;
+            int nbLivrAjoute = interLivraison.size();
+            if (nbLivrAjoute == 0) { //premier clic
+                URL imageURL = null;
+                try {
+                    imageURL = new URL("file://C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                mapView.addMarker(m);
+                deliveriesMarkers.put(m.getPosition(), m);
+                interLivraison.add(i);
+                ajouterLivraison(interLivraison);
+            }
+            if (nbLivrAjoute == 1) { //deuxieme clic
+                URL imageURL = null;
+                try {
+                    imageURL = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/d_" + size + ".png");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                mapView.addMarker(m);
+                deliveriesMarkers.put(m.getPosition(), m);
+                interLivraison.add(i);
+                ajouterLivraison(interLivraison);
+            }
+            if (nbLivrAjoute == 2) {
+                ajoutPickUp.setText("Livraison ajoutée !");
+            }
+
+        });
+    }
+
+    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+        if (interLivraison.size() == 2) {
+            ajoutPickUp.setText("");
+            Intersection interPickUp = interLivraison.get(0);
+            Intersection interDelivery = interLivraison.get(1);
+            genererLivraison(interPickUp,interDelivery);
+            calculerTourneeOptimale();
+            afficherTourneeCalculee();
+            ajoutPickUp.setText("Livraison ajoutée !");
+        }
+    }
+
+    private void genererLivraison(Intersection interPickUp, Intersection interDelivery) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+
+        // Set the button types.
+        ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField dEnlevement = new TextField();
+        dEnlevement.setPromptText("Durée d'enlèvement : ");
+        TextField dLivraison = new TextField();
+        dLivraison.setPromptText("Durée de livraison : ");
+
+        gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
+        gridPane.add(dEnlevement, 1, 0);
+        gridPane.add(new Label("Durée de livraison : "), 2, 0);
+        gridPane.add(dLivraison, 3, 0);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        // Request focus on the username field by default.
+        Platform.runLater(() -> dEnlevement.requestFocus());
+
+        // Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(dEnlevement.getText(), dLivraison.getText());
+            }
+            return null;
+        });
+            Optional<Pair<String, String>> result = dialog.showAndWait();
+            //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
+            demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
+            calculerTourneeOptimale();
+            afficherTourneeCalculee();
+            ajoutPickUp.setText("Livraison ajoutée !");
+        }
+
+
+    private void setButtonAjoutLivraison() {
+        ajoutLivraison.setOnAction(event -> {
+            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
+            ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
+            addRightClickEvent(interLivraison);
+        });
+    }
+
+    /**
+     *
+     */
+
+    private void setButtonExportFeuille() {
+        exportFeuille.setOnAction(event ->
+        {
+            try {
+                File selectedDirectory = directoryChooser.showDialog(primaryStage);
+                if(selectedDirectory == null){
+                    //No Directory selected
+                }else{
+                    System.out.println(selectedDirectory.getAbsolutePath());
+                }
+            } catch (Exception e) {
+
+
+            }
+
+        });
+
     }
 
     /**
@@ -358,79 +495,96 @@ public class Controller implements ActionListener {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
+            ajoutLivraison.setDisable(true);
+            supprLivraison.setDisable(true);
+            File selectedFile = null;
             try {
                 System.out.println("Chargement d'une demande");
-                File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
-
-                mapView.removeCoordinateLine(trackTrajet);
-                if (entrepotMarker != null) {
-                    mapView.removeMarker(entrepotMarker);
-                }
-                for (int i = 0; i < deliveriesMarkers.size(); i++) {
-                    mapView.removeMarker(deliveriesMarkers.get(i).getKey());
-                    mapView.removeMarker(deliveriesMarkers.get(i).getValue());
-                }
-                for (int i = 0; i < deliveriesNumbers.size(); i++) {
-                    mapView.removeLabel(deliveriesNumbers.get(i));
-                }
-
-                deliveriesMarkers.clear();
-
-                entrepot = demande.getEntrepot().getCoordinate();
-                setDeliveriesFromLivraisons(demande.getLivraisons());
-                System.out.println("Demande : " + demande);
-
-                entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
-                mapView.addMarker(entrepotMarker);
-
-                for (int i = 0; i < demande.getLivraisons().size(); i++) {
-                    Marker markerPickUp;
-                    Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                  /*  URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/pick_up_logo_small.png");
-                    markerPickUp = new Marker(imageURL, 0, 0).setPosition(pickUp);*/
-                    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
-
-                    Marker markerDelivery;
-                    Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                    System.out.println(pickUp + "/////" + delivery);
-
-                    markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-                    deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
-                }
-
-                for (int i = 0; i < deliveriesMarkers.size(); i++) {
-                    deliveriesMarkers.get(i).getKey().setVisible(true);
-                    deliveriesMarkers.get(i).getValue().setVisible(true);
-                    mapView.addMarker(deliveriesMarkers.get(i).getKey());
-                    mapView.addMarker(deliveriesMarkers.get(i).getValue());
-                }
-
-                System.out.println(deliveriesMarkers.size());
             } catch (Exception e) {
-                e.printStackTrace();
+                //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
+                Dialog<Pair<String, String>> dialog = new Dialog<>();
+                dialog.setTitle("Erreur chargement demande");
+                dialog.getDialogPane().setContent(new Text(e.getMessage()));
+                //TODO : Faire des tests pour montrer qu'on throw bien les erreurs (si Alice l'a pas déjà fait)
+                // TODO: Histoire que ce soit clean et pour le livrable est-ce qu'on ferait pas un tableu récapitulatif des erreurs possibles et du message correspondant ?
             }
+            if (selectedFile != null) {
+                try {
+                    mapView.removeCoordinateLine(trackTrajet);
+                    if (entrepotMarker != null) {
+                        mapView.removeMarker(entrepotMarker);
+                    }
+                    for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                        mapView.removeMarker(entry.getValue());
+                    }
+                    for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
+                        mapView.removeLabel(entry.getValue());
+                    }
 
+                    deliveriesMarkers.clear();
+
+                    entrepot = demande.getEntrepot().getCoordinate();
+                    setDeliveriesFromLivraisons(demande.getLivraisons());
+                    System.out.println("Demande : " + demande);
+
+                    entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+                    mapView.addMarker(entrepotMarker);
+
+                    for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                        Marker markerPickUp;
+                        Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                        URL imageURL = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
+                        markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
+                        //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
+
+                        Marker markerDelivery;
+                        Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                        URL imageURL2 = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
+                        markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
+                        //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
+
+
+                        deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
+                        deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
+                    }
+
+                    for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                        entry.getValue().setVisible(true);
+                        mapView.addMarker(entry.getValue().setVisible(true));
+                    }
+
+                    System.out.println(deliveriesMarkers.size());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
 
-
-    private void setButtonCalculerTournee() {
+    private void setButtonCalculerTourneeOptimale() {
         calculTournee.setOnAction(event -> {
-            calculerTournee();
+            calculerTourneeOptimale();
         });
     }
 
-    private void calculerTournee() {
+    private void calculerTourneeOptimale() {
         mapView.removeCoordinateLine(trackTrajet);
-        tournee.clear();
+        tourneeCoordinate.clear();
         System.out.println("Calcul d'une tournée");
         try {
+            ajoutLivraison.setDisable(true);
+            supprLivraison.setDisable(true);
+            exportFeuille.setDisable(true);
+            detailsLivraisons.getChildren().clear();
+            scroll.setVisible(true);
+            scroll.setContent(detailsLivraisons);
             if (demande != null) {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
-                //TODO: DEBUT CHARGEMENT TRAJET
+                loading.visibleProperty().setValue(true);
                 Thread t1 = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -448,74 +602,172 @@ public class Controller implements ActionListener {
         }
     }
 
-    //TODO: FAIRE UN BOUTON APPELANT CETTE METHODE
     private void arreterChargementMeilleureTournee() {
         Computations.endComputations();
     }
 
     private void afficherTourneeCalculee() {
         Tournee t = service.recupererTournee();
-        Platform.runLater(new Runnable(){
-            @Override public void run() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
                 mapView.removeCoordinateLine(trackTrajet);
-                tournee.clear();
+                mapView.removeCoordinateLine(trackPart);
+                tourneeCoordinate.clear();
                 afficherTournee(t);
+
             }
         });
     }
 
-    private void afficherTournee(Tournee t){
-            if (demande != null) {
-                livrButtons.clear();
-
-                for (int i = 0; i < deliveriesNumbers.size(); i++) {
-                    mapView.removeLabel(deliveriesNumbers.get(i));
-                }
-                detailsLivraisons.getChildren().clear();
-                scroll.setVisible(true);
-                scroll.setContent(detailsLivraisons);
-                // scroll.setContent(supprLivraison);
-
-                // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-                int compteur = 1;
-                for (int i = 0; i < t.getTrajets().size(); i++) {
-                    tournee.add(t.getTrajets().get(i).getOrigine().getCoordinate());
-                    MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
-                    mapView.addLabel(l);
-                    deliveriesNumbers.add(l);
-                    compteur++;
-                    for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                        tournee.add(troncon.getDestination().getCoordinate());
-                    }
-
-                    ToggleButton button = new ToggleButton("Livraison " + i + "\n Arrivée à :");
-                    button.setId("" + i);
-                    livrButtons.add(button);
-                }
-
-                for (int i = 0; i < livrButtons.size(); i++) {
-                    detailsLivraisons.getChildren().add(livrButtons.get(i));
-                    detailsLivraisons.getChildren().get(i).setVisible(true);
-                }
-                detailsLivraisons.getChildren().add(supprLivraison);
-                detailsLivraisons.setVisible(true);
-                System.out.println(scroll.getContent());
-
-                System.out.println("****************"+detailsLivraisons.getChildren().toString());
-
-                System.out.println("LINE :" + trackTrajet);
-                trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
-                trackTrajet.setVisible(true);
-                // add the tracks
-                System.out.println("ADD TRACK TO MAP");
-                mapView.addCoordinateLine(trackTrajet);
-                System.out.println("Tournee: " + trackTrajet.toString());
-
-            } else {
-                System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
-            }
+    private void entrepotSelected(ToggleButton button) {
+        if (lastSelected != null) {
+            lastSelected.setStyle(null);
+        }
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
+        }
+        lastSelected = button;
+        mapView.removeCoordinateLine(trackPart);
+        tourneePartCoordinate.clear();
+        button.setStyle("-fx-base: lightblue;");
     }
 
+    private void entrepotDeselected(ToggleButton button) {
+        button.setStyle(null);
+    }
+
+    private void livraisonSelected(ToggleButton button) {
+        if (lastSelected != null) {
+            lastSelected.setStyle(null);
+        }
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
+        }
+        mapView.removeCoordinateLine(trackPart);
+        tourneePartCoordinate.clear();
+
+        ToggleButton pairedButton;
+        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
+            if (entry.getValue() == button) {
+                pairedButton = livrButtons.get(deliveries.get(entry.getKey()));
+                lastSelected = button;
+                lastPairSelected = pairedButton;
+                button.setStyle("-fx-base: lightblue;");
+                pairedButton.setStyle("-fx-base: lightblue;");
+                break;
+            }
+        }
+
+        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
+            if (entry.getValue() == button) {
+                int i = 0;
+                while (tourneeCoordinate.get(i) != entry.getKey()) {
+                    tourneePartCoordinate.add(tourneeCoordinate.get(i));
+                    i++;
+                }
+                break;
+            }
+        }
+
+        trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
+        trackPart.setVisible(true);
+        mapView.addCoordinateLine(trackPart);
+    }
+
+    private void livraisonDeselected(ToggleButton button) {
+        button.setStyle(null);
+        if (lastPairSelected != null) {
+            lastPairSelected.setStyle(null);
+        }
+        mapView.removeCoordinateLine(trackPart);
+        tourneePartCoordinate.clear();
+    }
+
+    private void afficherTournee(Tournee t) {
+        if (demande != null) {
+            ajoutLivraison.setDisable(false);
+            supprLivraison.setDisable(false);
+            exportFeuille.setDisable(false);
+
+            livrButtons.clear();
+            for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
+                mapView.removeLabel(entry.getValue());
+            }
+            deliveriesNumbers.clear();
+            detailsLivraisons.getChildren().clear();
+            scroll.setVisible(true);
+            scroll.setContent(detailsLivraisons);
+            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+            int compteur = 1;
+            Coordinate coord;
+            Trajet trajet;
+            for (int i = 0; i < t.getTrajets().size(); i++) {
+                trajet = t.getTrajets().get(i);
+                coord = trajet.getOrigine().getCoordinate();
+                tourneeCoordinate.add(coord);
+                MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
+                mapView.addLabel(l);
+                deliveriesNumbers.put(coord, l);
+                compteur++;
+                for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                    tourneeCoordinate.add(troncon.getDestination().getCoordinate());
+                }
+
+                String infoButton = "";
+                ToggleButton button = new ToggleButton();
+                if (i == 0) {
+                    infoButton = i + 1 + " - Entrepôt \n Départ : " + formater.format(trajet.getHeureArrivee());
+                    button.setOnAction(event -> {
+                        if (button.isSelected()) {
+                            entrepotSelected(button);
+                        } else {
+                            entrepotDeselected(button);
+                        }
+                    });
+                } else {
+                    if (trajet.getType() == Trajet.Type.PICKUP) {
+                        infoButton = i + 1 + " - PICKUP \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                    } else {
+                        infoButton = i + 1 + " - DELIVERY \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                    }
+                    button.setOnAction(event -> {
+                        if (button.isSelected()) {
+                            livraisonSelected(button);
+                        } else {
+                            livraisonDeselected(button);
+                        }
+                    });
+                }
+                button.setText(infoButton);
+                button.setPrefWidth(250.0);
+                button.setAlignment(Pos.TOP_LEFT);
+                button.setId("" + i);
+                button.setToggleGroup(groupButtons);
+                livrButtons.put(coord, button);
+                detailsLivraisons.getChildren().add(button);
+            }
+
+            //infoButton = "Fin de tournée - \n Arrivée : " + formater.format(trajet.getHeureArrivee());
+
+            detailsLivraisons.setVisible(true);
+
+            trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
+            trackTrajet.setVisible(true);
+
+            // add the tracks
+            mapView.addCoordinateLine(trackTrajet);
+            // System.out.println("Tournee: " + trackTrajet.toString());
+
+        } else {
+            System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+        }
+    }
+
+
+    /** Méthode qui permet de créer
+     *
+     */
 
     /**
      * @param flag
@@ -525,42 +777,20 @@ public class Controller implements ActionListener {
     }
 
     public void deleteMarkerByCoord(Coordinate c) {
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            if (deliveriesMarkers.get(i).getKey().getPosition().equals(c) || deliveriesMarkers.get(i).getValue().getPosition().equals(c)) {
-                mapView.removeMarker(deliveriesMarkers.get(i).getKey());
-                mapView.removeMarker(deliveriesMarkers.get(i).getValue());
-                deliveriesMarkers.remove(new Pair<Marker, Marker>(deliveriesMarkers.get(i).getKey(), deliveriesMarkers.get(i).getValue()));
-            }
-        }
+        mapView.removeMarker(deliveriesMarkers.get(c));
+        deliveriesMarkers.remove(c);
     }
 
     public void deleteLabelByCoord(Coordinate c) {
-        Coordinate c2 = null;
-        for (int i = 0; i < deliveries.size(); i++) {
-            if (deliveries.get(i).getKey().equals(c)) {
-                c2 = deliveries.get(i).getValue();
-            }
-            if (deliveries.get(i).getValue().equals(c)) {
-                c2 = deliveries.get(i).getKey();
-            }
-        }
-        for (int i = 0; i < deliveriesNumbers.size(); i++) {
-            if (deliveriesNumbers.get(i).getPosition().equals(c)) {
-                mapView.removeLabel(deliveriesNumbers.get(i));
-            }
-        }
-        for (int i = 0; i < deliveriesNumbers.size(); i++) {
-            if (deliveriesNumbers.get(i).getPosition().equals(c2)) {
-                mapView.removeLabel(deliveriesNumbers.get(i));
-            }
-        }
-
+        System.out.println("LABEL A SUPPR " + deliveriesNumbers.get(c));
+        mapView.removeLabel(deliveriesNumbers.get(c));
+        deliveriesNumbers.remove(c);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ended")) {
-            //TODO: CHARGMENT DES TRAJETS TERMINÉS
+            loading.visibleProperty().setValue(false);
         } else if (e.getActionCommand().equals("newResultFound")) {
             afficherTourneeCalculee();
         }
