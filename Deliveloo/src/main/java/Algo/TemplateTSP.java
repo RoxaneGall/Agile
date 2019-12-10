@@ -35,20 +35,6 @@ public abstract class TemplateTSP implements TSP {
         Computations.lastResultIsBestResult();
     }
 
-    public void chercherSuiteSolution(int tpsLimite, int nbSommets, int sommetCourant,  Trajet[][] cout) {
-        tempsLimiteAtteint = false;
-        end = false;
-        coutMeilleureSolution = Double.MAX_VALUE;
-        limitDiscrepancy = nbSommets/2+4;
-        meilleureSolution = new Integer[nbSommets];
-        ArrayList<Integer> nonVus = new ArrayList<Integer>();
-        for (int i = 1; i < nbSommets; i++) nonVus.add(i);
-        ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
-        vus.add(sommetCourant);
-        branchAndBound(sommetCourant,0, nonVus, vus, 0.0, cout, System.currentTimeMillis(), tpsLimite);
-        Computations.lastResultIsBestResult();
-    }
-
     public Integer[] getMeilleureSolution() {
         return meilleureSolution;
     }
