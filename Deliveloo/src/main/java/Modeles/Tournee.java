@@ -1,5 +1,7 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,31 +24,20 @@ public class Tournee {
         return this.trajets;
     }
 
-    public double getTotalDistance() {
-        Double longueur = 0.0;
+    public int getTotalDistance() {
+        int longueur = 0;
         for(Trajet trajet: trajets) {
             longueur+=trajet.getLongueur();
         }
         return longueur;
     }
 
-    public double getTotalDuration() {
-        double livraisonsTotalDurationSeconds = 0;
-        for(Livraison livraison: demande.getLivraisons()) {
-            livraisonsTotalDurationSeconds+=livraison.getDureeEnlevement()+livraison.getDureeLivraison();
-        }
-        double vitesse = 14 * 1000 / 60; //En m/min
-        double bicycleTotalMinutes = getTotalDistance()/vitesse;
-        return bicycleTotalMinutes+livraisonsTotalDurationSeconds/60;
+    public int getTotalDuration() {
+        return (int) (trajets.get(trajets.size()-1).getHeureArrivee().getTime()-demande.getHeureDepart().getTime())/(60*1000);
     }
 
     public Date getHeureArrivee() {
-        Calendar depart = Calendar.getInstance();
-        depart.set(Calendar.MINUTE, demande.getHeureDepart().getMinutes());
-        depart.set(Calendar.HOUR, demande.getHeureDepart().getHours());
-        depart.add(Calendar.MINUTE, (int) getTotalDuration());
-        Date dateArrivee = depart.getTime();
-        return dateArrivee;
+        return trajets.get(trajets.size()-1).getHeureArrivee();
     }
 
     public void addTrajets(ArrayList<Trajet> trajets){

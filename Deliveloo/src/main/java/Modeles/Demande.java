@@ -1,6 +1,9 @@
 package Modeles;
 
+import com.sothawo.mapjfx.Coordinate;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -9,8 +12,8 @@ public class Demande {
     private Intersection entrepot;
     private Date heureDepart;
 
-    public Demande(ArrayList<Livraison> livraisons, Intersection entrepot, Date heureDepart) {
-        this.livraisons = livraisons;
+    public Demande(Intersection entrepot, Date heureDepart) {
+        this.livraisons = new ArrayList<>();
         this.entrepot = entrepot;
         this.heureDepart = heureDepart;
     }
@@ -19,8 +22,21 @@ public class Demande {
         return livraisons;
     }
 
-    public void setLivraisons(ArrayList<Livraison> livraisons) {
-        this.livraisons = livraisons;
+
+    public void removeLivraison(Coordinate coord) {
+        for (Livraison l : livraisons) {
+            // recherche de la livraison qui contient la coordinate
+            if (l.getDelivery().getCoordinate() == coord || l.getPickup().getCoordinate() == coord) {
+                // suppression de cette livraison
+                livraisons.remove(l);
+            }
+        }
+    }
+
+    public Livraison addLivraison(Intersection pickup,  Intersection delivery, int dureeEnlevement, int dureeLivraison) {
+        Livraison livraison = new Livraison( ((Integer) livraisons.size()).longValue(), pickup, delivery, dureeEnlevement, dureeLivraison);
+        livraisons.add(livraison);
+        return livraison;
     }
 
     public Intersection getEntrepot() {

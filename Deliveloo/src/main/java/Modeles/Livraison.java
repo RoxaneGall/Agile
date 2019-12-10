@@ -7,12 +7,18 @@ public class Livraison {
     private Intersection delivery;
     int dureeEnlevement;
     int dureeLivraison;
+    Long id;
 
-    public Livraison(Intersection pickup, Intersection delivery, int dE, int dL) {
+    public Livraison(Long id, Intersection pickup, Intersection delivery, int dE, int dL) {
         this.pickup = pickup;
         this.delivery = delivery;
         this.dureeEnlevement = dE;
         this.dureeLivraison = dL;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Intersection getPickup() {

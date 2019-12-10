@@ -5,16 +5,11 @@ import java.util.HashMap;
 public class Graphe {
 
     public static Graphe shared = new Graphe();
-
     private HashMap<Long,Intersection> intersectionMap;
 
-    public Graphe() {
-        this.intersectionMap = new HashMap<Long, Intersection>();
-    }
+    public Graphe() {this.intersectionMap = new HashMap<Long, Intersection>();}
 
-    public HashMap<Long,Intersection> getIntersectionMap() {
-        return intersectionMap;
-    }
+    public HashMap<Long,Intersection> getIntersectionMap() {return intersectionMap;}
 
     public void addTroncon(Troncon troncon, long origineId) {
         if (intersectionMap.containsKey(origineId)) {
@@ -27,4 +22,6 @@ public class Graphe {
             intersectionMap.put(intersection.getId(),intersection);
         }
     }
+
+    public void clearGraph() {this.intersectionMap.clear();}
 }

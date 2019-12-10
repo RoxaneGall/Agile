@@ -4,6 +4,7 @@ import com.sothawo.mapjfx.Coordinate;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static java.lang.StrictMath.atan2;
 
@@ -13,12 +14,64 @@ public class Trajet {
     private Intersection origine;
     private Intersection arrivee;
     private Double longueur;
+    private Date heureDepart;
+    private Date heureArrivee;
+    private Type type;
+    private Livraison livraison;
+
+    public enum Type {
+        PICKUP,
+        DELIVERY,
+        COMEBACKHOME;
+    }
 
     public Trajet(Intersection origine) {
         this.origine = origine;
         this.troncons = new ArrayList<Troncon>();
         this.arrivee = origine;
         this.longueur = 0.0;
+    }
+
+    public Trajet(Trajet trajet) {
+        this.origine = trajet.getOrigine();
+        this.troncons = trajet.getTroncons();
+        this.arrivee = trajet.getArrivee();
+        this.longueur = trajet.getLongueur();
+        this.type = trajet.getType();
+        this.livraison = trajet.getLivraison();
+    }
+
+
+    public Date getHeureDepart() {
+        return heureDepart;
+    }
+
+    public void setHeureDepart(Date heureDepart) {
+        this.heureDepart = heureDepart;
+    }
+
+    public Date getHeureArrivee() {
+        return heureArrivee;
+    }
+
+    public void setHeureArrivee(Date heureArrivee) {
+        this.heureArrivee = heureArrivee;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Livraison getLivraison() {
+        return livraison;
+    }
+
+    public void setLivraison(Livraison livraison) {
+        this.livraison = livraison;
     }
 
     public Double getLongueur() {
@@ -59,6 +112,7 @@ public class Trajet {
         Intersection lastLocation = origine;
         Troncon lastTroncon = null;
         double distanceSinceLastInstruction = 0;
+
         for (Troncon troncon : troncons) {
 
             InstructionLivraison.Direction direction = InstructionLivraison.Direction.TOUTDROIT;
@@ -81,12 +135,10 @@ public class Trajet {
                     direction = InstructionLivraison.Direction.LEGERDROIT;
                 }
 
-                if (angle>0.1||angle<-0.1) {
+                if (angle>0.1||angle<-0.1||!lastTroncon.getNom().equals(troncon.getNom())) {
                     InstructionLivraison newInstruction = new InstructionLivraison(troncon.getNom(), direction, distanceSinceLastInstruction);
                     instructions.add(newInstruction);
                     distanceSinceLastInstruction = 0;
-                } else if (lastTroncon.getNom() == troncon.getNom()) {
-                    distanceSinceLastInstruction += lastTroncon.getLongueur();
                 }
 
                 lastLocation = lastTroncon.getDestination();
