@@ -301,16 +301,6 @@ public class Controller implements ActionListener {
         System.out.println("Chargement du plan");
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
-
-            // POUR TESTER :
-            Coordinate c1 = new Coordinate(45.778579, 4.852096);
-            Coordinate c2 = new Coordinate(45.781901, 4.791063);
-            Coordinate c3 = new Coordinate(45.730995, 4.859773);
-            Coordinate c4 = new Coordinate(45.714939, 4.901873);
-            limites.add(c1);
-            limites.add(c2);
-            limites.add(c3);
-            limites.add(c4);
             System.out.println("Limites du plan :" + limites);
 
             mapExtent = Extent.forCoordinates(limites);
@@ -347,15 +337,20 @@ public class Controller implements ActionListener {
             }
 
             c2 = deliveries.get(c1);
-
             deleteMarkerByCoord(c1);
             deleteMarkerByCoord(c2);
             deleteLabelByCoord(c1);
             deleteLabelByCoord(c2);
-            demande.removeLivraison(c1);
-            deliveries.remove(c1);
+            /* demande.removeLivraison(c1);
+            deliveries.remove(c1); */
 
+            //demande.removeLivraison(c1);
+
+            //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
+            //TODO : remplacer cette méthode calculerTournee Optimale
             calculerTourneeOptimale();
+
+
             afficherTourneeCalculee();
             System.out.println("deliveries after removal : " + deliveries);
         });
@@ -444,6 +439,7 @@ public class Controller implements ActionListener {
             });
 
             Optional<Pair<String, String>> result = dialog.showAndWait();
+            //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
             demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             calculerTourneeOptimale();
             afficherTourneeCalculee();
@@ -490,9 +486,10 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             ajoutLivraison.setDisable(true);
             supprLivraison.setDisable(true);
+            File selectedFile = null;
             try {
                 System.out.println("Chargement d'une demande");
-                File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
             } catch (Exception e) {
                 //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
@@ -502,55 +499,56 @@ public class Controller implements ActionListener {
                 //TODO : Faire des tests pour montrer qu'on throw bien les erreurs (si Alice l'a pas déjà fait)
                 // TODO: Histoire que ce soit clean et pour le livrable est-ce qu'on ferait pas un tableu récapitulatif des erreurs possibles et du message correspondant ?
             }
-            try {
-                mapView.removeCoordinateLine(trackTrajet);
-                if (entrepotMarker != null) {
-                    mapView.removeMarker(entrepotMarker);
+            if (selectedFile != null) {
+                try {
+                    mapView.removeCoordinateLine(trackTrajet);
+                    if (entrepotMarker != null) {
+                        mapView.removeMarker(entrepotMarker);
+                    }
+                    for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                        mapView.removeMarker(entry.getValue());
+                    }
+                    for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
+                        mapView.removeLabel(entry.getValue());
+                    }
+
+                    deliveriesMarkers.clear();
+
+                    entrepot = demande.getEntrepot().getCoordinate();
+                    setDeliveriesFromLivraisons(demande.getLivraisons());
+                    System.out.println("Demande : " + demande);
+
+                    entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+                    mapView.addMarker(entrepotMarker);
+
+                    for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                        Marker markerPickUp;
+                        Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                        URL imageURL = new URL("file:///C:/Users/Rox'/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
+                        markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
+                        //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
+
+                        Marker markerDelivery;
+                        Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                        URL imageURL2 = new URL("file:///C:/Users/Rox'/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
+                        markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
+                        //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
+
+
+                        deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
+                        deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
+                    }
+
+                    for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                        entry.getValue().setVisible(true);
+                        mapView.addMarker(entry.getValue().setVisible(true));
+                    }
+
+                    System.out.println(deliveriesMarkers.size());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
-                    mapView.removeMarker(entry.getValue());
-                }
-                for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
-                    mapView.removeLabel(entry.getValue());
-                }
-
-                deliveriesMarkers.clear();
-
-                entrepot = demande.getEntrepot().getCoordinate();
-                setDeliveriesFromLivraisons(demande.getLivraisons());
-                System.out.println("Demande : " + demande);
-
-                entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
-                mapView.addMarker(entrepotMarker);
-
-                for (int i = 0; i < demande.getLivraisons().size(); i++) {
-                    Marker markerPickUp;
-                    Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                    URL imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
-                    markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
-                    //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
-
-                    Marker markerDelivery;
-                    Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                    URL imageURL2 = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
-                    markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
-                    //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-
-
-                    deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
-                    deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
-                }
-
-                for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
-                    entry.getValue().setVisible(true);
-                    mapView.addMarker(entry.getValue().setVisible(true));
-                }
-
-                System.out.println(deliveriesMarkers.size());
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
         });
     }
 

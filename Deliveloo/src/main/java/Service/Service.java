@@ -5,6 +5,7 @@ import Donnees.LectureXML;
 import Modeles.*;
 import com.sothawo.mapjfx.Coordinate;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.*;
 
 public class Service {
