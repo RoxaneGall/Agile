@@ -25,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.ProgressIndicator;
@@ -50,9 +51,9 @@ public class Controller implements ActionListener {
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
+    public DirectoryChooser directoryChooser = new DirectoryChooser();
     public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
     ;
-
     @FXML
     public Button chargerDemande;
     @FXML
@@ -97,6 +98,8 @@ public class Controller implements ActionListener {
     public Button supprLivraison;
     @FXML
     public Button ajoutLivraison;
+    @FXML
+    public Button exportFeuille;
     @FXML
     public ScrollPane scroll;
     @FXML
@@ -183,9 +186,9 @@ public class Controller implements ActionListener {
         primaryStage = primaryStageFromMain;
         scene = mainScene;
         fileChooser.setInitialDirectory(new File("../datas"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        ajoutLivraison.setDisable(true);
-        supprLivraison.setDisable(true);
         //loading.toFront();
 
         // init MapView-Cache
@@ -212,8 +215,11 @@ public class Controller implements ActionListener {
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
+        supprLivraison.setDisable(true);
         setButtonAjoutLivraison();
-
+        ajoutLivraison.setDisable(true);
+        setButtonExportFeuille();
+        exportFeuille.setDisable(true);
         setButtonChargerDemande();
 
         setButtonStopTournee();
@@ -435,6 +441,28 @@ public class Controller implements ActionListener {
         });
     }
 
+    /**
+     *
+     */
+
+    private void setButtonExportFeuille() {
+        exportFeuille.setOnAction(event ->
+        {
+            try {
+                File selectedDirectory = directoryChooser.showDialog(primaryStage);
+                if(selectedDirectory == null){
+                    //No Directory selected
+                }else{
+                    System.out.println(selectedDirectory.getAbsolutePath());
+                }
+            } catch (Exception e) {
+
+
+            }
+
+        });
+
+    }
 
     /**
      *
@@ -515,6 +543,7 @@ public class Controller implements ActionListener {
         try {
             ajoutLivraison.setDisable(true);
             supprLivraison.setDisable(true);
+            exportFeuille.setDisable(true);
             detailsLivraisons.getChildren().clear();
             scroll.setVisible(true);
             scroll.setContent(detailsLivraisons);
@@ -625,6 +654,7 @@ public class Controller implements ActionListener {
         if (demande != null) {
             ajoutLivraison.setDisable(false);
             supprLivraison.setDisable(false);
+            exportFeuille.setDisable(false);
 
             livrButtons.clear();
             for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
@@ -700,6 +730,10 @@ public class Controller implements ActionListener {
         }
     }
 
+
+    /** Méthode qui permet de créer
+     *
+     */
 
     /**
      * @param flag

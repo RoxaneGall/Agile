@@ -91,6 +91,7 @@
                     <children>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
                         <Button fx:id="supprLivraison" text="Supprimer"/>
+                        <Button fx:id="exportFeuille" text="Feuille de route"/>
                     </children>
                     <padding>
                         <Insets bottom="5.0" left="2.0" right="2.0" top="5.0"/>
