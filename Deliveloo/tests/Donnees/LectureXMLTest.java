@@ -50,9 +50,6 @@ class LectureXMLTest {
 
     @Test
     void chargerPetitPlan_shouldLoadMap() throws Exception {
-
-    @Test
-    void chargerPetitPlan_shouldSucceed() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/petitPlan.xml");
         long idTest = 25611760;
