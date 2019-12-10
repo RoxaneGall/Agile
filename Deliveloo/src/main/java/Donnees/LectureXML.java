@@ -231,7 +231,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
            if(latitude<minLatitude){ minLatitude = latitude; }
            else if(latitude>maxLatitude){ maxLatitude = latitude;}
            if(longitude<minLongitude){ minLongitude = longitude;}
-           else if(longitude>minLongitude){ maxLongitude = longitude; }
+           else if(longitude>maxLongitude){ maxLongitude = longitude; }
        }
 
        Coordinate minLatminLong = new Coordinate(minLatitude,minLongitude);

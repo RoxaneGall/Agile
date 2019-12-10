@@ -29,6 +29,28 @@ class LectureXMLTest {
     void tearDown() {
     }
 
+
+    @Test
+    void chargerFichierNonXML_shouldThrowException(){
+        Graphe.shared.clearGraph();
+        try {
+            lectureXML.chargerPlan("../datas/petitPlan");
+            fail("Le test doit envoyer une exception car le fichier n'est pas un fichier XML.");
+        }catch(Exception e){}
+    }
+
+    @Test
+    void chargerFichierInexistant_shouldThrowException(){
+        Graphe.shared.clearGraph();
+        try {
+            lectureXML.chargerPlan("../datas/fichierInexistant");
+            fail("Le test doit lancer une exception car le fichier n'existe pas.");
+        }catch(Exception e){}
+    }
+
+    @Test
+    void chargerPetitPlan_shouldLoadMap() throws Exception {
+
     @Test
     void chargerPetitPlan_shouldSucceed() throws Exception {
         Graphe.shared.clearGraph();
@@ -85,6 +107,8 @@ class LectureXMLTest {
 
     @Test
     void getLimitesPlan_shouldSucceed() throws Exception {
+        Graphe.shared.clearGraph();
+        lectureXML.chargerPlan("../datas/grandPlan.xml");
         ArrayList<Coordinate> testList = new ArrayList<>();
         testList = lectureXML.getLimitesPlan();
         int compteur = 1;

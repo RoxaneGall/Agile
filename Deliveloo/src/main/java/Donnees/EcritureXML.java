@@ -104,14 +104,14 @@ public class EcritureXML {
             fop.close();
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new Exception(e);
         } finally {
             try {
                 if (fop != null) {
                     fop.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new Exception(e);
             }
         }
     }
