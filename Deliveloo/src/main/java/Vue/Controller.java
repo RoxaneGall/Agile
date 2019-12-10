@@ -362,12 +362,12 @@ public class Controller implements ActionListener {
             labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
-            int size = demande.getLivraisons().size()+1;
+            int size = demande.getLivraisons().size() + 1;
             int nbLivrAjoute = interLivraison.size();
             if (nbLivrAjoute == 0) { //premier clic
                 URL imageURL = null;
                 try {
-                    imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
+                    imageURL = new URL("file://C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -402,48 +402,53 @@ public class Controller implements ActionListener {
             ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
-            Dialog<Pair<String, String>> dialog = new Dialog<>();
-            dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
-
-            // Set the button types.
-            ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-            GridPane gridPane = new GridPane();
-            gridPane.setHgap(10);
-            gridPane.setVgap(10);
-            gridPane.setPadding(new Insets(20, 150, 10, 10));
-
-            TextField dEnlevement = new TextField();
-            dEnlevement.setPromptText("Durée d'enlèvement : ");
-            TextField dLivraison = new TextField();
-            dLivraison.setPromptText("Durée de livraison : ");
-
-            gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
-            gridPane.add(dEnlevement, 1, 0);
-            gridPane.add(new Label("Durée de livraison : "), 2, 0);
-            gridPane.add(dLivraison, 3, 0);
-
-            dialog.getDialogPane().setContent(gridPane);
-
-            // Request focus on the username field by default.
-            Platform.runLater(() -> dEnlevement.requestFocus());
-
-            // Convert the result to a username-password-pair when the login button is clicked.
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == loginButtonType) {
-                    return new Pair<>(dEnlevement.getText(), dLivraison.getText());
-                }
-                return null;
-            });
-
-            Optional<Pair<String, String>> result = dialog.showAndWait();
-            demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
+            genererLivraison(interPickUp,interDelivery);
             calculerTourneeOptimale();
             afficherTourneeCalculee();
             ajoutPickUp.setText("Livraison ajoutée !");
         }
     }
+
+    private void genererLivraison(Intersection interPickUp, Intersection interDelivery) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+
+        // Set the button types.
+        ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField dEnlevement = new TextField();
+        dEnlevement.setPromptText("Durée d'enlèvement : ");
+        TextField dLivraison = new TextField();
+        dLivraison.setPromptText("Durée de livraison : ");
+
+        gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
+        gridPane.add(dEnlevement, 1, 0);
+        gridPane.add(new Label("Durée de livraison : "), 2, 0);
+        gridPane.add(dLivraison, 3, 0);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        // Request focus on the username field by default.
+        Platform.runLater(() -> dEnlevement.requestFocus());
+
+        // Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(dEnlevement.getText(), dLivraison.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        demande.addLivraison(interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+    }
+
 
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
