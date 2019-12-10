@@ -354,7 +354,6 @@ public class Controller implements ActionListener {
             //TODO : remplacer cette méthode calculerTournee Optimale
             calculerTourneeOptimale();
 
-
             afficherTourneeCalculee();
             System.out.println("deliveries after removal : " + deliveries);
         });
