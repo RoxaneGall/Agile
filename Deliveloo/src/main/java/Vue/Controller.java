@@ -218,7 +218,7 @@ public class Controller implements ActionListener {
         setButtonStopTournee();
 
         // enable le bouton calculer une tournée avec l'event correspondant
-        setButtonCalculerTournee();
+        setButtonCalculerTourneeOptimale();
 
         // add event Handlers to the mapView
         eventHandlers();
@@ -347,7 +347,7 @@ public class Controller implements ActionListener {
             demande.removeLivraison(c1);
             deliveries.remove(c1);
 
-            calculerTournee();
+            calculerTourneeOptimale();
             afficherTourneeCalculee();
             System.out.println("deliveries after removal : " + deliveries);
         });
@@ -420,7 +420,7 @@ public class Controller implements ActionListener {
             Optional<Pair<String, String>> result = dialog.showAndWait();
             /* Livraison l = new Livraison (interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             demande.getLivraisons().add(l);
-            calculerTournee();
+            calculerTourneeOptimale();
             afficherTourneeCalculee();
             System.out.println(l.getDureeEnlevement()+" "+l.getDureeLivraison()); */
         }
@@ -501,13 +501,13 @@ public class Controller implements ActionListener {
     }
 
 
-    private void setButtonCalculerTournee() {
+    private void setButtonCalculerTourneeOptimale() {
         calculTournee.setOnAction(event -> {
-            calculerTournee();
+            calculerTourneeOptimale();
         });
     }
 
-    private void calculerTournee() {
+    private void calculerTourneeOptimale() {
         mapView.removeCoordinateLine(trackTrajet);
         tournee.clear();
         System.out.println("Calcul d'une tournée");
