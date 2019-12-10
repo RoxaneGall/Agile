@@ -51,7 +51,7 @@ public class Computations {
             return null;
         }
 
-        double vitesse = 14 * 1000 / 60; //En m/min
+        double vitesse = 15 * 1000 / 60; //En m/min
 
         for(Integer trajetId : solution) {
             if( lastIntersectionId != null) {
@@ -92,6 +92,7 @@ public class Computations {
 
         return tournee;
     }
+
     public static Trajet getMeilleurTrajet(Intersection origine,
                                            Intersection arrivee)
     {
