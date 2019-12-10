@@ -47,6 +47,7 @@ public class Controller implements ActionListener {
      */
     public Scene scene;
     public Service service = new Service();
+    public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
     public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
     ;
@@ -177,7 +178,8 @@ public class Controller implements ActionListener {
      *
      * @param projection
      */
-    public void initializeView(Scene mainScene, Projection projection) {
+    public void initializeView(Scene mainScene, Projection projection, Stage primaryStageFromMain) {
+        primaryStage = primaryStageFromMain;
         scene = mainScene;
         fileChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
@@ -444,7 +446,8 @@ public class Controller implements ActionListener {
                 supprLivraison.setDisable(true);
 
                 System.out.println("Chargement d'une demande");
-                demande = service.chargerDemande("../datas/demandeGrand9.xml");
+                File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                demande = service.chargerDemande(selectedFile.getAbsolutePath());
 
                 mapView.removeCoordinateLine(trackTrajet);
                 if (entrepotMarker != null) {
