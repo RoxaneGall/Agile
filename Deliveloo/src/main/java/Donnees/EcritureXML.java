@@ -4,13 +4,11 @@ import Modeles.InstructionLivraison;
 import Modeles.Tournee;
 import Modeles.Trajet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Scanner;
 
 public class EcritureXML {
@@ -81,7 +79,7 @@ public class EcritureXML {
 
         if(chemin=="") return;
 
-        String extension = ".xml";
+        String extension = ".txt";
         String fichier = chemin + extension;
 
         FileOutputStream fop =null;
@@ -89,14 +87,12 @@ public class EcritureXML {
 
         try{
             file = new File(fichier);
-            fop = new FileOutputStream(file);
-
             if(!file.exists()){
                 file.createNewFile();
             }else {
-                throw new Exception("Le fichier "+ chemin + ".xml existe déjà.");
+                throw new Exception("Le fichier "+ chemin + ".txt existe déjà.");
             }
-
+            fop = new FileOutputStream(file);
             byte[] contentInBytes = genererInstructionsPourTournee(tournee).getBytes();
 
             fop.write(contentInBytes);
