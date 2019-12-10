@@ -135,7 +135,8 @@ public class Controller implements ActionListener {
     /**
      * Attributs pour la demande
      */
-    public Demande demande;
+    public Demande demande; // demande de départ obtenue avec chargerDemande
+    public Tournee tournee; // tournee calculée, qui contient donc également la demande, utilisée également quand on modifie la demande avec Ajout/Suppr
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
@@ -147,8 +148,8 @@ public class Controller implements ActionListener {
     /**
      * Attributs pour le trajet/la tournee
      */
-    public ArrayList<Coordinate> tournee = new ArrayList<>();
-    public ArrayList<Coordinate> tourneePart = new ArrayList<>();
+    public ArrayList<Coordinate> tourneeCoordinate = new ArrayList<>();
+    public ArrayList<Coordinate> tourneePartCoordinate = new ArrayList<>();
     /* Ligne du trajet de la tournée (Coordinateline) */
     // Pour les couleurs en JFX : go là https://docs.oracle.com/javase/8/javafx/api/javafx/scene/paint/Color.html
     public CoordinateLine trackTrajet = new CoordinateLine();
@@ -223,7 +224,7 @@ public class Controller implements ActionListener {
         exportFeuille.setDisable(true);
         setButtonChargerDemande();
 
-        setButtonStopTournee();
+        setButtonStopCalculTourneeOptimale();
 
         // enable le bouton calculer une tournée avec l'event correspondant
         setButtonCalculerTourneeOptimale();
@@ -315,7 +316,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void setButtonStopTournee() {
+    private void setButtonStopCalculTourneeOptimale() {
         stopTournee.setOnAction(event -> {
             arreterChargementMeilleureTournee();
         });
@@ -561,7 +562,7 @@ public class Controller implements ActionListener {
 
     private void calculerTourneeOptimale() {
         mapView.removeCoordinateLine(trackTrajet);
-        tournee.clear();
+        tourneeCoordinate.clear();
         System.out.println("Calcul d'une tournée");
         try {
             ajoutLivraison.setDisable(true);
@@ -602,7 +603,7 @@ public class Controller implements ActionListener {
             public void run() {
                 mapView.removeCoordinateLine(trackTrajet);
                 mapView.removeCoordinateLine(trackPart);
-                tournee.clear();
+                tourneeCoordinate.clear();
                 afficherTournee(t);
 
             }
@@ -618,7 +619,7 @@ public class Controller implements ActionListener {
         }
         lastSelected = button;
         mapView.removeCoordinateLine(trackPart);
-        tourneePart.clear();
+        tourneePartCoordinate.clear();
         button.setStyle("-fx-base: lightblue;");
     }
 
@@ -634,7 +635,7 @@ public class Controller implements ActionListener {
             lastPairSelected.setStyle(null);
         }
         mapView.removeCoordinateLine(trackPart);
-        tourneePart.clear();
+        tourneePartCoordinate.clear();
 
         ToggleButton pairedButton;
         for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
@@ -651,15 +652,15 @@ public class Controller implements ActionListener {
         for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
             if (entry.getValue() == button) {
                 int i = 0;
-                while (tournee.get(i) != entry.getKey()) {
-                    tourneePart.add(tournee.get(i));
+                while (tourneeCoordinate.get(i) != entry.getKey()) {
+                    tourneePartCoordinate.add(tourneeCoordinate.get(i));
                     i++;
                 }
                 break;
             }
         }
 
-        trackPart = new CoordinateLine(tourneePart).setColor(Color.DARKTURQUOISE).setWidth(8);
+        trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
     }
@@ -670,7 +671,7 @@ public class Controller implements ActionListener {
             lastPairSelected.setStyle(null);
         }
         mapView.removeCoordinateLine(trackPart);
-        tourneePart.clear();
+        tourneePartCoordinate.clear();
     }
 
     private void afficherTournee(Tournee t) {
@@ -694,13 +695,13 @@ public class Controller implements ActionListener {
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
                 coord = trajet.getOrigine().getCoordinate();
-                tournee.add(coord);
+                tourneeCoordinate.add(coord);
                 MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getOrigine().getCoordinate()).setVisible(true);
                 mapView.addLabel(l);
                 deliveriesNumbers.put(coord, l);
                 compteur++;
                 for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                    tournee.add(troncon.getDestination().getCoordinate());
+                    tourneeCoordinate.add(troncon.getDestination().getCoordinate());
                 }
 
                 String infoButton = "";
@@ -741,7 +742,7 @@ public class Controller implements ActionListener {
 
             detailsLivraisons.setVisible(true);
 
-            trackTrajet = new CoordinateLine(tournee).setColor(Color.DARKRED).setWidth(8);
+            trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
             trackTrajet.setVisible(true);
 
             // add the tracks
