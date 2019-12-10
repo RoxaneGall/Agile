@@ -494,7 +494,15 @@ public class Controller implements ActionListener {
                 System.out.println("Chargement d'une demande");
                 File selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
-
+            } catch (Exception e) {
+                //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
+                Dialog<Pair<String, String>> dialog = new Dialog<>();
+                dialog.setTitle("Erreur chargement demande");
+                dialog.getDialogPane().setContent(new Text(e.getMessage()));
+                //TODO : Faire des tests pour montrer qu'on throw bien les erreurs (si Alice l'a pas déjà fait)
+                // TODO: Histoire que ce soit clean et pour le livrable est-ce qu'on ferait pas un tableu récapitulatif des erreurs possibles et du message correspondant ?
+            }
+            try {
                 mapView.removeCoordinateLine(trackTrajet);
                 if (entrepotMarker != null) {
                     mapView.removeMarker(entrepotMarker);
@@ -541,8 +549,6 @@ public class Controller implements ActionListener {
                 System.out.println(deliveriesMarkers.size());
             } catch (Exception e) {
                 e.printStackTrace();
-                Dialog<Pair<String, String>> dialog = new Dialog<>();
-                dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
             }
 
         });
