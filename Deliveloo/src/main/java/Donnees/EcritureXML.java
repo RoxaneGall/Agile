@@ -16,10 +16,9 @@ import java.util.Scanner;
 public class EcritureXML {
 
     public EcritureXML(){
-
     }
 
-    public String genererNomFichierDeTournee(Tournee tournee) throws Exception {
+    /*public String genererNomFichierDeTournee(Tournee tournee) throws Exception {
 
         String nomFichier="";
         int nbDeliv = tournee.getDemande().getLivraisons().size();
@@ -39,7 +38,7 @@ public class EcritureXML {
         if(nomFichier.equals("")) {
             throw new Exception("Le fichier doit avoir un nom pour être créé.");
         }else return nomFichier;
-    }
+    }*/
 
     public String genererInstructionsPourTournee(Tournee tournee){
         String instructions="";
@@ -78,30 +77,24 @@ public class EcritureXML {
         return instructions+"\n";
     }
 
-    public void ecrireFichier(Tournee tournee) throws Exception {
+    public void ecrireFichier(Tournee tournee, String chemin) throws Exception {
 
-        String nomFichier = genererNomFichierDeTournee(tournee);
-        String chemin = "../datas/feuillesDeRoute/";
+        if(chemin=="") return;
+
         String extension = ".xml";
-        String fichier = chemin + nomFichier + extension;
+        String fichier = chemin + extension;
 
-        FileOutputStream fop = null;
+        FileOutputStream fop =null;
         File file;
 
         try{
             file = new File(fichier);
             fop = new FileOutputStream(file);
 
-            if(file.exists()){
-                throw new Exception("Le fichier "+ nomFichier+ " existe déjà dans " + chemin + ". \n" +
-                        " Vérifier que les deux fichiers soient bien différents dans leur contenu. \n " /*+
-                        " Si oui, pour conserver ce nouveau fichier, entrez un autre nom, par exemple "+ nomFichier + "_1" */);
-              /*  Scanner sc = new Scanner(System.in);
-                nomFichier = sc.nextLine();
-                fichier = chemin +nomFichier+".xml";
-                file = new File(fichier);*/
-            }else {
+            if(!file.exists()){
                 file.createNewFile();
+            }else {
+                throw new Exception("Le fichier "+ chemin + ".xml existe déjà.");
             }
 
             byte[] contentInBytes = genererInstructionsPourTournee(tournee).getBytes();
@@ -112,9 +105,14 @@ public class EcritureXML {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } finally {
+            try {
+                if (fop != null) {
+                    fop.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 }

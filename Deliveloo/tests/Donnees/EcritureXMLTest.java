@@ -18,7 +18,12 @@ public class EcritureXMLTest {
     }
 
     @Test
-    void testerEcrireFichier(){
+    void ecrireFichier_shouldCreateANewFile(){
         //Tournee ;
+    }
+
+    @Test
+    void ecrireFichier_shouldThrowException(){
+
     }
 }
