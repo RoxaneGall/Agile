@@ -124,6 +124,9 @@ public class Controller implements ActionListener {
     @FXML
     public Label labelEvent;
 
+    public String path = System.getProperty("user.home").substring(9);
+
+
     /**
      * Attributs pour définir le plan
      */
@@ -369,7 +372,7 @@ public class Controller implements ActionListener {
             if (nbLivrAjoute == 0) { //premier clic
                 URL imageURL = null;
                 try {
-                    imageURL = new URL("file://C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
+                    imageURL = new URL("file://C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -382,7 +385,7 @@ public class Controller implements ActionListener {
             if (nbLivrAjoute == 1) { //deuxieme clic
                 URL imageURL = null;
                 try {
-                    imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_" + size + ".png");
+                    imageURL = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/d_" + size + ".png");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -532,13 +535,13 @@ public class Controller implements ActionListener {
                     for (int i = 0; i < demande.getLivraisons().size(); i++) {
                         Marker markerPickUp;
                         Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                        URL imageURL = new URL("file:///C:/Users/Rox'/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
+                        URL imageURL = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
                         markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
                         //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
                         Marker markerDelivery;
                         Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                        URL imageURL2 = new URL("file:///C:/Users/Rox'/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
+                        URL imageURL2 = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
                         markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
                         //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
 
