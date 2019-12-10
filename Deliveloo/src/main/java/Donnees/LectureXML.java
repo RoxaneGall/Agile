@@ -150,11 +150,11 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 
         if(nbRootNodes==0) throw new Exception("Le fichier ne contient aucune information.");
 
-        ArrayList<Livraison> deliveries= new ArrayList<>();
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
         Long countDeliveries= new Long(0);
+        Demande demande = new Demande(entrepot, myDate);
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
@@ -183,9 +183,8 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                 if(livraison==null){
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
-                Livraison myDelivery = new Livraison(countDeliveries, enlevement,livraison,dureeEnlevement,dureeLivraison);
                 countDeliveries++;
-                deliveries.add(myDelivery);
+                demande.addLivraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
 
             } else if(node.getNodeName().equals("entrepot")){
                 try {
@@ -208,11 +207,12 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                     }
                     throw new Exception(message);
                 }
+                demande.setEntrepot(entrepot);
             }
         }
         if(countDeliveries==0) throw new Exception("La demande ne contient aucune livraison.");
 
-        Demande demande = new Demande(deliveries,entrepot, myDate);
+
         return demande;
     }
 
