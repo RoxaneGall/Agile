@@ -221,7 +221,7 @@ public class LectureXML {
            if(latitude<minLatitude){ minLatitude = latitude; }
            else if(latitude>maxLatitude){ maxLatitude = latitude;}
            if(longitude<minLongitude){ minLongitude = longitude;}
-           else if(longitude>minLongitude){ maxLongitude = longitude; }
+           else if(longitude>maxLongitude){ maxLongitude = longitude; }
        }
 
        Coordinate minLatminLong = new Coordinate(minLatitude,minLongitude);
