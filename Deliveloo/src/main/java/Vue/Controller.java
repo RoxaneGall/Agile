@@ -32,6 +32,7 @@ import javafx.scene.control.ProgressIndicator;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -361,17 +362,36 @@ public class Controller implements ActionListener {
             labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
-            if (interLivraison.size() < 2) {
-                interLivraison.add(i);
-                System.out.println("pickup : " + i); // interPickUp est bien récupérée
-                Marker m = Marker.createProvided(Marker.Provided.ORANGE).setPosition(i.getCoordinate()).setVisible(true);
+            int size = demande.getLivraisons().size()+1;
+            int nbLivrAjoute = interLivraison.size();
+            if (nbLivrAjoute == 0) { //premier clic
+                URL imageURL = null;
+                try {
+                    imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/p_" + size + ".png");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
                 mapView.addMarker(m);
                 deliveriesMarkers.put(m.getPosition(), m);
+                interLivraison.add(i);
                 ajouterLivraison(interLivraison);
             }
-            if (interLivraison.size() == 2) {
+            if (nbLivrAjoute == 1) { //deuxieme clic
+                URL imageURL = null;
+                try {
+                    imageURL = new URL("file:///C:/Users/manal/Documents/GitHub/Agile/datas/logos/d_" + size + ".png");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                mapView.addMarker(m);
+                deliveriesMarkers.put(m.getPosition(), m);
+                interLivraison.add(i);
+                ajouterLivraison(interLivraison);
+            }
+            if (nbLivrAjoute == 2) {
                 ajoutPickUp.setText("Livraison ajoutée !");
-
             }
 
         });
@@ -379,10 +399,9 @@ public class Controller implements ActionListener {
 
     private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
+            ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
-            //reste à demander à l'utilisateur de rentrer la durée d'enlèvement et de livraison
-
             Dialog<Pair<String, String>> dialog = new Dialog<>();
             dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
 
@@ -422,6 +441,7 @@ public class Controller implements ActionListener {
             demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
             calculerTourneeOptimale();
             afficherTourneeCalculee();
+            ajoutPickUp.setText("Livraison ajoutée !");
         }
     }
 
