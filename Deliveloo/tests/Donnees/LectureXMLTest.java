@@ -31,20 +31,20 @@ class LectureXMLTest {
 
 
     @Test
-    void chargerFichierNonXML_shouldThrowException() throws Exception {
+    void chargerFichierNonXML_shouldThrowException(){
         Graphe.shared.clearGraph();
         try {
             lectureXML.chargerPlan("../datas/petitPlan");
-            fail("The test should throw an exception because the file is not an XML file.");
+            fail("Le test doit envoyer une exception car le fichier n'est pas un fichier XML.");
         }catch(Exception e){}
     }
 
     @Test
-    void chargerFichierInexistant_shouldThrowException() throws Exception {
+    void chargerFichierInexistant_shouldThrowException(){
         Graphe.shared.clearGraph();
         try {
             lectureXML.chargerPlan("../datas/fichierInexistant");
-            fail("The test should throw an exception because the file does not exist.");
+            fail("Le test doit lancer une exception car le fichier n'existe pas.");
         }catch(Exception e){}
     }
 
@@ -58,7 +58,7 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerMoyenPlan_shouldLoadMap() throws Exception {
+    void chargerMoyenPlan_shouldSucceed() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/moyenPlan.xml");
         long idTest = 2512682687L;
@@ -67,7 +67,7 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerGrandPlan_shouldLoadMap() throws Exception {
+    void chargerGrandPlan_shouldSucceed() throws Exception {
         Graphe.shared.clearGraph();
         lectureXML.chargerPlan("../datas/grandPlan.xml");
         long idTest = 26576932;
@@ -76,37 +76,36 @@ class LectureXMLTest {
     }
 
     @Test
-    void chargerDemandeGrand7_shouldCreateDemand() throws Exception {
-        Graphe.shared.clearGraph();
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        lectureXML.chargerPlan("../datas/grandPlan.xml");
+    void chargerDemandeGrand7_shouldSucceed() throws Exception {
         Demande testDemandeGrand7 = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
+        assertTrue((BooleanSupplier) testDemandeGrand7.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandeGrand7.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeGrand7.getEntrepot()));
         assertTrue(testDemandeGrand7.getLivraisons().size()==7);
     }
 
     @Test
-    void chargerDemandeMoyen3_shouldCreateDemand() throws Exception {
-        Graphe.shared.clearGraph();
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        lectureXML.chargerPlan("../datas/grandPlan.xml");
+    void chargerDemandeMoyen3_shouldSucceed() throws Exception {
         Demande testDemandeMoyen3 = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
+        assertTrue((BooleanSupplier) testDemandeMoyen3.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandeMoyen3.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeMoyen3.getEntrepot()));
         assertTrue(testDemandeMoyen3.getLivraisons().size()==3);
     }
 
     @Test
-    void chargerDemandePetit1_shouldCreateDemand() throws Exception {
-        Graphe.shared.clearGraph();
-        lectureXML.chargerPlan("../datas/petitPlan.xml");
-        lectureXML.chargerPlan("../datas/moyenPlan.xml");
-        lectureXML.chargerPlan("../datas/grandPlan.xml");
+    void chargerDemandePetit1_shouldSucceed() throws Exception {
         Demande testDemandePetit1 = lectureXML.chargerDemande("../datas/demandePetit1.xml");
+        assertTrue((BooleanSupplier) testDemandePetit1.getHeureDepart());
+        assertTrue((BooleanSupplier) testDemandePetit1.getEntrepot());
+        assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandePetit1.getEntrepot()));
         assertTrue(testDemandePetit1.getLivraisons().size()==1);
     }
 
     @Test
     void getLimitesPlan_shouldSucceed() throws Exception {
+        Graphe.shared.clearGraph();
+        lectureXML.chargerPlan("../datas/grandPlan.xml");
         ArrayList<Coordinate> testList = new ArrayList<>();
         testList = lectureXML.getLimitesPlan();
         int compteur = 1;
