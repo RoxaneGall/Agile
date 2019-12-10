@@ -38,15 +38,6 @@ public class Service {
         Computations.runTSP(couts);
     }
 
-    public void recalculerTournee(Tournee tournee, Demande demande) {
-        int index = 0;
-        //Connaitre les livraisons ajoutées
-        //Connaitre les livraisons supprimées
-        //Regarder jusqu'ou on peut utiliser l'ancienne tournée
-
-        //En creer une nouvelle a parti de l'ancienne et calculer la suite de la tournée.
-    }
-
     public Tournee recupererTournee() {
         //Verifier que l'on veut recuperer une nouvelle tournée ou une tounrée depuis une ancienne
         return Computations.getTourneeFromDemande(couts,demandeEnCours);

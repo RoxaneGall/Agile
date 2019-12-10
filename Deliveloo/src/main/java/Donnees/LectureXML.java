@@ -139,11 +139,11 @@ public class LectureXML {
 
         if (nbRootNodes == 0) throw new Exception("Le fichier ne contient aucune information.");
 
-        ArrayList<Livraison> deliveries = new ArrayList<>();
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
         Long countDeliveries= new Long(0);
+        Demande demande = new Demande(entrepot, myDate);
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
@@ -175,9 +175,8 @@ public class LectureXML {
                 if (livraison == null) {
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
-                Livraison myDelivery = new Livraison(countDeliveries, enlevement,livraison,dureeEnlevement,dureeLivraison);
                 countDeliveries++;
-                deliveries.add(myDelivery);
+                demande.addLivraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
 
             } else if (node.getNodeName().equals("entrepot")) {
                 try {
@@ -203,8 +202,6 @@ public class LectureXML {
             }
         }
         if (countDeliveries == 0) throw new Exception("La demande ne contient aucune livraison.");
-
-        Demande demande = new Demande(deliveries, entrepot, myDate);
         return demande;
     }
 
