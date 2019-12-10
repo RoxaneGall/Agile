@@ -93,63 +93,6 @@ public class Computations {
         return tournee;
     }
 
-    public static Tournee getToTourneeFromHalfTournee(Trajet[][] couts, Tournee t)
-    {
-        Tournee tournee = new Tournee(t.getDemande());
-        tournee.addTrajets(t.getTrajets());
-
-        Integer lastIntersectionId = null;
-        Integer[] solution = tsp1.getMeilleureSolution();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(tournee.getHeureArrivee());
-
-        if (solution == null || solution[0] == null) {
-            return null;
-        }
-
-        double vitesse = 15 * 1000 / 60; //En m/min
-
-        for(Integer trajetId : solution) {
-            if( lastIntersectionId != null) {
-                Trajet trajet = couts[lastIntersectionId][trajetId];
-                trajet.setHeureDepart(calendar.getTime());
-
-                double cyclingTime = trajet.getLongueur()/vitesse;
-                calendar.add(Calendar.MINUTE, (int) cyclingTime);
-
-                trajet.setHeureArrivee(calendar.getTime());
-                if (trajetId == 0) {
-                    trajet.setType(Trajet.Type.COMEBACKHOME);
-                } else if (trajetId%2==0) {
-                    trajet.setType(Trajet.Type.DELIVERY);
-                    Livraison livraison = tournee.getDemande().getLivraisons().get((int) (trajetId.doubleValue()/2.0+0.6)-1);
-                    trajet.setLivraison(livraison);
-                    calendar.add(Calendar.SECOND, (int) livraison.getDureeLivraison());
-                } else {
-                    trajet.setType(Trajet.Type.PICKUP);
-                    Livraison livraison = tournee.getDemande().getLivraisons().get((int) (trajetId.doubleValue()/2.0+0.6)-1);
-                    trajet.setLivraison(livraison);
-                    calendar.add(Calendar.SECOND, (int) livraison.getDureeEnlevement());
-                }
-                tournee.addTrajet(trajet);
-            }
-            lastIntersectionId = trajetId;
-        }
-        //Ajout du dernier trajet jusqu'a l'entrepot
-        Trajet trajet = (couts[lastIntersectionId][0]);
-        trajet.setHeureDepart(calendar.getTime());
-
-        double cyclingTime = trajet.getLongueur()/vitesse;
-        calendar.add(Calendar.MINUTE, (int) cyclingTime);
-
-        trajet.setHeureArrivee(calendar.getTime());
-        trajet.setType(Trajet.Type.COMEBACKHOME);
-        tournee.addTrajet(trajet);
-
-        return tournee;
-    }
-
     public static Trajet getMeilleurTrajet(Intersection origine,
                                            Intersection arrivee)
     {
