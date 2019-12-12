@@ -1,6 +1,7 @@
 package Service;
 
 import Algo.Computations;
+import Donnees.EcritureXML;
 import Donnees.LectureXML;
 import Modeles.*;
 import com.sothawo.mapjfx.Coordinate;
@@ -19,6 +20,7 @@ public class Service {
     }
 
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
+        Graphe.shared.clearGraph();
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = lec.getLimitesPlan();
         return limites;
