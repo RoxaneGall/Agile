@@ -677,6 +677,11 @@ public class Controller implements ActionListener {
         if (lastPairSelected != null) {
             lastPairSelected.setStyle(null);
         }
+
+        mapView.removeCoordinateLine(trackTrajet);
+        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
+        mapView.addCoordinateLine(trackTrajet);
+
         mapView.removeCoordinateLine(trackPart);
         tourneePartCoordinate.clear();
 
@@ -696,10 +701,8 @@ public class Controller implements ActionListener {
 
         int i = 0;
         while (tourneeCoordinate.get(i) != entry.getKey()) {
-            tourneePartCoordinate.add(tourneeCoordinate.get(i));
-            i++;
+            tourneePartCoordinate.add(tourneeCoordinate.get(i++));
         }
-
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
@@ -733,16 +736,16 @@ public class Controller implements ActionListener {
             scroll.setContent(detailsLivraisons);
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
-            Coordinate coord;
+            Coordinate origine;
             Trajet trajet;
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
-                coord = trajet.getOrigine().getCoordinate();
-                tourneeCoordinate.add(coord);
+                origine = trajet.getOrigine().getCoordinate();
+                tourneeCoordinate.add(origine);
 
                 MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getArrivee().getCoordinate()).setVisible(true);
                 mapView.addLabel(l);
-                deliveriesNumbers.put(coord, l);
+                deliveriesNumbers.put(trajet.getArrivee().getCoordinate(), l);
                 compteur++;
 
                 for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
@@ -760,11 +763,14 @@ public class Controller implements ActionListener {
                     button.setAlignment(Pos.TOP_LEFT);
                     button.setToggleGroup(groupButtons);
                     detailsLivraisons.getChildren().add(button);
+                    button.setOnAction(event -> {
+                        entrepotDeselected(button);
+                    });
                 }
 
                 ToggleButton button = new ToggleButton();
                 if (i == t.getTrajets().size() - 1) {
-                    idLivr = (long) 0;
+                    idLivr = (long) -1;
                     infoButton = i + 1 + " - Retour à l'entrepôt \n Arrivée : " + formater.format(trajet.getHeureArrivee());
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
@@ -793,7 +799,7 @@ public class Controller implements ActionListener {
                 button.setAlignment(Pos.TOP_LEFT);
                 button.setId("" + i);
                 button.setToggleGroup(groupButtons);
-                livrButtons.put(button, new Pair<>(coord, idLivr));
+                livrButtons.put(button, new Pair<>(trajet.getArrivee().getCoordinate(), idLivr));
                 detailsLivraisons.getChildren().add(button);
             }
 
