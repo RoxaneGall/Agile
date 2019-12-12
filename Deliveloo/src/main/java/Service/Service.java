@@ -93,6 +93,7 @@ public class Service {
 
     public Tournee ajouterLivraison(Tournee tournee, Intersection pickup, Intersection delivery, int dE, int dL){
         Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart());
+        nouvelleDemande.addLivraisons(tournee.getDemande().getLivraisons());
         Livraison livraison = nouvelleDemande.addLivraison(pickup, delivery, dE, dL);
         Tournee nouvelleTournee = new Tournee(nouvelleDemande);
 
