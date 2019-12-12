@@ -18,7 +18,7 @@ public class Service {
         lec = new LectureXML();
     }
 
-    public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
+    public ArrayList<Coordinate> chargerPlan(String path) throws Exception {
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = lec.getLimitesPlan();
         return limites;

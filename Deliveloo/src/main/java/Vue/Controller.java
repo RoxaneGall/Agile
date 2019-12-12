@@ -302,8 +302,13 @@ public class Controller implements ActionListener {
     /**
      *
      */
+<<<<<<< Updated upstream
     public void chargerPlan() {
         System.out.println("Chargement du plan");
+=======
+    public void chargerPlan(String path) {
+        System.out.println("Chargement du plan "+path);
+>>>>>>> Stashed changes
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
             System.out.println("Limites du plan :" + limites);
@@ -692,7 +697,13 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t) {
+<<<<<<< Updated upstream
         if (demande != null) {
+=======
+        mapView.removeCoordinateLine(trackTrajet);
+        tourneeCoordinate.clear();
+        if (demande != null) { //TODO: A RETIRER EN NETTOYANT CODE
+>>>>>>> Stashed changes
             ajoutLivraison.setDisable(false);
             supprLivraison.setDisable(false);
             exportFeuille.setDisable(false);
