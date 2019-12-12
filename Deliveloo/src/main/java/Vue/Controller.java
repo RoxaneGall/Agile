@@ -183,6 +183,7 @@ public class Controller implements ActionListener {
         for (Livraison livr : livraisons) {
             deliveries.put(livr.getPickup().getCoordinate(), livr.getDelivery().getCoordinate());
             deliveries.put(livr.getDelivery().getCoordinate(), livr.getPickup().getCoordinate());
+
         }
     }
 
@@ -482,11 +483,14 @@ public class Controller implements ActionListener {
             return null;
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
-
+        System.out.println("before : "+deliveries.size());
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
+        deliveries.put(interPickUp.getCoordinate(), interDelivery.getCoordinate());
+        deliveries.put(interDelivery.getCoordinate(), interPickUp.getCoordinate());
         demande = nvTournee.getDemande();
         afficherTournee(nvTournee);
+        System.out.println("after : "+deliveries.size());
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
@@ -791,7 +795,7 @@ public class Controller implements ActionListener {
 
             // add the tracks
             mapView.addCoordinateLine(trackTrajet);
-            // System.out.println("Tournee: " + trackTrajet.toString());
+            System.out.println("Tournee: " + trackTrajet.toString());
 
         } else {
             System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
