@@ -387,15 +387,9 @@ public class Controller implements ActionListener {
             deleteLabelByCoord(c2);
             tournee = service.supprimerLivraison(tournee,idLivrSupr);
             afficherTournee(tournee);
-            /* demande.removeLivraison(c1);
-            deliveries.remove(c1); */
-
-            //demande.removeLivraison(c1);
 
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
-            calculerTourneeOptimale();
-            afficherTourneeCalculee();
             System.out.println("deliveries after removal : " + deliveries);
         });
     }
