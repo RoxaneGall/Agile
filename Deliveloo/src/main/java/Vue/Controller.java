@@ -399,38 +399,47 @@ public class Controller implements ActionListener {
             labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
-            int size = demande.getLivraisons().size() + 1;
-            int nbLivrAjoute = interLivraison.size();
-            if (nbLivrAjoute == 0) { //premier clic
-                URL imageURL = null;
-                try {
-                    imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+            System.out.println("inter trouvée : "+i);
+            if(i != null) {
+                int size = demande.getLivraisons().size() + 1;
+                int nbLivrAjoute = interLivraison.size();
+                if (nbLivrAjoute == 0) { //premier clic
+                    URL imageURL = null;
+                    try {
+                        imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                    mapView.addMarker(m);
+                    deliveriesMarkers.put(m.getPosition(), m);
+                    interLivraison.add(i);
+                    ajouterLivraison(interLivraison);
                 }
-                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
-                mapView.addMarker(m);
-                deliveriesMarkers.put(m.getPosition(), m);
-                interLivraison.add(i);
-                ajouterLivraison(interLivraison);
-            }
-            if (nbLivrAjoute == 1) { //deuxieme clic
-                URL imageURL = null;
-                try {
-                    imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                if (nbLivrAjoute == 1) { //deuxieme clic
+                    URL imageURL = null;
+                    try {
+                        imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                    mapView.addMarker(m);
+                    deliveriesMarkers.put(m.getPosition(), m);
+                    interLivraison.add(i);
+                    ajouterLivraison(interLivraison);
                 }
-                Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
-                mapView.addMarker(m);
-                deliveriesMarkers.put(m.getPosition(), m);
-                interLivraison.add(i);
-                ajouterLivraison(interLivraison);
+                if (nbLivrAjoute == 2) {
+                    ajoutPickUp.setText("Livraison ajoutée !");
+                }
             }
-            if (nbLivrAjoute == 2) {
-                ajoutPickUp.setText("Livraison ajoutée !");
+            if(i == null){
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Erreur ajout livraison");
+                alert.setHeaderText("Erreur ajout livraison");
+                alert.setContentText("Veuillez sélectionner un point dans le plan !");
+                alert.show();
             }
-
         });
     }
 
@@ -637,7 +646,6 @@ public class Controller implements ActionListener {
 
     private void afficherTourneeCalculee() {
         tournee = service.recupererTournee();
-        System.out.println("hheheyeyehy");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
