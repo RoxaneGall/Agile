@@ -54,7 +54,7 @@ public class Controller implements ActionListener {
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
     public DirectoryChooser directoryChooser = new DirectoryChooser();
-    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
+    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
     ;
     @FXML
     public Button chargerPlan;
