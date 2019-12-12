@@ -485,8 +485,8 @@ public class Controller implements ActionListener {
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
         //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
+        tournee = service.recupererTournee();
         Tournee nvTournee =service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
-        System.out.println("jujujuju"+nvTournee);
         afficherTournee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
     }
