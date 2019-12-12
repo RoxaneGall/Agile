@@ -319,7 +319,6 @@ public class Controller implements ActionListener {
             selectedFile = fileChooser.showOpenDialog(primaryStage);
             path = selectedFile.getAbsolutePath();
         } catch (Exception e) {
-            //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
             Dialog<Pair<String, String>> dialog = new Dialog<>();
             dialog.setTitle("Erreur chargement demande");
             dialog.getDialogPane().setContent(new Text(e.getMessage()));
@@ -344,6 +343,7 @@ public class Controller implements ActionListener {
             System.out.println("Limites du plan :" + limites);
             mapExtent = Extent.forCoordinates(limites);
             if (mapView != null) {
+                System.out.println("Extent of Map reset");
                 mapView.setExtent(mapExtent);
             }
             setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
@@ -606,8 +606,6 @@ public class Controller implements ActionListener {
     }
 
     private void calculerTourneeOptimale() {
-        mapView.removeCoordinateLine(trackTrajet);
-        tourneeCoordinate.clear();
         System.out.println("Calcul d'une tournée");
         try {
             ajoutLivraison.setDisable(true);
@@ -651,7 +649,6 @@ public class Controller implements ActionListener {
                 mapView.removeCoordinateLine(trackPart);
                 tourneeCoordinate.clear();
                 afficherTournee(tournee);
-
             }
         });
     }
@@ -722,6 +719,8 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t) {
+        mapView.removeCoordinateLine(trackTrajet);
+        tourneeCoordinate.clear();
         if (demande != null) {
             ajoutLivraison.setDisable(false);
             supprLivraison.setDisable(false);
