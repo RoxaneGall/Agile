@@ -661,10 +661,17 @@ public class Controller implements ActionListener {
         mapView.removeCoordinateLine(trackPart);
         tourneePartCoordinate.clear();
         button.setStyle("-fx-base: lightblue;");
+        mapView.removeCoordinateLine(trackTrajet);
+        trackTrajet.setColor(Color.DARKTURQUOISE).setWidth(8).setVisible(true);
+        mapView.addCoordinateLine(trackTrajet);
     }
 
     private void entrepotDeselected(ToggleButton button) {
         button.setStyle(null);
+        mapView.removeCoordinateLine(trackTrajet);
+        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
+        mapView.addCoordinateLine(trackTrajet);
+
     }
 
     private void livraisonSelected(ToggleButton button) {
