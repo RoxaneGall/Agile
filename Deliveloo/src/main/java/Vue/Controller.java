@@ -127,7 +127,7 @@ public class Controller implements ActionListener {
     @FXML
     public Label labelEvent;
 
-    public String path = "file://"+System.getProperty("user.dir").substring(0, System.getProperty("user.dir").lastIndexOf('/'));
+    public String path = "file://" + System.getProperty("user.dir").substring(0, System.getProperty("user.dir").lastIndexOf('/'));
 
 
     /**
@@ -333,6 +333,7 @@ public class Controller implements ActionListener {
             }
         }
     }
+
     /**
      *
      */
@@ -408,7 +409,7 @@ public class Controller implements ActionListener {
             if (nbLivrAjoute == 0) { //premier clic
                 URL imageURL = null;
                 try {
-                    imageURL = new URL(path+"/datas/logos/p_" + size + ".png");
+                    imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -421,7 +422,7 @@ public class Controller implements ActionListener {
             if (nbLivrAjoute == 1) { //deuxieme clic
                 URL imageURL = null;
                 try {
-                    imageURL = new URL(path+"/datas/logos/d_" + size + ".png");
+                    imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -443,7 +444,7 @@ public class Controller implements ActionListener {
             ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
-            genererLivraison(interPickUp,interDelivery);
+            genererLivraison(interPickUp, interDelivery);
             calculerTourneeOptimale();
             afficherTourneeCalculee();
             ajoutPickUp.setText("Livraison ajoutée !");
@@ -485,13 +486,13 @@ public class Controller implements ActionListener {
             }
             return null;
         });
-            Optional<Pair<String, String>> result = dialog.showAndWait();
-            //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
-            demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
-            calculerTourneeOptimale();
-            afficherTourneeCalculee();
-            ajoutPickUp.setText("Livraison ajoutée !");
-        }
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
+        demande.addLivraison(interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+        calculerTourneeOptimale();
+        afficherTourneeCalculee();
+        ajoutPickUp.setText("Livraison ajoutée !");
+    }
 
 
     private void setButtonAjoutLivraison() {
@@ -510,9 +511,9 @@ public class Controller implements ActionListener {
         {
             try {
                 File selectedDirectory = directoryChooser.showDialog(primaryStage);
-                if(selectedDirectory == null){
+                if (selectedDirectory == null) {
                     System.out.println("No Directory selected");
-                }else{
+                } else {
                     System.out.println(selectedDirectory.getAbsolutePath());
 
                 }
@@ -572,13 +573,13 @@ public class Controller implements ActionListener {
                     for (int i = 0; i < demande.getLivraisons().size(); i++) {
                         Marker markerPickUp;
                         Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                        URL imageURL = new URL(path+"/datas/logos/p_" + i + ".png");
+                        URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
                         markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
                         //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
 
                         Marker markerDelivery;
                         Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                        URL imageURL2 = new URL(path+"/datas/logos/d_" + i + ".png");
+                        URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
                         markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
                         //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
 
