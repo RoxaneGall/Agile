@@ -34,6 +34,7 @@ import javafx.scene.control.Alert.AlertType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.CookieHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -111,7 +112,7 @@ public class Controller implements ActionListener {
 
     public ToggleButton lastSelected;
     public ToggleButton lastPairSelected;
-    public HashMap<Coordinate, ToggleButton> livrButtons = new HashMap<>();
+    public HashMap<Coordinate, Pair<ToggleButton,Long>> livrButtons = new HashMap<>();
 
     /**
      * FX elements d'affichage pour debug
@@ -371,8 +372,8 @@ public class Controller implements ActionListener {
             // récupérer le point cliqué
             Coordinate c1 = null;
             Coordinate c2 = null;
-            for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
-                if (entry.getValue().isSelected()) {
+            for (Map.Entry<Coordinate, Pair<ToggleButton,Long>> entry : livrButtons.entrySet()) {
+                if (entry.getValue().getKey().isSelected()) {
                     c1 = entry.getKey();
                     break;
                 }
@@ -686,9 +687,10 @@ public class Controller implements ActionListener {
         tourneePartCoordinate.clear();
 
         ToggleButton pairedButton;
-        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
-            if (entry.getValue() == button) {
-                pairedButton = livrButtons.get(deliveries.get(entry.getKey()));
+        for (Map.Entry<Coordinate, Pair<ToggleButton,Long>> entry : livrButtons.entrySet()) {
+            if (entry.getValue().getKey() == button) {
+                Coordinate pairedCoord = deliveries.get(entry.getKey());
+                pairedButton = livrButtons.get(pairedCoord).getKey();
                 lastSelected = button;
                 lastPairSelected = pairedButton;
                 button.setStyle("-fx-base: lightblue;");
@@ -697,8 +699,8 @@ public class Controller implements ActionListener {
             }
         }
 
-        for (Map.Entry<Coordinate, ToggleButton> entry : livrButtons.entrySet()) {
-            if (entry.getValue() == button) {
+        for (Map.Entry<Coordinate, Pair<ToggleButton,Long>> entry : livrButtons.entrySet()) {
+            if (entry.getValue().getKey() == button) {
                 int i = 0;
                 while (tourneeCoordinate.get(i) != entry.getKey()) {
                     tourneePartCoordinate.add(tourneeCoordinate.get(i));
@@ -753,9 +755,21 @@ public class Controller implements ActionListener {
                 }
 
                 String infoButton = "";
+                Long idLivr;
                 ToggleButton button = new ToggleButton();
                 if (i == 0) {
-                    infoButton = i + 1 + " - Entrepôt \n Départ : " + formater.format(trajet.getHeureArrivee());
+                    idLivr = (long) 0;
+                    infoButton = i + 1 + " - Entrepôt \n Départ : " + formater.format(trajet.getHeureDepart());
+                    button.setOnAction(event -> {
+                        if (button.isSelected()) {
+                            entrepotSelected(button);
+                        } else {
+                            entrepotDeselected(button);
+                        }
+                    });
+                } else if(i == t.getTrajets().size()-1) {
+                    idLivr = (long) 0;
+                    infoButton = i + 1 + " - Retour à l'entrepôt \n Arrivée : " + formater.format(trajet.getHeureArrivee());
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -764,6 +778,8 @@ public class Controller implements ActionListener {
                         }
                     });
                 } else {
+                    System.out.println(trajet.getLivraison());
+                    idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
                         infoButton = i + 1 + " - PICKUP \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
                     } else {
@@ -782,7 +798,7 @@ public class Controller implements ActionListener {
                 button.setAlignment(Pos.TOP_LEFT);
                 button.setId("" + i);
                 button.setToggleGroup(groupButtons);
-                livrButtons.put(coord, button);
+                livrButtons.put(coord, new Pair<>(button, idLivr));
                 detailsLivraisons.getChildren().add(button);
             }
 
