@@ -198,7 +198,6 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        //loading.toFront();
 
         // init MapView-Cache
         final OfflineCache offlineCache = mapView.getOfflineCache();
@@ -392,8 +391,7 @@ public class Controller implements ActionListener {
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
             calculerTourneeOptimale();
-            Tournee t = service.recupererTournee();
-            afficherTourneeCalculee(t);
+            afficherTourneeCalculee();
             System.out.println("deliveries after removal : " + deliveries);
         });
     }
@@ -487,10 +485,9 @@ public class Controller implements ActionListener {
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
         //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
-        demande.addLivraison(interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+        tournee = service.recupererTournee();
         Tournee nvTournee =service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
-        System.out.println("jujujuju"+nvTournee);
-        afficherTourneeCalculee(nvTournee);
+        afficherTournee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
@@ -644,7 +641,8 @@ public class Controller implements ActionListener {
         Computations.endComputations();
     }
 
-    private void afficherTourneeCalculee(Tournee t) {
+    private void afficherTourneeCalculee() {
+        Tournee t = service.recupererTournee();
         System.out.println("hheheyeyehy");
         Platform.runLater(new Runnable() {
             @Override
@@ -845,8 +843,7 @@ public class Controller implements ActionListener {
         if (e.getActionCommand().equals("ended")) {
             loading.visibleProperty().setValue(false);
         } else if (e.getActionCommand().equals("newResultFound")) {
-            Tournee t = service.recupererTournee();
-            afficherTourneeCalculee(t);
+            afficherTourneeCalculee();
         }
     }
 }
