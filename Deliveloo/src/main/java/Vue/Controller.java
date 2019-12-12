@@ -371,9 +371,11 @@ public class Controller implements ActionListener {
             // récupérer le point cliqué
             Coordinate c1 = null;
             Coordinate c2 = null;
+            Long idLivrSupr = null;
             for (Map.Entry<Coordinate, Pair<ToggleButton,Long>> entry : livrButtons.entrySet()) {
                 if (entry.getValue().getKey().isSelected()) {
                     c1 = entry.getKey();
+                    idLivrSupr = entry.getValue().getValue();
                     break;
                 }
             }
@@ -383,6 +385,8 @@ public class Controller implements ActionListener {
             deleteMarkerByCoord(c2);
             deleteLabelByCoord(c1);
             deleteLabelByCoord(c2);
+            tournee = service.supprimerLivraison(tournee,idLivrSupr);
+            afficherTournee(tournee);
             /* demande.removeLivraison(c1);
             deliveries.remove(c1); */
 
