@@ -778,9 +778,9 @@ public class Controller implements ActionListener {
                     System.out.println(trajet.getLivraison());
                     idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - PICKUP Livraison n°"+trajet.getLivraison().getId()+"\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
                     } else {
-                        infoButton = i + 1 + " - DELIVERY \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - DELIVERY Livraison n°"+trajet.getLivraison().getId()+ "\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
