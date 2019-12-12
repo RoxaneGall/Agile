@@ -98,33 +98,33 @@ public class Service {
         //Recuperer le meilleur emplacement pour pickup
         Double cout_min = Double.MAX_VALUE;
         int pickupInsertionId = 0;
-        int currentPickupInesertionId = 0;
+        int currentPickupInsertionId = 0;
         for (Trajet trajet: tournee.getTrajets()) {
             Trajet trajet1=Computations.getMeilleurTrajet(trajet.getOrigine(), pickup);
             Trajet trajet2=Computations.getMeilleurTrajet(pickup, trajet.getArrivee());
             Double cout = trajet1.getLongueur()+trajet2.getLongueur();
             if (cout<cout_min) {
                 cout_min = cout;
-                pickupInsertionId = currentPickupInesertionId;
+                pickupInsertionId = currentPickupInsertionId;
             }
-            currentPickupInesertionId++;
+            currentPickupInsertionId++;
         }
         //Recuperer le meilleur emplacement pour delivery
         cout_min = Double.MAX_VALUE;
         int deliveryInsertionId = 0;
-        int currentDeliveryInesertionId = 0;
+        int currentDeliveryInsertionId = 0;
 
         for (Trajet trajet: tournee.getTrajets()) {
-            if (currentDeliveryInesertionId>pickupInsertionId) {
+            if (currentDeliveryInsertionId>pickupInsertionId) {
                 Trajet trajet1=Computations.getMeilleurTrajet(trajet.getOrigine(), delivery);
                 Trajet trajet2=Computations.getMeilleurTrajet(delivery, trajet.getArrivee());
                 Double cout = trajet1.getLongueur()+trajet2.getLongueur();
                 if (cout<cout_min) {
                     cout_min = cout;
-                    pickupInsertionId = currentPickupInesertionId;
+                    deliveryInsertionId = currentDeliveryInsertionId;
                 }
             }
-            currentDeliveryInesertionId++;
+            currentDeliveryInsertionId++;
         }
         
         //Creation des trajets correspondant
