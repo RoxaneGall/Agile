@@ -260,7 +260,7 @@ public class Controller implements ActionListener {
      * --> On charge le grand plan
      */
     private void afterMapIsInitialized() {
-        chargerPlan();
+        chargerPlan("../datas/grandPlan.xml");
     }
 
     /**
@@ -508,7 +508,7 @@ public class Controller implements ActionListener {
                     System.out.println("No Directory selected");
                 }else{
                     System.out.println(selectedDirectory.getAbsolutePath());
-                    
+
                 }
             } catch (Exception e) {
 
