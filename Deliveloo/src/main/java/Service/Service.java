@@ -76,6 +76,8 @@ public class Service {
                 calendar.add(Calendar.MINUTE, (int) cyclingTime);
 
                 nouveauTrajet.setHeureArrivee(calendar.getTime());
+                nouveauTrajet.setLivraison(trajet.getLivraison());
+                nouveauTrajet.setType(trajet.getType());
 
                 nouvelleTournee.addTrajet(nouveauTrajet);
 
