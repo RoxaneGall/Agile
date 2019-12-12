@@ -29,6 +29,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Alert.AlertType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -315,6 +316,11 @@ public class Controller implements ActionListener {
             setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
 
         } catch (Exception ex) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Erreur chargement plan");
+            alert.setHeaderText("Erreur chargement plan");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
             ex.printStackTrace();
         }
     }
@@ -502,10 +508,11 @@ public class Controller implements ActionListener {
                 selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
             } catch (Exception e) {
-                //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
-                Dialog<Pair<String, String>> dialog = new Dialog<>();
-                dialog.setTitle("Erreur chargement demande");
-                dialog.getDialogPane().setContent(new Text(e.getMessage()));
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Erreur chargement demande");
+                alert.setHeaderText("Erreur chargement demande");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
                 //TODO : Faire des tests pour montrer qu'on throw bien les erreurs (si Alice l'a pas déjà fait)
                 // TODO: Histoire que ce soit clean et pour le livrable est-ce qu'on ferait pas un tableu récapitulatif des erreurs possibles et du message correspondant ?
             }
