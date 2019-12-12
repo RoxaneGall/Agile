@@ -32,7 +32,7 @@ class ControllerTest {
         Coordinate c3 = new Coordinate(45.730995, 4.859773);
         Coordinate c4 = new Coordinate(45.714939, 4.901873);
         Controller contr = new Controller();
-        contr.chargerPlan();
+        contr.chargerPlan("../datas/grandPlan.xml");
         // min latitude
         Assertions.assertEquals(contr.mapExtent.getMin().getLatitude(), c4.getLatitude());
         // min longitude
