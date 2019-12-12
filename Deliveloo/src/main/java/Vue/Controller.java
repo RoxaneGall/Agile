@@ -57,6 +57,8 @@ public class Controller implements ActionListener {
     public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
     ;
     @FXML
+    public Button chargerPlan;
+    @FXML
     public Button chargerDemande;
     @FXML
     public Button calculTournee;
@@ -227,6 +229,7 @@ public class Controller implements ActionListener {
         setButtonExportFeuille();
         exportFeuille.setDisable(true);
         setButtonChargerDemande();
+        setButtonChargerPlan();
 
         setButtonStopCalculTourneeOptimale();
 
@@ -258,7 +261,7 @@ public class Controller implements ActionListener {
      * --> On charge le grand plan
      */
     private void afterMapIsInitialized() {
-        chargerPlan();
+        chargerPlan("../datas/grandPlan.xml");
     }
 
     /**
@@ -299,22 +302,50 @@ public class Controller implements ActionListener {
         });
     }
 
+    public void setButtonChargerPlan() {
+        chargerPlan.setOnAction(event -> {
+            selectPlan();
+        });
+    }
+
     /**
      *
      */
-    public void chargerPlan() {
+    public void selectPlan() {
+        File selectedFile = null;
+        String path = "";
+        try {
+            System.out.println("Sélection d'un plan");
+            selectedFile = fileChooser.showOpenDialog(primaryStage);
+            path = selectedFile.getAbsolutePath();
+        } catch (Exception e) {
+            //TODO : Ouvrir un Dialog avec le message d'erreur généré par Alice
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Erreur chargement demande");
+            dialog.getDialogPane().setContent(new Text(e.getMessage()));
+            //TODO : Faire des tests pour montrer qu'on throw bien les erreurs
+        }
+        if (selectedFile != null) {
+            try {
+                chargerPlan(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     *
+     */
+    public void chargerPlan(String path) {
         System.out.println("Chargement du plan");
         try {
-            ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
+            ArrayList<Coordinate> limites = service.chargerPlan(path);
             System.out.println("Limites du plan :" + limites);
-
             mapExtent = Extent.forCoordinates(limites);
             if (mapView != null) {
                 mapView.setExtent(mapExtent);
             }
-
             setTopControlsDisable(false); // on permet les topControls maintenant que le plan est chargé
-
         } catch (Exception ex) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Erreur chargement plan");
@@ -474,16 +505,16 @@ public class Controller implements ActionListener {
     /**
      *
      */
-
     private void setButtonExportFeuille() {
         exportFeuille.setOnAction(event ->
         {
             try {
                 File selectedDirectory = directoryChooser.showDialog(primaryStage);
                 if(selectedDirectory == null){
-                    //No Directory selected
+                    System.out.println("No Directory selected");
                 }else{
                     System.out.println(selectedDirectory.getAbsolutePath());
+
                 }
             } catch (Exception e) {
 
