@@ -55,7 +55,7 @@ public class Controller implements ActionListener {
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
     public DirectoryChooser directoryChooser = new DirectoryChooser();
-    public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
+    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
     ;
     @FXML
     public Button chargerPlan;
@@ -128,7 +128,7 @@ public class Controller implements ActionListener {
     @FXML
     public Label labelEvent;
 
-    public String path = "file://"+System.getProperty("user.dir").replace('\\','/').substring(0,System.getProperty("user.dir").replace('\\','/').lastIndexOf('/'));
+    public String path = "file://" + System.getProperty("user.dir").replace('\\', '/').substring(0, System.getProperty("user.dir").replace('\\', '/').lastIndexOf('/'));
 
 
     /**
@@ -392,8 +392,8 @@ public class Controller implements ActionListener {
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
             calculerTourneeOptimale();
-
-            afficherTourneeCalculee();
+            Tournee t = service.recupererTournee();
+            afficherTourneeCalculee(t);
             System.out.println("deliveries after removal : " + deliveries);
         });
     }
@@ -446,8 +446,6 @@ public class Controller implements ActionListener {
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
             genererLivraison(interPickUp, interDelivery);
-            calculerTourneeOptimale();
-            afficherTourneeCalculee();
             ajoutPickUp.setText("Livraison ajoutée !");
         }
     }
@@ -490,8 +488,9 @@ public class Controller implements ActionListener {
         Optional<Pair<String, String>> result = dialog.showAndWait();
         //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
         demande.addLivraison(interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
-        calculerTourneeOptimale();
-        afficherTourneeCalculee();
+        Tournee nvTournee =service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+        System.out.println("jujujuju"+nvTournee);
+        afficherTourneeCalculee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
@@ -645,8 +644,8 @@ public class Controller implements ActionListener {
         Computations.endComputations();
     }
 
-    private void afficherTourneeCalculee() {
-        Tournee t = service.recupererTournee();
+    private void afficherTourneeCalculee(Tournee t) {
+        System.out.println("hheheyeyehy");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -846,7 +845,8 @@ public class Controller implements ActionListener {
         if (e.getActionCommand().equals("ended")) {
             loading.visibleProperty().setValue(false);
         } else if (e.getActionCommand().equals("newResultFound")) {
-            afficherTourneeCalculee();
+            Tournee t = service.recupererTournee();
+            afficherTourneeCalculee(t);
         }
     }
 }
