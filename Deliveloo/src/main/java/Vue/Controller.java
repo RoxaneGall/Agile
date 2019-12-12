@@ -650,9 +650,6 @@ public class Controller implements ActionListener {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                mapView.removeCoordinateLine(trackTrajet);
-                mapView.removeCoordinateLine(trackPart);
-                tourneeCoordinate.clear();
                 afficherTournee(tournee);
             }
         });
@@ -725,6 +722,7 @@ public class Controller implements ActionListener {
 
     private void afficherTournee(Tournee t) {
         mapView.removeCoordinateLine(trackTrajet);
+        mapView.removeCoordinateLine(trackPart);
         tourneeCoordinate.clear();
         if (demande != null) {
             ajoutLivraison.setDisable(false);
