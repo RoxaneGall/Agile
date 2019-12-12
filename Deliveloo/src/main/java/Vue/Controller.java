@@ -2,6 +2,7 @@ package Vue;
 
 import Algo.Computations;
 import Modeles.*;
+import Donnees.*;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -514,12 +515,14 @@ public class Controller implements ActionListener {
         {
             try {
                 File selectedDirectory = directoryChooser.showDialog(primaryStage);
-                if (selectedDirectory == null) {
-                    System.out.println("No Directory selected");
-                } else {
-                    System.out.println(selectedDirectory.getAbsolutePath());
 
-                }
+                if(selectedDirectory == null){
+                    System.out.println("No Directory selected");
+                }else{
+                    //System.out.println(selectedDirectory.getAbsolutePath());
+                    EcritureXML ecr = new EcritureXML();
+                    ecr.ecrireFichier(tournee,selectedDirectory.getAbsolutePath());
+
             } catch (Exception e) {
 
 
