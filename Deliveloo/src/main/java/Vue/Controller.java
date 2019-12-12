@@ -127,7 +127,7 @@ public class Controller implements ActionListener {
     @FXML
     public Label labelEvent;
 
-    public String path = "file://"+System.getProperty("user.dir").substring(0, System.getProperty("user.dir").lastIndexOf('/'));
+    public String path = "file://"+System.getProperty("user.dir").replace('\\','/').substring(0,System.getProperty("user.dir").replace('\\','/').lastIndexOf('/'));
 
 
     /**
