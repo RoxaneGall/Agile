@@ -61,11 +61,9 @@ public class Service {
 
         for (Trajet trajet: tournee.getTrajets()) {
 
-           if (trajet.getLivraison()==null) {
-               break;
-            } else if ((trajet.getLivraison().getId() == idLivraison)&&(lastIntersection==null)) {
+           if ((trajet.getLivraison()!=null )&&(trajet.getLivraison().getId() == idLivraison)&&(lastIntersection==null)) {
                 lastIntersection = trajet.getOrigine();
-            }  else if ((trajet.getLivraison().getId() != idLivraison)) {
+            }  else if (trajet.getLivraison()==null || (trajet.getLivraison().getId() != idLivraison)) {
                 Trajet nouveauTrajet = new Trajet(trajet);
                 if (lastIntersection!=null) {
                     nouveauTrajet=Computations.getMeilleurTrajet(lastIntersection, trajet.getArrivee());
@@ -88,7 +86,6 @@ public class Service {
                 }
             }
         }
-        System.out.println(nouvelleTournee);
         return nouvelleTournee;
     }
 
