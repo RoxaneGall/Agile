@@ -44,43 +44,5 @@ class ControllerTest {
         System.out.println(" Extent Test : PASSED ");
     }
 
-    @Test
-    public void getDeliveriesTest() throws Exception {
-        Service service = new Service();
-        Controller contr = new Controller();
-
-        service.chargerPlan("../datas/grandPlan.xml");
-
-        String pathDemandePetit1 = "../datas/demandePetit1.xml";
-        Demande demande = service.chargerDemande(pathDemandePetit1);
-        contr.setDeliveriesFromLivraisons(demande.getLivraisons());
-        Assertions.assertEquals(demande.getLivraisons().size(), contr.deliveries.size());
-        System.out.println(" Deliveries size for 'demandePetit1.xml'  Test : PASSED ");
-
-
-        contr.deliveries.clear();
-
-        String pathDemandePetit2 = "../datas/demandePetit2.xml";
-        demande = service.chargerDemande(pathDemandePetit2);
-        contr.setDeliveriesFromLivraisons(demande.getLivraisons());
-        Assertions.assertEquals(demande.getLivraisons().size(), contr.deliveries.size());
-        System.out.println(" Deliveries size for 'demandePetit2.xml'  Test : PASSED ");
-
-
-        ArrayList<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<Pair<Marker, Marker>>();
-        for (int i = 0; i < demande.getLivraisons().size(); i++) {
-            Marker markerPickUp;
-            Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-            markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
-            Marker markerDelivery;
-            Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-            markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-            deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
-        }
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            Assertions.assertEquals(deliveriesMarkers.get(i).getKey().getPosition(), demande.getLivraisons().get(i).getPickup().getCoordinate());
-            Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
-        }
-        System.out.println(" Deliveries markers  Test : PASSED ");
-    }
+    
 }
