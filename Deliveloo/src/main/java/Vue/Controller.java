@@ -485,8 +485,8 @@ public class Controller implements ActionListener {
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
         //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
-        tournee = service.recupererTournee();
         Tournee nvTournee =service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+        tournee = nvTournee;
         afficherTournee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
     }
@@ -642,7 +642,7 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTourneeCalculee() {
-        Tournee t = service.recupererTournee();
+        tournee = service.recupererTournee();
         System.out.println("hheheyeyehy");
         Platform.runLater(new Runnable() {
             @Override
@@ -650,7 +650,7 @@ public class Controller implements ActionListener {
                 mapView.removeCoordinateLine(trackTrajet);
                 mapView.removeCoordinateLine(trackPart);
                 tourneeCoordinate.clear();
-                afficherTournee(t);
+                afficherTournee(tournee);
 
             }
         });
