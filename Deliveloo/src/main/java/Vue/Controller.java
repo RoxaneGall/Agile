@@ -373,7 +373,7 @@ public class Controller implements ActionListener {
             }
 
             for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry1 : livrButtons.entrySet()) {
-                if (c1!=entry1.getValue().getKey()&&entry1.getValue().getValue()==idLivrSupr) {
+                if (c1 != entry1.getValue().getKey() && entry1.getValue().getValue() == idLivrSupr) {
                     c2 = entry1.getValue().getKey();
                     break;
                 }
@@ -400,8 +400,8 @@ public class Controller implements ActionListener {
             labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
-            System.out.println("inter trouvée : "+i);
-            if(i != null) {
+            System.out.println("inter trouvée : " + i);
+            if (i != null) {
                 int size = demande.getLivraisons().size() + 1;
                 int nbLivrAjoute = interLivraison.size();
                 if (nbLivrAjoute == 0) { //premier clic
@@ -434,7 +434,7 @@ public class Controller implements ActionListener {
                     ajoutPickUp.setText("Livraison ajoutée !");
                 }
             }
-            if(i == null){
+            if (i == null) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur ajout livraison");
                 alert.setHeaderText("Erreur ajout livraison");
@@ -516,20 +516,19 @@ public class Controller implements ActionListener {
             try {
                 File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
-                if(selectedDirectory == null){
+                if (selectedDirectory == null) {
                     System.out.println("No Directory selected");
-                }else{
+                } else {
                     //System.out.println(selectedDirectory.getAbsolutePath());
                     EcritureXML ecr = new EcritureXML();
-                    ecr.ecrireFichier(tournee,selectedDirectory.getAbsolutePath());
+                    ecr.ecrireFichier(tournee, selectedDirectory.getAbsolutePath());
+                }
+
 
             } catch (Exception e) {
-
-
+                System.out.println(e);
             }
-
         });
-
     }
 
     /**
@@ -699,8 +698,8 @@ public class Controller implements ActionListener {
         ToggleButton pairedButton = null;
         Pair<Coordinate, Long> entry = livrButtons.get(button);
         for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry1 : livrButtons.entrySet()) {
-            if (button!=entry1.getKey()&&entry1.getValue().getValue()==entry.getValue()) {
-                pairedButton=entry1.getKey();
+            if (button != entry1.getKey() && entry1.getValue().getValue() == entry.getValue()) {
+                pairedButton = entry1.getKey();
                 break;
             }
 
