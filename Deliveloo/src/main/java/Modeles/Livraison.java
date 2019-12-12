@@ -44,4 +44,13 @@ public class Livraison {
     public void setDureeEnlevement(int dureeEnlevement) { this.dureeEnlevement = dureeEnlevement; }
 
     public void setDureeLivraison(int dureeLivraison) { this.dureeLivraison = dureeLivraison; }
+
+    @Override
+    public java.lang.String toString() {
+        return "Livraison{" +
+                 pickup + " to " + delivery +
+                ", enlevement="+ dureeEnlevement +
+                "min(s), livraison="+ dureeLivraison +
+                "min(s)}";
+    }
 }
