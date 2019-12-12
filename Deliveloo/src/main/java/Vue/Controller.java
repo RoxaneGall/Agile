@@ -554,7 +554,7 @@ public class Controller implements ActionListener {
                         mapView.addMarker(entry.getValue().setVisible(true));
                     }
 
-                    System.out.println(deliveriesMarkers.size());
+                    System.out.println(demande.getLivraisons().size());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
