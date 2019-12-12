@@ -197,7 +197,6 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        //loading.toFront();
 
         // init MapView-Cache
         final OfflineCache offlineCache = mapView.getOfflineCache();
