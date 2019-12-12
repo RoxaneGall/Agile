@@ -61,9 +61,9 @@ public class Service {
 
         for (Trajet trajet: tournee.getTrajets()) {
 
-            if ((trajet.getLivraison().getId() == idLivraison)&&(lastIntersection==null)) {
+           if ((trajet.getLivraison()!=null )&&(trajet.getLivraison().getId() == idLivraison)&&(lastIntersection==null)) {
                 lastIntersection = trajet.getOrigine();
-            }  else if ((trajet.getLivraison().getId() != idLivraison)) {
+            }  else if (trajet.getLivraison()==null || (trajet.getLivraison().getId() != idLivraison)) {
                 Trajet nouveauTrajet = new Trajet(trajet);
                 if (lastIntersection!=null) {
                     nouveauTrajet=Computations.getMeilleurTrajet(lastIntersection, trajet.getArrivee());
@@ -76,6 +76,8 @@ public class Service {
                 calendar.add(Calendar.MINUTE, (int) cyclingTime);
 
                 nouveauTrajet.setHeureArrivee(calendar.getTime());
+                nouveauTrajet.setLivraison(trajet.getLivraison());
+                nouveauTrajet.setType(trajet.getType());
 
                 nouvelleTournee.addTrajet(nouveauTrajet);
 
@@ -86,45 +88,45 @@ public class Service {
                 }
             }
         }
-
         return nouvelleTournee;
     }
 
     public Tournee ajouterLivraison(Tournee tournee, Intersection pickup, Intersection delivery, int dE, int dL){
         Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart());
+        nouvelleDemande.addLivraisons(tournee.getDemande().getLivraisons());
         Livraison livraison = nouvelleDemande.addLivraison(pickup, delivery, dE, dL);
         Tournee nouvelleTournee = new Tournee(nouvelleDemande);
 
         //Recuperer le meilleur emplacement pour pickup
         Double cout_min = Double.MAX_VALUE;
         int pickupInsertionId = 0;
-        int currentPickupInesertionId = 0;
+        int currentPickupInsertionId = 0;
         for (Trajet trajet: tournee.getTrajets()) {
             Trajet trajet1=Computations.getMeilleurTrajet(trajet.getOrigine(), pickup);
             Trajet trajet2=Computations.getMeilleurTrajet(pickup, trajet.getArrivee());
             Double cout = trajet1.getLongueur()+trajet2.getLongueur();
             if (cout<cout_min) {
                 cout_min = cout;
-                pickupInsertionId = currentPickupInesertionId;
+                pickupInsertionId = currentPickupInsertionId;
             }
-            currentPickupInesertionId++;
+            currentPickupInsertionId++;
         }
         //Recuperer le meilleur emplacement pour delivery
         cout_min = Double.MAX_VALUE;
         int deliveryInsertionId = 0;
-        int currentDeliveryInesertionId = 0;
+        int currentDeliveryInsertionId = 0;
 
         for (Trajet trajet: tournee.getTrajets()) {
-            if (currentDeliveryInesertionId>pickupInsertionId) {
+            if (currentDeliveryInsertionId>pickupInsertionId) {
                 Trajet trajet1=Computations.getMeilleurTrajet(trajet.getOrigine(), delivery);
                 Trajet trajet2=Computations.getMeilleurTrajet(delivery, trajet.getArrivee());
                 Double cout = trajet1.getLongueur()+trajet2.getLongueur();
                 if (cout<cout_min) {
                     cout_min = cout;
-                    pickupInsertionId = currentPickupInesertionId;
+                    deliveryInsertionId = currentDeliveryInsertionId;
                 }
             }
-            currentDeliveryInesertionId++;
+            currentDeliveryInsertionId++;
         }
         
         //Creation des trajets correspondant
