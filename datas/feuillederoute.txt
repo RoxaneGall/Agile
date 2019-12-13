@@ -1,0 +1,162 @@
+• TRAJET : Recupérer le colis de la livraison numéro 1
+  Heure de départ : 08:25
+  Heure d'arrivée : 08:29
+  Durée du trajet : 4 minutes
+  Temps sur place : 8 minutes 
+  Itineraire : 
+Continuez sur Route de Genas.
+Dans 241 mètres, prenez à droite sur Boulevard Pinel.
+Dans 62 mètres, prenez à droite sur Cours Docteur Long.
+Dans 181 mètres, tournez légèrement à gauche sur Cours Docteur Long.
+Dans 636 mètres, prenez à gauche sur Rue Louise.
+
+• TRAJET : Recupérer le colis de la livraison numéro 4
+  Heure de départ : 08:37
+  Heure d'arrivée : 08:39
+  Durée du trajet : 2 minutes
+  Temps sur place : 2 minutes 
+  Itineraire : 
+Continuez sur Rue Louise.
+Dans 68 mètres, tournez légèrement à gauche sur Rue Julie.
+Dans 28 mètres, prenez à gauche sur Rue du Général Brulard.
+Dans 111 mètres, continuez tout droit sur Avenue des Acacias.
+
+• TRAJET : Recupérer le colis de la livraison numéro 2
+  Heure de départ : 08:41
+  Heure d'arrivée : 08:49
+  Durée du trajet : 8 minutes
+  Temps sur place : 3 minutes 
+  Itineraire : 
+Continuez sur Avenue des Acacias.
+Dans 351 mètres, continuez tout droit sur Rue du Général Brulard.
+Dans 111 mètres, tournez légèrement à droite sur Rue Bonnand.
+Dans 280 mètres, tournez légèrement à gauche sur Rue Bonnand.
+Dans 80 mètres, tournez légèrement à gauche sur Rue Ferdinand Buisson.
+Dans 53 mètres, prenez à droite sur Rue Jean-Marc Bernard.
+Dans 160 mètres, tournez légèrement à gauche sur Avenue Lacassagne.
+Dans 810 mètres, tournez légèrement à droite sur Avenue Lacassagne.
+Dans 25 mètres, tournez légèrement à droite sur Boulevard Pinel.
+Dans 11 mètres, tournez légèrement à gauche sur Boulevard Pinel.
+Dans 124 mètres, tournez légèrement à droite sur Boulevard Pinel.
+Dans 15 mètres, prenez à gauche sur Boulevard Pinel.
+
+• TRAJET : Livrer le colis de la livraison numéro 2
+  Heure de départ : 08:52
+  Heure d'arrivée : 08:55
+  Durée du trajet : 3 minutes
+  Temps sur place : 9 minutes 
+  Itineraire : 
+Continuez sur Boulevard Pinel.
+Dans 22 mètres, prenez à gauche sur Avenue Esquirol.
+Dans 418 mètres, tournez légèrement à gauche sur Cours Eugénie.
+Dans 163 mètres, prenez à droite sur Avenue Rockefeller.
+Dans 133 mètres, continuez tout droit sur Rue Victor de Laprade.
+
+• TRAJET : Livrer le colis de la livraison numéro 4
+  Heure de départ : 09:04
+  Heure d'arrivée : 09:16
+  Durée du trajet : 12 minutes
+  Temps sur place : 7 minutes 
+  Itineraire : 
+Continuez sur Rue Volney Rue Victor de Laprade.
+Dans 197 mètres, tournez légèrement à gauche sur Boulevard Ambroise Paré.
+Dans 450 mètres, tournez légèrement à droite sur Boulevard Ambroise Paré.
+Dans 314 mètres, continuez tout droit sur Boulevard Edmond Michelet.
+Dans 281 mètres, continuez tout droit sur Avenue du Général Frère.
+Dans 12 mètres, prenez à droite sur Avenue du Général Frère.
+Dans 20 mètres, prenez à droite sur Rue du Professeur Beauvisage.
+Dans 144 mètres, tournez légèrement à droite sur Rue du Professeur Beauvisage.
+Dans 1024 mètres, continuez tout droit sur Avenue Francis de Pressensé.
+Dans 44 mètres, tournez légèrement à droite sur Avenue Francis de Pressensé.
+Dans 153 mètres, prenez à gauche sur Rue Louise Michel.
+Dans 149 mètres, continuez tout droit.
+Dans 18 mètres, tournez légèrement à droite.
+Dans 13 mètres, prenez à droite sur Rue Louise Michel.
+Dans 107 mètres, continuez tout droit.
+Dans 12 mètres, tournez légèrement à droite sur Rue du Professeur Roux.
+
+• TRAJET : Recupérer le colis de la livraison numéro 0
+  Heure de départ : 09:23
+  Heure d'arrivée : 09:29
+  Durée du trajet : 6 minutes
+  Temps sur place : 6 minutes 
+  Itineraire : 
+Continuez sur Rue du Professeur Roux.
+Dans 160 mètres, prenez à droite sur Rue du Moulin à Vent.
+Dans 236 mètres, tournez légèrement à gauche sur Avenue Francis de Pressensé.
+Dans 55 mètres, prenez à droite sur Rue Paul Cazeneuve.
+Dans 418 mètres, tournez légèrement à droite sur Rue Paul Cazeneuve.
+Dans 87 mètres, tournez légèrement à gauche sur Boulevard des États-Unis.
+Dans 582 mètres, tournez légèrement à droite sur Rue Audibert et Lavirotte.
+
+• TRAJET : Recupérer le colis de la livraison numéro 3
+  Heure de départ : 09:35
+  Heure d'arrivée : 09:36
+  Durée du trajet : 1 minutes
+  Temps sur place : 3 minutes 
+  Itineraire : 
+Continuez sur Rue Audibert et Lavirotte.
+Dans 216 mètres, tournez légèrement à gauche sur Rue Marius Berliet.
+Dans 56 mètres, prenez à droite sur Rue Saint-Romain.
+Dans 145 mètres, tournez légèrement à gauche sur Rue Saint-Gervais.
+Dans 47 mètres, tournez légèrement à droite sur Impasse Saint-Gervais.
+
+• TRAJET : Livrer le colis de la livraison numéro 1
+  Heure de départ : 09:39
+  Heure d'arrivée : 09:43
+  Durée du trajet : 4 minutes
+  Temps sur place : 0 minutes 
+  Itineraire : 
+Continuez sur Impasse Saint-Gervais.
+Dans 5 mètres, prenez à droite sur Rue Saint-Gervais.
+Dans 420 mètres, continuez tout droit sur Rue des Tuiliers.
+Dans 98 mètres, prenez à gauche sur Rue Saint-Hippolyte.
+Dans 186 mètres, tournez légèrement à droite sur Petite Rue de Monplaisir.
+Dans 162 mètres, prenez à gauche sur Cours Albert Thomas.
+Dans 203 mètres, continuez tout droit sur Boulevard Vivier-Merle Cours Albert Thomas.
+
+• TRAJET : Livrer le colis de la livraison numéro 3
+  Heure de départ : 09:43
+  Heure d'arrivée : 09:50
+  Durée du trajet : 7 minutes
+  Temps sur place : 4 minutes 
+  Itineraire : 
+Continuez sur Boulevard Vivier-Merle.
+Dans 123 mètres, tournez légèrement à gauche sur Boulevard Vivier-Merle.
+Dans 304 mètres, tournez légèrement à droite sur Avenue Félix Faure.
+Dans 590 mètres, prenez à gauche sur Rue Baraban.
+Dans 538 mètres, prenez à droite sur Avenue Georges Pompidou.
+Dans 106 mètres, continuez tout droit sur Rue Nazareth.
+Dans 49 mètres, tournez légèrement à droite sur Rue Nazareth.
+
+• TRAJET : Livrer le colis de la livraison numéro 0
+  Heure de départ : 09:54
+  Heure d'arrivée : 10:03
+  Durée du trajet : 9 minutes
+  Temps sur place : 8 minutes 
+  Itineraire : 
+Continuez sur Rue Nazareth.
+Dans 108 mètres, tournez légèrement à gauche sur Rue Nazareth.
+Dans 20 mètres, tournez légèrement à droite sur Rue François Gillet.
+Dans 232 mètres, tournez légèrement à droite sur Place Marengo.
+Dans 23 mètres, tournez légèrement à gauche sur Place Marengo.
+Dans 12 mètres, tournez légèrement à gauche sur Place Marengo.
+Dans 14 mètres, prenez à droite sur Avenue Antoine de Saint-Exupéry.
+Dans 82 mètres, continuez tout droit.
+Dans 9 mètres, tournez légèrement à droite.
+Dans 15 mètres, tournez légèrement à gauche sur Avenue Antoine de Saint-Exupéry.
+Dans 471 mètres, continuez tout droit sur Rue Jean Jaurès.
+Dans 210 mètres, continuez tout droit sur Place Jules Grandclément.
+Dans 452 mètres, continuez tout droit sur Rue Léon Blum.
+
+• TRAJET : RETOUR À L'ENTREPOT 
+  Heure de départ : 10:11
+  Heure d'arrivée : 10:14
+  Durée du trajet : 3 minutes
+  Itineraire : 
+Continuez sur Rue Émile Decorps.
+Dans 244 mètres, tournez légèrement à gauche sur Rue Émile Decorps.
+Dans 411 mètres, tournez légèrement à droite sur Rue Émile Decorps.
+Dans 177 mètres, tournez légèrement à droite sur Rue Émile Decorps.
+
+

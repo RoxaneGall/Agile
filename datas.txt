@@ -1,0 +1,58 @@
+• TRAJET : Recupérer le colis de la livraison numéro 0
+  Heure de départ : 08:21
+  Heure d'arrivée : 08:22
+  Durée du trajet : 1 minutes
+  Temps sur place : 3 minutes 
+  Itineraire : 
+Continuez sur Rue Richelieu.
+Dans 24 mètres, prenez à gauche sur Rue Frédéric Passy.
+Dans 106 mètres, prenez à droite sur Rue Édouard Aynard.
+Dans 96 mètres, tournez légèrement à droite sur Place Marengo.
+Dans 12 mètres, prenez à gauche sur Avenue Marc Sangnier.
+
+• TRAJET : Livrer le colis de la livraison numéro 0
+  Heure de départ : 08:25
+  Heure d'arrivée : 08:34
+  Durée du trajet : 9 minutes
+  Temps sur place : 4 minutes 
+  Itineraire : 
+Continuez sur Rue Pascal.
+Dans 127 mètres, tournez légèrement à droite sur Rue François Gillet.
+Dans 140 mètres, continuez tout droit sur Place de la Ferrandière.
+Dans 22 mètres, prenez à droite sur Place de la Ferrandière.
+Dans 244 mètres, tournez légèrement à droite sur Avenue Georges Pompidou.
+Dans 487 mètres, tournez légèrement à gauche sur Rue Maurice Flandin.
+Dans 231 mètres, tournez légèrement à droite sur Rue Paul Bert.
+Dans 67 mètres, prenez à droite sur Rue du Général Mouton-Duvernet.
+Dans 356 mètres, tournez légèrement à droite sur Rue du Général Mouton-Duvernet.
+Dans 361 mètres, tournez légèrement à gauche sur Rue du Général Mouton-Duvernet.
+Dans 161 mètres, prenez à gauche sur Cours Albert Thomas.
+Dans 66 mètres, continuez tout droit.
+Dans 10 mètres, continuez tout droit sur Cours Gambetta.
+
+• TRAJET : RETOUR À L'ENTREPOT 
+  Heure de départ : 08:38
+  Heure d'arrivée : 08:48
+  Durée du trajet : 10 minutes
+  Itineraire : 
+Continuez sur Cours Gambetta.
+Dans 112 mètres, prenez à droite sur Rue de l'Abbé Boisard.
+Dans 225 mètres, prenez à droite sur Boulevard Vivier-Merle.
+Dans 146 mètres, tournez légèrement à gauche.
+Dans 16 mètres, tournez légèrement à gauche sur Cours Albert Thomas.
+Dans 15 mètres, tournez légèrement à gauche sur Rue du Général Mouton-Duvernet Cours Albert Thomas.
+Dans 53 mètres, tournez légèrement à gauche sur Rue du Général Mouton-Duvernet.
+Dans 61 mètres, prenez à droite sur Rue du Dauphiné.
+Dans 311 mètres, tournez légèrement à gauche sur Rue du Dauphiné.
+Dans 96 mètres, tournez légèrement à gauche sur Rue du Dauphiné.
+Dans 213 mètres, prenez à droite sur Rue du Dauphiné.
+Dans 821 mètres, continuez tout droit sur Route de Genas.
+Dans 36 mètres, tournez légèrement à gauche sur Place des Maisons Neuves.
+Dans 95 mètres, continuez tout droit sur Rue Frédéric Mistral.
+Dans 11 mètres, tournez légèrement à droite sur Rue Frédéric Mistral.
+Dans 297 mètres, tournez légèrement à droite sur Rue Richelieu.
+Dans 86 mètres, continuez tout droit.
+Dans 12 mètres, prenez à droite.
+Dans 9 mètres, tournez légèrement à gauche sur Rue Richelieu.
+
+

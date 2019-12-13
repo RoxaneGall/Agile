@@ -26,7 +26,7 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         //Act
         ArrayList<Livraison> actualL = dmd.getLivraisons();
@@ -50,7 +50,7 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
 
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
@@ -84,7 +84,7 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,60);
 
         //Act
@@ -106,7 +106,7 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId,p);
         Date d = new Date();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         //Act
         dmd.setEntrepot(i1);
@@ -129,7 +129,7 @@ class DemandeTest {
         Intersection inter = new Intersection(initialId, p);
         Date d = new Date();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
 
         //Act
@@ -155,7 +155,7 @@ class DemandeTest {
         c.add(Calendar.DATE, 1);
         Date newD = c.getTime();
 
-        dmd = new Demande(inter, d);
+        dmd = new Demande(inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
 
         //Act
