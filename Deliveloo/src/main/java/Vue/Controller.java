@@ -741,7 +741,7 @@ public class Controller implements ActionListener {
                 String infoButton = "";
                 Long idLivr;
                 if (i == 0) {
-                    infoButton = "Entrepôt \n Départ : " + formater.format(trajet.getHeureDepart());
+                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : "+ formater.format(t.getHeureArrivee());
 
                     ToggleButton button = new ToggleButton();
                     button.setText(infoButton);
@@ -757,7 +757,7 @@ public class Controller implements ActionListener {
                 ToggleButton button = new ToggleButton();
                 if (i == t.getTrajets().size() - 1) {
                     idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt \n Arrivée : " + formater.format(trajet.getHeureArrivee());
+                    infoButton = i + 1 + " - Retour à l'entrepôt"  + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -768,9 +768,9 @@ public class Controller implements ActionListener {
                 } else {
                     idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
