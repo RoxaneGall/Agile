@@ -55,7 +55,7 @@ public class Controller implements ActionListener {
     public FileChooser fileChooser = new FileChooser();
     public DirectoryChooser directoryChooser = new DirectoryChooser();
     public SimpleDateFormat formater = new SimpleDateFormat("HH-mm");
-    ;
+
     @FXML
     public Button chargerDemande;
     @FXML
@@ -305,7 +305,7 @@ public class Controller implements ActionListener {
     public void chargerPlan() {
         System.out.println("Chargement du plan");
         try {
-            ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
+            ArrayList<Coordinate> limites = service.chargerPlan("../datas/petitPlan.xml");
             System.out.println("Limites du plan :" + limites);
 
             mapExtent = Extent.forCoordinates(limites);
