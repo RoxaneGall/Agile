@@ -146,6 +146,7 @@ public class Controller implements ActionListener {
     public Tournee tournee; // tournee calculée, qui contient donc également la demande, utilisée également quand on modifie la demande avec Ajout/Suppr
     public ArrayList<Tournee> historique = new ArrayList<>(); // liste historique des tournees calculées, au clique de précédent ou suivant on charge la tournee correspondante de l'historique
     public Button retour;
+    public Button suivant;
     public int indexHistorique = -1;
 
     /* Entrepot */
@@ -218,15 +219,14 @@ public class Controller implements ActionListener {
         labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
-        supprLivraison.setDisable(true);
         setButtonAjoutLivraison();
-        ajoutLivraison.setDisable(true);
         setButtonExportFeuille();
-        exportFeuille.setDisable(true);
         setButtonChargerDemande();
         setButtonChargerPlan();
         setButtonRetour();
-        retour.setDisable(true);
+        setButtonSuivant();
+
+        disableButtonsTournee(true); // disable les boutons de tournée
 
         setButtonStopCalculTourneeOptimale();
 
@@ -390,8 +390,6 @@ public class Controller implements ActionListener {
             deleteLabelByCoord(c1);
             deleteLabelByCoord(c2);
             tournee = service.supprimerLivraison(tournee, idLivrSupr);
-            historique.add(tournee);
-            indexHistorique++;
             demande = tournee.getDemande();
             afficherTournee(tournee);
 
@@ -500,8 +498,6 @@ public class Controller implements ActionListener {
 
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
-        historique.add(tournee);
-        indexHistorique++;
         demande = nvTournee.getDemande();
         afficherTournee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
@@ -544,8 +540,7 @@ public class Controller implements ActionListener {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
-            ajoutLivraison.setDisable(true);
-            supprLivraison.setDisable(true);
+            disableButtonsTournee(true);
             File selectedFile = null;
             try {
                 System.out.println("Chargement d'une demande");
@@ -606,7 +601,6 @@ public class Controller implements ActionListener {
                 markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
                 //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
 
-
                 deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
                 deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
             }
@@ -631,12 +625,6 @@ public class Controller implements ActionListener {
     private void calculerTourneeOptimale() {
         System.out.println("Calcul d'une tournée");
         try {
-            ajoutLivraison.setDisable(true);
-            supprLivraison.setDisable(true);
-            exportFeuille.setDisable(true);
-            detailsLivraisons.getChildren().clear();
-            scroll.setVisible(true);
-            scroll.setContent(detailsLivraisons);
             if (demande != null) {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
@@ -664,8 +652,6 @@ public class Controller implements ActionListener {
 
     private void afficherTourneeCalculee() {
         tournee = service.recupererTournee();
-        historique.add(tournee);
-        indexHistorique++;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -746,12 +732,14 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t) {
-        mapView.removeCoordinateLine(trackTrajet);
-        tourneeCoordinate.clear();
         System.out.println("*****"+historique.size()+" index :"+indexHistorique);
         if (demande != null) {
+            disableButtonsTournee(false); // les boutons tournées sont cliquables
             // On supprime les infos de l'ancienne tournée de l'IHM
             clearTournee();
+            // On ajoute la tournée à l'historique
+            historique.add(tournee);
+            indexHistorique++;
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate origine;
@@ -838,20 +826,24 @@ public class Controller implements ActionListener {
     }
 
     public void clearTournee() {
-        ajoutLivraison.setDisable(false);
-        supprLivraison.setDisable(false);
-        exportFeuille.setDisable(false);
-        retour.setDisable(false);
-
+        mapView.removeCoordinateLine(trackTrajet);
+        tourneeCoordinate.clear();
         detailsLivraisons.getChildren().clear();
         livrButtons.clear();
         for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
             mapView.removeLabel(entry.getValue());
         }
         deliveriesNumbers.clear();
-
         scroll.setVisible(true);
         scroll.setContent(detailsLivraisons);
+    }
+
+    public void disableButtonsTournee(boolean value) {
+        ajoutLivraison.setDisable(value);
+        supprLivraison.setDisable(value);
+        exportFeuille.setDisable(value);
+        retour.setDisable(value);
+        suivant.setDisable(value);
     }
     /**
      *
@@ -867,6 +859,19 @@ public class Controller implements ActionListener {
         });
     }
 
+    /**
+     *
+     */
+    public void setButtonSuivant() {
+        suivant.setOnAction(event -> {
+            indexHistorique++;
+            tournee = historique.get(indexHistorique);
+            demande = tournee.getDemande();
+            clearDemande();
+            afficherTournee(tournee);
+            afficherDemande();
+        });
+    }
     /** Méthode qui permet de créer
      *
      */
