@@ -469,6 +469,9 @@ public class Controller implements ActionListener {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(dEnlevement.getText(), dLivraison.getText());
             }
+            //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
+            mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
+            mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
             return null;
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
