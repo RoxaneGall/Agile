@@ -121,13 +121,11 @@ public class Controller implements ActionListener {
      */
     /* Label de debug pour afficher les infos sur la map et les events */
     @FXML
-    public Label labelCenter;
+    public Label labelTourneeDistance;
     @FXML
-    public Label labelExtent;
+    public Label labelTourneeTemps;
     @FXML
-    public Label labelZoom;
-    @FXML
-    public Label labelEvent;
+    public Label labelTourneeNbLivraison;
 
     public String path = "file://" + System.getProperty("user.dir").replace('\\', '/').substring(0, System.getProperty("user.dir").replace('\\', '/').lastIndexOf('/'));
 
@@ -137,7 +135,7 @@ public class Controller implements ActionListener {
     /* cadrage de la map */
     public Extent mapExtent;
     /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 14;
+    public static final int ZOOM_DEFAULT = 12;
 
     /**
      * Attributs pour la tournee
@@ -208,15 +206,13 @@ public class Controller implements ActionListener {
 
         buttonResetExtent.setOnAction(event -> {
             mapView.setExtent(mapExtent);
+            mapView.setZoom(ZOOM_DEFAULT);
         });
-
         // wire the zoom button and connect the slider to the map's zoom
         buttonZoom.setOnAction(event -> mapView.setZoom(ZOOM_DEFAULT));
         sliderZoom.valueProperty().bindBidirectional(mapView.zoomProperty());
 
         // bind the map's center and zoom properties to the corresponding labels and format them
-        labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
-        labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
         setButtonAjoutLivraison();
@@ -250,6 +246,9 @@ public class Controller implements ActionListener {
                 afterMapIsInitialized();
             }
         });
+
+
+        mapView.setZoom(ZOOM_DEFAULT);
     }
 
 
@@ -273,28 +272,6 @@ public class Controller implements ActionListener {
         });
 
         // add an event handler for extent changes and display them in the status label
-        mapView.addEventHandler(MapViewEvent.MAP_BOUNDING_EXTENT, event -> {
-            event.consume();
-            labelExtent.setText(event.getExtent().toString());
-        });
-
-        mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: marker clicked: " + event.getMarker().getId());
-        });
-        mapView.addEventHandler(MarkerEvent.MARKER_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: marker right clicked: " + event.getMarker().getId());
-        });
-        mapView.addEventHandler(MapLabelEvent.MAPLABEL_CLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: label clicked: " + event.getMapLabel().getText());
-        });
-        mapView.addEventHandler(MapLabelEvent.MAPLABEL_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: label right clicked: " + event.getMapLabel().getText());
-        });
-
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
         });
     }
@@ -403,7 +380,6 @@ public class Controller implements ActionListener {
 
         mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
             eventClick.consume();
-            labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
             System.out.println("inter trouvée : " + i);
@@ -599,8 +575,6 @@ public class Controller implements ActionListener {
                 Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                 URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
                 markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
-                //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
-
                 Marker markerDelivery;
                 Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
                 URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
@@ -750,6 +724,11 @@ public class Controller implements ActionListener {
             int compteur = 1;
             Coordinate origine;
             Trajet trajet;
+
+            labelTourneeDistance.setText("Distance: "+t.getTotalDistance()/1000+"km");
+            labelTourneeTemps.setText("Temps: "+t.getTotalDuration()+"min");
+            labelTourneeNbLivraison.setText("Nombre de livraisons: "+t.getDemande().getLivraisons().size());
+
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
                 origine = trajet.getOrigine().getCoordinate();
@@ -767,7 +746,7 @@ public class Controller implements ActionListener {
                 String infoButton = "";
                 Long idLivr;
                 if (i == 0) {
-                    infoButton = "Entrepôt \n Départ : " + formater.format(trajet.getHeureDepart());
+                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : "+ formater.format(t.getHeureArrivee());
 
                     ToggleButton button = new ToggleButton();
                     button.setText(infoButton);
@@ -783,7 +762,7 @@ public class Controller implements ActionListener {
                 ToggleButton button = new ToggleButton();
                 if (i == t.getTrajets().size() - 1) {
                     idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt \n Arrivée : " + formater.format(trajet.getHeureArrivee());
+                    infoButton = i + 1 + " - Retour à l'entrepôt"  + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -794,9 +773,9 @@ public class Controller implements ActionListener {
                 } else {
                     idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
