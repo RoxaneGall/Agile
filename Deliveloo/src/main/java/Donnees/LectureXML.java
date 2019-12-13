@@ -156,8 +156,8 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         Intersection entrepot = new Intersection();
 
         Long countDeliveries= new Long(0);
-        String nomDemande = cheminFichier.substring(cheminFichier.lastIndexOf("/"),cheminFichier.lastIndexOf("."));
-        Demande demande = new Demande(entrepot, myDate,nomDemande);
+        String nomDemande = cheminFichier.substring(cheminFichier.replace("\\","/").lastIndexOf("/"),cheminFichier.lastIndexOf("."));
+        Demande demande = new Demande(entrepot, myDate, nomDemande);
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
