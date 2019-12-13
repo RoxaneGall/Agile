@@ -528,9 +528,8 @@ public class Controller implements ActionListener {
                 if (selectedDirectory == null) {
                     System.out.println("No Directory selected");
                 } else {
-                    //System.out.println(selectedDirectory.getAbsolutePath());
-                    EcritureXML ecr = new EcritureXML();
-                    ecr.ecrireFichier(tournee, selectedDirectory.getAbsolutePath());
+                    String cheminFichier = selectedDirectory.getAbsolutePath();
+                    service.ecrireFichier(tournee, cheminFichier);
                 }
             } catch (Exception e) {
                 System.out.println(e);
