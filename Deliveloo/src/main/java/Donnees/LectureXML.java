@@ -282,7 +282,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                 res = i;
             }
         }
-        if (distanceMin>0.001)
+        if (distanceMin>0.002)
             return null;
         return res;
     }
