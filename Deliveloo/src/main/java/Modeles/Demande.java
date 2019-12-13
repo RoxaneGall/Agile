@@ -28,6 +28,12 @@ public class Demande {
         return livraison;
     }
 
+    public void addLivraisons(ArrayList<Livraison> livraisons) {
+        for (Livraison livraison: livraisons) {
+            addLivraison(livraison.getPickup(), livraison.getDelivery(), livraison.dureeEnlevement, livraison.getDureeLivraison());
+        }
+    }
+
     public Intersection getEntrepot() {
         return entrepot;
     }
