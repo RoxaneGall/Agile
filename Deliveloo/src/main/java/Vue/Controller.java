@@ -748,7 +748,6 @@ public class Controller implements ActionListener {
     private void afficherTournee(Tournee t) {
         mapView.removeCoordinateLine(trackTrajet);
         tourneeCoordinate.clear();
-
         System.out.println("*****"+historique.size()+" index :"+indexHistorique);
         if (demande != null) {
             // On supprime les infos de l'ancienne tournée de l'IHM
