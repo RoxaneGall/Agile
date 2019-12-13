@@ -394,6 +394,7 @@ public class Controller implements ActionListener {
             indexHistorique++;
             demande = tournee.getDemande();
             afficherTournee(tournee);
+            mapView.removeCoordinateLine(trackPart);
 
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
