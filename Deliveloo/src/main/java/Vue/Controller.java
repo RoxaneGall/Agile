@@ -135,7 +135,7 @@ public class Controller implements ActionListener {
     /* cadrage de la map */
     public Extent mapExtent;
     /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 12;
+    public static final int ZOOM_DEFAULT = 14;
 
     /**
      * Attributs pour la tournee
@@ -721,8 +721,10 @@ public class Controller implements ActionListener {
 
     private void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
-        if (demande != null) {
-            if (historique.size()==0 || historique.contains(tournee)!=true) {
+        if (demande != null) {disableButtonsTournee(false); // les boutons tournées sont cliquables
+            // On supprime les infos de l'ancienne tournée de l'IHM
+            clearTournee();
+            if (historique.size() == 0 || historique.contains(tournee) != true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
