@@ -11,11 +11,17 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0"
             prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
+    <fx:define>
+        <Image fx:id="undoImage" url="file:../datas/logos/undo.png" />
+    </fx:define>
     <top>
         <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
@@ -92,12 +98,12 @@
                     <children>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
                         <Button fx:id="supprLivraison" text="Supprimer"/>
+                        <Button fx:id="suivant" text="NEXT" />
                         <Button fx:id="retour">
                             <graphic>
                                 <ImageView image="$undoImage" fitHeight="20.0" fitWidth="20.0" preserveRatio="true"></ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="suivant" text="NEXT" />
                         <Button fx:id="exportFeuille" text="Feuille de route"/>
                     </children>
                     <padding>

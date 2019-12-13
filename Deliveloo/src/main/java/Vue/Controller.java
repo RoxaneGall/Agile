@@ -500,6 +500,11 @@ public class Controller implements ActionListener {
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
         demande = nvTournee.getDemande();
+        if (indexHistorique < historique.size()-1) {
+            for(int i = indexHistorique+1; i<historique.size(); i++) {
+                historique.remove(i);
+            }
+        }
         afficherTournee(nvTournee);
         ajoutPickUp.setText("Livraison ajoutée !");
     }
@@ -736,7 +741,7 @@ public class Controller implements ActionListener {
             disableButtonsTournee(false); // les boutons tournées sont cliquables
             // On supprime les infos de l'ancienne tournée de l'IHM
             clearTournee();
-            if (historique.size()==0 || tournee != historique.get(historique.size()-1)) {
+            if (historique.size()==0 || historique.contains(tournee)!=true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
@@ -843,11 +848,15 @@ public class Controller implements ActionListener {
         ajoutLivraison.setDisable(value);
         supprLivraison.setDisable(value);
         exportFeuille.setDisable(value);
-        if (value == true || (historique.size() > 1 && indexHistorique > 0)) {
+        if (historique.size() > 1 && indexHistorique > 0) {
             retour.setDisable(value);
+        } else {
+            retour.setDisable(true);
         }
-        if (value == true || (indexHistorique==historique.size()-1)) {
+        if (indexHistorique<historique.size()-1) {
             suivant.setDisable(value);
+        } else {
+            suivant.setDisable(true);
         }
     }
 
@@ -857,7 +866,7 @@ public class Controller implements ActionListener {
     public void setButtonRetour() {
         retour.setOnAction(event -> {
             indexHistorique--;
-            System.out.println("RETOUR =" + indexHistorique);
+            System.out.println("RETOUR à la tournée d'index=" + indexHistorique);
             tournee = historique.get(indexHistorique);
             demande = tournee.getDemande();
             afficherDemande();
@@ -871,11 +880,11 @@ public class Controller implements ActionListener {
     public void setButtonSuivant() {
         suivant.setOnAction(event -> {
             indexHistorique++;
+            System.out.println("SUIVANT à la tournée d'index=" + indexHistorique);
             tournee = historique.get(indexHistorique);
             demande = tournee.getDemande();
-            clearDemande();
-            afficherTournee(tournee);
             afficherDemande();
+            afficherTournee(tournee);
         });
     }
     /** Méthode qui permet de créer
