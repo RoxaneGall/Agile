@@ -78,7 +78,8 @@ public abstract class TemplateTSP implements TSP {
      */
     void branchAndBound(int sommetCrt, int discrepancy, ArrayList<Integer> nonVus, ArrayList<Integer> vus, Double coutVus, Trajet[][] cout, long tpsDebut, int tpsLimite) {
         if (end || System.currentTimeMillis() - tpsDebut > tpsLimite) {
-            tempsLimiteAtteint = true;
+            if (System.currentTimeMillis() - tpsDebut > tpsLimite)
+                tempsLimiteAtteint = true;
             return;
         }
         if (nonVus.size() == 0) { // tous les sommets ont ete visites

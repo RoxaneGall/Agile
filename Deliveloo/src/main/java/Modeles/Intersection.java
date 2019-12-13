@@ -44,7 +44,7 @@ public class Intersection {
         return troncons;
     }
 
-    @java.lang.Override
+    @Override
     public java.lang.String toString() {
         return "Intersection{" +
                 "c=" + coord +

@@ -22,21 +22,16 @@ public class Demande {
         return livraisons;
     }
 
-
-    public void removeLivraison(Coordinate coord) {
-        for (Livraison l : livraisons) {
-            // recherche de la livraison qui contient la coordinate
-            if (l.getDelivery().getCoordinate() == coord || l.getPickup().getCoordinate() == coord) {
-                // suppression de cette livraison
-                livraisons.remove(l);
-            }
-        }
-    }
-
     public Livraison addLivraison(Intersection pickup,  Intersection delivery, int dureeEnlevement, int dureeLivraison) {
         Livraison livraison = new Livraison( ((Integer) livraisons.size()).longValue(), pickup, delivery, dureeEnlevement, dureeLivraison);
         livraisons.add(livraison);
         return livraison;
+    }
+
+    public void addLivraisons(ArrayList<Livraison> livraisons) {
+        for (Livraison livraison: livraisons) {
+            addLivraison(livraison.getPickup(), livraison.getDelivery(), livraison.dureeEnlevement, livraison.getDureeLivraison());
+        }
     }
 
     public Intersection getEntrepot() {

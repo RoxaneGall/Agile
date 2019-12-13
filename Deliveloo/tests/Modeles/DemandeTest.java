@@ -33,42 +33,8 @@ class DemandeTest {
 
         //Assert
         assertNotNull(actualL);
-        assertEquals(l,actualL.get(0));
+        assertEquals(l.toString(),actualL.get(0).toString());
     }
-
-    /*@Test
-    void removeLivraisonTest_ShouldDecreaseLivraisonsSize() {
-        //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        ArrayList<Livraison> liv= new ArrayList<>();
-        Livraison l = new Livraison(i1,i2,30,160);
-        liv.add(l);
-
-        Coordinate p = new Coordinate(4.112233, 5.32404);
-        long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
-        Date d = new Date();
-
-        dmd = new Demande(liv, inter, d);
-
-        System.out.println("done");
-
-        ArrayList<Livraison> actualL = dmd.getLivraisons();
-        for(Livraison livraison : actualL)
-            System.out.println(livraison);
-
-        //Act
-        dmd.removeLivraison(new Coordinate(0.0,0.0));
-
-        //Assert
-        actualL = dmd.getLivraisons();
-        for(Livraison livraison : actualL)
-            System.out.println(livraison);
-
-        assertNotNull(actualL);
-        assertEquals(0,actualL.size());
-    }*/
 
     @Test
     void setLivraisonsTest_ShouldModifyLivraisonsAttribute() {
@@ -101,7 +67,7 @@ class DemandeTest {
 
         int i = 0;
         for (Livraison livr : actualL) {
-            assertEquals(liv.toArray()[i], livr);
+            assertEquals(liv.toArray()[i].toString(), livr.toString());
             i++;
         }
     }
