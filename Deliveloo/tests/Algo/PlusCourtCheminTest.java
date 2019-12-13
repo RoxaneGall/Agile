@@ -1,9 +1,9 @@
 package Algo;
 
-import Modeles.Graphe;
-import Modeles.Intersection;
-import Modeles.Trajet;
-import Modeles.Troncon;
+import Modele.Graphe;
+import Modele.Intersection;
+import Modele.Trajet;
+import Modele.Troncon;
 import com.sothawo.mapjfx.Coordinate;
 //import com.sun.tools.corba.se.idl.constExpr.Plus;
 import org.junit.jupiter.api.AfterEach;
@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PlusCourtCheminTest {
 

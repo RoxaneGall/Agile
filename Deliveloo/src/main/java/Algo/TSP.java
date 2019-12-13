@@ -1,6 +1,6 @@
 package Algo;
 
-import Modeles.Trajet;
+import Modele.Trajet;
 
 public interface TSP {
 

@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modeles.*;
+import Modele.*;
 import Donnees.*;
 
 import javafx.geometry.Insets;
@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
-import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
-import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
