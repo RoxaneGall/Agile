@@ -311,7 +311,7 @@ public class Controller implements ActionListener {
      *
      */
     public void chargerPlan(String path) {
-        System.out.println("Chargement du plan "+path);
+        System.out.println("Chargement du plan " + path);
         try {
             ArrayList<Coordinate> limites = service.chargerPlan(path);
             System.out.println("Limites du plan :" + limites);
@@ -525,7 +525,7 @@ public class Controller implements ActionListener {
                 selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
                 historique.clear();
-                indexHistorique =  -1;
+                indexHistorique = -1;
             } catch (Exception e) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur chargement demande");
@@ -552,17 +552,16 @@ public class Controller implements ActionListener {
                 mapView.removeMarker(entry.getValue());
             }
             deliveriesMarkers.clear();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void afficherDemande() {
         try {
+            clearDemande(); // on supprime la demande d'avant
 
             entrepot = demande.getEntrepot().getCoordinate();
-            System.out.println("Demande : " + demande);
-
             entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
             mapView.addMarker(entrepotMarker);
 
@@ -708,14 +707,16 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t) {
-        System.out.println("*****"+historique.size()+" index :"+indexHistorique);
+        System.out.println("*****" + historique.size() + " index :" + indexHistorique);
         if (demande != null) {
             disableButtonsTournee(false); // les boutons tournées sont cliquables
             // On supprime les infos de l'ancienne tournée de l'IHM
             clearTournee();
-            // On ajoute la tournée à l'historique
-            historique.add(tournee);
-            indexHistorique++;
+            if (historique.size()==0 || tournee != historique.get(historique.size()-1)) {
+                // On ajoute la tournée à l'historique
+                historique.add(tournee);
+                indexHistorique++;
+            }
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate origine;
@@ -823,20 +824,25 @@ public class Controller implements ActionListener {
         ajoutLivraison.setDisable(value);
         supprLivraison.setDisable(value);
         exportFeuille.setDisable(value);
-        retour.setDisable(value);
-        suivant.setDisable(value);
+        if (value == true || (historique.size() > 1 && indexHistorique > 0)) {
+            retour.setDisable(value);
+        }
+        if (value == true || (indexHistorique==historique.size()-1)) {
+            suivant.setDisable(value);
+        }
     }
+
     /**
      *
      */
     public void setButtonRetour() {
         retour.setOnAction(event -> {
             indexHistorique--;
+            System.out.println("RETOUR =" + indexHistorique);
             tournee = historique.get(indexHistorique);
             demande = tournee.getDemande();
-            clearDemande();
-            afficherTournee(tournee);
             afficherDemande();
+            afficherTournee(tournee);
         });
     }
 
