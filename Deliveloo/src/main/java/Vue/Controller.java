@@ -538,6 +538,7 @@ public class Controller implements ActionListener {
         });
     }
 
+    
     /**
      *
      */
@@ -545,6 +546,7 @@ public class Controller implements ActionListener {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
             mapView.removeCoordinateLine(trackTrajet);
+            mapView.removeCoordinateLine(trackPart);
             ajoutLivraison.setDisable(true);
             supprLivraison.setDisable(true);
             File selectedFile = null;
