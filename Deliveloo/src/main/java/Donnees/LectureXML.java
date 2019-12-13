@@ -17,7 +17,7 @@ import java.util.*;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import static java.lang.Math.abs;
+import static java.lang.Math.*;
 
 public class LectureXML {
     //map(idIntersection,Intersection);
@@ -273,27 +273,25 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
     public Intersection getIntersectionPlusProche(Coordinate c) {
 
         Intersection res = new Intersection();
-        Double latMin = 100000.0;
-        Double longMin = 100000.0;
+        Double distanceMin = Double.MAX_VALUE;
         Collection<Intersection> inter = Graphe.shared.getIntersectionMap().values();
         Iterator it = inter.iterator();
 
         while(it.hasNext()){
             Intersection i = (Intersection) it.next();
-            Double longi = abs(i.getCoordinate().getLongitude() - c.getLongitude());
 
-            Double lati = abs(i.getCoordinate().getLatitude() - c.getLatitude());
+            Double diffLongitude = abs(i.getCoordinate().getLongitude() - c.getLongitude());
+            Double difflatitude = abs(i.getCoordinate().getLatitude() - c.getLatitude());
 
+            Double distance = sqrt(pow(diffLongitude,2)+pow(difflatitude,2));
 
-            if (longi <= longMin && lati <= latMin) {
-                System.out.println("longi : " + longi+". longMin : "+longMin);
-                System.out.println("lati : " + longi+". latMin : "+longMin);
-
-                longMin = longi;
-                latMin = lati;
+            if (distance<distanceMin) {
+                distanceMin=distance;
                 res = i;
             }
         }
+        if (distanceMin>0.001)
+            return null;
         return res;
     }
 }

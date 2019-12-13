@@ -46,6 +46,7 @@
         <VBox prefHeight="80.0" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
             <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
                 <children>
+                    <Button fx:id="chargerPlan" text="Changer de plan"/>
                     <Button fx:id="chargerDemande" text="Charger Demande"/>
                     <Button fx:id="calculTournee" text="Calculer Tournée"/>
                     <Button fx:id="stopTournee" text="STOP"/>
@@ -91,6 +92,7 @@
                     <children>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
                         <Button fx:id="supprLivraison" text="Supprimer"/>
+                        <Button fx:id="retour" text="BACK" />
                         <Button fx:id="exportFeuille" text="Feuille de route"/>
                     </children>
                     <padding>
