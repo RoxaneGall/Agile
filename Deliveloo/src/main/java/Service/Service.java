@@ -2,7 +2,7 @@ package Service;
 
 import Algo.Computations;
 import Donnees.EcritureXML;
-import Donnees.LectureXML;
+import Donnees.*;
 import Modeles.*;
 import com.sothawo.mapjfx.Coordinate;
 
@@ -12,11 +12,13 @@ import java.util.*;
 public class Service {
 
     private LectureXML lec;
+    private EcritureXML ecr;
     private Demande demandeEnCours;
     private Trajet[][] couts;
 
     public Service() throws Exception {
         lec = new LectureXML();
+        ecr = new EcritureXML();
     }
 
     public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
@@ -29,6 +31,10 @@ public class Service {
     public Demande chargerDemande(String path) throws Exception {
         Demande d = lec.chargerDemande(path);
         return d;
+    }
+
+    public void ecrireFichier(Tournee tournee, String path) throws Exception {
+        ecr.ecrireFichier(tournee,path);
     }
 
     public void calculerTournee(Demande demande){
@@ -47,7 +53,7 @@ public class Service {
     }
 
     public Tournee supprimerLivraison(Tournee tournee, Long idLivraison){
-        Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart());
+        Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart(),tournee.getDemande().getNomDemande());
         for (Livraison livraison: tournee.getDemande().getLivraisons()) {
             if (livraison.getId()!=idLivraison) {
                 nouvelleDemande.addLivraison(livraison.getPickup(), livraison.getDelivery(), livraison.getDureeEnlevement(), livraison.getDureeLivraison());
@@ -94,7 +100,7 @@ public class Service {
     }
 
     public Tournee ajouterLivraison(Tournee tournee, Intersection pickup, Intersection delivery, int dE, int dL){
-        Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart());
+        Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart(),tournee.getDemande().getNomDemande());
         nouvelleDemande.addLivraisons(tournee.getDemande().getLivraisons());
         Livraison livraison = nouvelleDemande.addLivraison(pickup, delivery, dE, dL);
         Tournee nouvelleTournee = new Tournee(nouvelleDemande);

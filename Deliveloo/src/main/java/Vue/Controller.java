@@ -117,13 +117,11 @@ public class Controller implements ActionListener {
      */
     /* Label de debug pour afficher les infos sur la map et les events */
     @FXML
-    public Label labelCenter;
+    public Label labelTourneeDistance;
     @FXML
-    public Label labelExtent;
+    public Label labelTourneeTemps;
     @FXML
-    public Label labelZoom;
-    @FXML
-    public Label labelEvent;
+    public Label labelTourneeNbLivraison;
 
     public String path = System.getProperty("user.home").substring(9);
 
@@ -134,13 +132,18 @@ public class Controller implements ActionListener {
     /* cadrage de la map */
     public Extent mapExtent;
     /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 14;
+    public static final int ZOOM_DEFAULT = 12;
 
     /**
      * Attributs pour la demande
      */
     public Demande demande; // demande de départ obtenue avec chargerDemande
     public Tournee tournee; // tournee calculée, qui contient donc également la demande, utilisée également quand on modifie la demande avec Ajout/Suppr
+    public ArrayList<Tournee> historique = new ArrayList<>(); // liste historique des tournees calculées, au clique de précédent ou suivant on charge la tournee correspondante de l'historique
+    public Button retour;
+    public Button suivant;
+    public int indexHistorique = -1;
+
     /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
@@ -210,23 +213,25 @@ public class Controller implements ActionListener {
 
         buttonResetExtent.setOnAction(event -> {
             mapView.setExtent(mapExtent);
+            mapView.setZoom(ZOOM_DEFAULT);
         });
-
         // wire the zoom button and connect the slider to the map's zoom
         buttonZoom.setOnAction(event -> mapView.setZoom(ZOOM_DEFAULT));
         sliderZoom.valueProperty().bindBidirectional(mapView.zoomProperty());
 
         // bind the map's center and zoom properties to the corresponding labels and format them
-        labelCenter.textProperty().bind(Bindings.format("center: %s", mapView.centerProperty()));
-        labelZoom.textProperty().bind(Bindings.format("zoom: %.0f", mapView.zoomProperty()));
 
         setButtonSupprLivraison();
-        supprLivraison.setDisable(true);
         setButtonAjoutLivraison();
-        ajoutLivraison.setDisable(true);
         setButtonExportFeuille();
-        exportFeuille.setDisable(true);
         setButtonChargerDemande();
+
+        setButtonChargerPlan();
+        setButtonRetour();
+        setButtonSuivant();
+
+        disableButtonsTournee(true); // disable les boutons de tournée
+
 
         setButtonStopCalculTourneeOptimale();
 
@@ -250,6 +255,9 @@ public class Controller implements ActionListener {
                 afterMapIsInitialized();
             }
         });
+
+
+        mapView.setZoom(ZOOM_DEFAULT);
     }
 
 
@@ -273,28 +281,6 @@ public class Controller implements ActionListener {
         });
 
         // add an event handler for extent changes and display them in the status label
-        mapView.addEventHandler(MapViewEvent.MAP_BOUNDING_EXTENT, event -> {
-            event.consume();
-            labelExtent.setText(event.getExtent().toString());
-        });
-
-        mapView.addEventHandler(MarkerEvent.MARKER_CLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: marker clicked: " + event.getMarker().getId());
-        });
-        mapView.addEventHandler(MarkerEvent.MARKER_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: marker right clicked: " + event.getMarker().getId());
-        });
-        mapView.addEventHandler(MapLabelEvent.MAPLABEL_CLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: label clicked: " + event.getMapLabel().getText());
-        });
-        mapView.addEventHandler(MapLabelEvent.MAPLABEL_RIGHTCLICKED, event -> {
-            event.consume();
-            labelEvent.setText("Event: label right clicked: " + event.getMapLabel().getText());
-        });
-
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
         });
     }
@@ -302,8 +288,34 @@ public class Controller implements ActionListener {
     /**
      *
      */
-    public void chargerPlan() {
-        System.out.println("Chargement du plan");
+
+    public void selectPlan() {
+        File selectedFile = null;
+        String path = "";
+        try {
+            System.out.println("Sélection d'un plan");
+            selectedFile = fileChooser.showOpenDialog(primaryStage);
+            path = selectedFile.getAbsolutePath();
+        } catch (Exception e) {
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Erreur chargement demande");
+            dialog.getDialogPane().setContent(new Text(e.getMessage()));
+            //TODO : Faire des tests pour montrer qu'on throw bien les erreurs
+        }
+        if (selectedFile != null) {
+            try {
+                chargerPlan(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public void chargerPlan(String path) {
+        System.out.println("Chargement du plan " + path);
         try {
             ArrayList<Coordinate> limites = service.chargerPlan("../datas/petitPlan.xml");
             System.out.println("Limites du plan :" + limites);
@@ -351,10 +363,10 @@ public class Controller implements ActionListener {
             deleteMarkerByCoord(c2);
             deleteLabelByCoord(c1);
             deleteLabelByCoord(c2);
-            /* demande.removeLivraison(c1);
-            deliveries.remove(c1); */
-
-            //demande.removeLivraison(c1);
+            tournee = service.supprimerLivraison(tournee, idLivrSupr);
+            demande = tournee.getDemande();
+            afficherTournee(tournee);
+            mapView.removeCoordinateLine(trackPart);
 
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
@@ -370,7 +382,6 @@ public class Controller implements ActionListener {
 
         mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
             eventClick.consume();
-            labelEvent.setText("Event: map right clicked at: " + eventClick.getCoordinate());
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
             int size = demande.getLivraisons().size() + 1;
@@ -455,13 +466,20 @@ public class Controller implements ActionListener {
             }
             return null;
         });
-            Optional<Pair<String, String>> result = dialog.showAndWait();
-            //TODO : remplacer cette méthode du caca ajouterLivraison par TA VRAIE METHODE :
-            demande.addLivraison(interPickUp,interDelivery,Integer.parseInt(result.get().getKey()),Integer.parseInt(result.get().getValue()));
-            calculerTourneeOptimale();
-            afficherTourneeCalculee();
-            ajoutPickUp.setText("Livraison ajoutée !");
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+        tournee = nvTournee;
+        demande = nvTournee.getDemande();
+        if (indexHistorique < historique.size()-1) {
+            for(int i = indexHistorique+1; i<historique.size(); i++) {
+                System.out.println("CLEAR historique for index="+i);
+                historique.remove(i);
+            }
         }
+        afficherTournee(nvTournee);
+        ajoutPickUp.setText("Livraison ajoutée !");
+    }
 
 
     private void setButtonAjoutLivraison() {
@@ -481,10 +499,11 @@ public class Controller implements ActionListener {
         {
             try {
                 File selectedDirectory = directoryChooser.showDialog(primaryStage);
-                if(selectedDirectory == null){
-                    //No Directory selected
-                }else{
-                    System.out.println(selectedDirectory.getAbsolutePath());
+                if (selectedDirectory == null) {
+                    System.out.println("No Directory selected");
+                } else {
+                    String cheminFichier = selectedDirectory.getAbsolutePath();
+                    service.ecrireFichier(tournee, cheminFichier);
                 }
             } catch (Exception e) {
 
@@ -495,19 +514,24 @@ public class Controller implements ActionListener {
 
     }
 
+
     /**
      *
      */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
-            ajoutLivraison.setDisable(true);
-            supprLivraison.setDisable(true);
+            disableButtonsTournee(true);
             File selectedFile = null;
+            mapView.removeCoordinateLine(trackPart);
+            mapView.removeCoordinateLine(trackTrajet);
+
             try {
                 System.out.println("Chargement d'une demande");
                 selectedFile = fileChooser.showOpenDialog(primaryStage);
                 demande = service.chargerDemande(selectedFile.getAbsolutePath());
+                historique.clear();
+                indexHistorique = -1;
             } catch (Exception e) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur chargement demande");
@@ -530,42 +554,44 @@ public class Controller implements ActionListener {
                         mapView.removeLabel(entry.getValue());
                     }
 
-                    deliveriesMarkers.clear();
+    private void clearDemande() {
+        try {
+            if (entrepotMarker != null) {
+                mapView.removeMarker(entrepotMarker);
+            }
+            for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                mapView.removeMarker(entry.getValue());
+            }
+            deliveriesMarkers.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                    entrepot = demande.getEntrepot().getCoordinate();
-                    setDeliveriesFromLivraisons(demande.getLivraisons());
-                    System.out.println("Demande : " + demande);
+    private void afficherDemande() {
+        try {
+            clearDemande(); // on supprime la demande d'avant
 
-                    entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
-                    mapView.addMarker(entrepotMarker);
+            entrepot = demande.getEntrepot().getCoordinate();
+            entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+            mapView.addMarker(entrepotMarker);
 
-                    for (int i = 0; i < demande.getLivraisons().size(); i++) {
-                        Marker markerPickUp;
-                        Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                        URL imageURL = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/p_" + i + ".png");
-                        markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
-                        //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
-
-                        Marker markerDelivery;
-                        Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                        URL imageURL2 = new URL("file:///C:/Users/"+path+"/Documents/GitHub/Agile/datas/logos/d_" + i + ".png");
-                        markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
-                        //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-
-
-                        deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
-                        deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
-                    }
-
-                    for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
-                        entry.getValue().setVisible(true);
-                        mapView.addMarker(entry.getValue().setVisible(true));
-                    }
-
-                    System.out.println(deliveriesMarkers.size());
-                } catch (Exception e) {
+            for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                Marker markerPickUp;
+                Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
+                markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
+                Marker markerDelivery;
+                Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
+                markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
+                deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
+                deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
+            }
+                System.out.println(deliveriesMarkers.size());
+            } catch (Exception e) {
                     e.printStackTrace();
-                }
+            }
             }
         });
     }
@@ -582,12 +608,6 @@ public class Controller implements ActionListener {
         tourneeCoordinate.clear();
         System.out.println("Calcul d'une tournée");
         try {
-            ajoutLivraison.setDisable(true);
-            supprLivraison.setDisable(true);
-            exportFeuille.setDisable(true);
-            detailsLivraisons.getChildren().clear();
-            scroll.setVisible(true);
-            scroll.setContent(detailsLivraisons);
             if (demande != null) {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
@@ -614,7 +634,7 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTourneeCalculee() {
-        Tournee t = service.recupererTournee();
+        tournee = service.recupererTournee();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -692,23 +712,25 @@ public class Controller implements ActionListener {
     }
 
     private void afficherTournee(Tournee t) {
+        System.out.println("*****" + historique.size() + " index :" + indexHistorique);
         if (demande != null) {
-            ajoutLivraison.setDisable(false);
-            supprLivraison.setDisable(false);
-            exportFeuille.setDisable(false);
-
-            livrButtons.clear();
-            for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
-                mapView.removeLabel(entry.getValue());
+            disableButtonsTournee(false); // les boutons tournées sont cliquables
+            // On supprime les infos de l'ancienne tournée de l'IHM
+            clearTournee();
+            if (historique.size()==0 || historique.contains(tournee)!=true) {
+                // On ajoute la tournée à l'historique
+                historique.add(tournee);
+                indexHistorique++;
             }
-            deliveriesNumbers.clear();
-            detailsLivraisons.getChildren().clear();
-            scroll.setVisible(true);
-            scroll.setContent(detailsLivraisons);
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate coord;
             Trajet trajet;
+
+            labelTourneeDistance.setText("Distance: "+t.getTotalDistance()/1000+"km");
+            labelTourneeTemps.setText("Temps: "+t.getTotalDuration()+"min");
+            labelTourneeNbLivraison.setText("Nombre de livraisons: "+t.getDemande().getLivraisons().size());
+
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
                 coord = trajet.getOrigine().getCoordinate();
@@ -722,9 +744,25 @@ public class Controller implements ActionListener {
                 }
 
                 String infoButton = "";
-                ToggleButton button = new ToggleButton();
+                Long idLivr;
                 if (i == 0) {
-                    infoButton = i + 1 + " - Entrepôt \n Départ : " + formater.format(trajet.getHeureArrivee());
+                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : "+ formater.format(t.getHeureArrivee());
+
+                    ToggleButton button = new ToggleButton();
+                    button.setText(infoButton);
+                    button.setPrefWidth(250.0);
+                    button.setAlignment(Pos.TOP_LEFT);
+                    button.setToggleGroup(groupButtons);
+                    detailsLivraisons.getChildren().add(button);
+                    button.setOnAction(event -> {
+                        entrepotDeselected(button);
+                    });
+                }
+
+                ToggleButton button = new ToggleButton();
+                if (i == t.getTrajets().size() - 1) {
+                    idLivr = (long) -1;
+                    infoButton = i + 1 + " - Retour à l'entrepôt"  + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -734,9 +772,9 @@ public class Controller implements ActionListener {
                     });
                 } else {
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                      infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     } else {
-                        infoButton = i + 1 + " - DELIVERY \n Arrivée : " + formater.format(trajet.getHeureArrivee()) + "    Départ : " + formater.format(trajet.getHeureDepart());
+                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
@@ -771,7 +809,62 @@ public class Controller implements ActionListener {
         }
     }
 
+    public void clearTournee() {
+        mapView.removeCoordinateLine(trackTrajet);
+        tourneeCoordinate.clear();
+        detailsLivraisons.getChildren().clear();
+        livrButtons.clear();
+        for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
+            mapView.removeLabel(entry.getValue());
+        }
+        deliveriesNumbers.clear();
+        scroll.setVisible(true);
+        scroll.setContent(detailsLivraisons);
+    }
 
+    public void disableButtonsTournee(boolean value) {
+        ajoutLivraison.setDisable(value);
+        supprLivraison.setDisable(value);
+        exportFeuille.setDisable(value);
+        if (historique.size() > 1 && indexHistorique > 0) {
+            retour.setDisable(value);
+        } else {
+            retour.setDisable(true);
+        }
+        if (indexHistorique<historique.size()-1) {
+            suivant.setDisable(value);
+        } else {
+            suivant.setDisable(true);
+        }
+    }
+
+    /**
+     *
+     */
+    public void setButtonRetour() {
+        retour.setOnAction(event -> {
+            indexHistorique--;
+            System.out.println("RETOUR à la tournée d'index=" + indexHistorique);
+            tournee = historique.get(indexHistorique);
+            demande = tournee.getDemande();
+            afficherDemande();
+            afficherTournee(tournee);
+        });
+    }
+
+    /**
+     *
+     */
+    public void setButtonSuivant() {
+        suivant.setOnAction(event -> {
+            indexHistorique++;
+            System.out.println("SUIVANT à la tournée d'index=" + indexHistorique);
+            tournee = historique.get(indexHistorique);
+            demande = tournee.getDemande();
+            afficherDemande();
+            afficherTournee(tournee);
+        });
+    }
     /** Méthode qui permet de créer
      *
      */

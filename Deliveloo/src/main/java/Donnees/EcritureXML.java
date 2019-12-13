@@ -45,13 +45,13 @@ public class EcritureXML {
         for (Trajet t : trajets){
             switch (t.getType()) {
                 case COMEBACKHOME:
-                    instructions += "• TRAJET : RETOUR À L'ENTREPOT \n";
+                    instructions += "• TRAJET : RETOUR À L'ENTREPOT \n\n";
                     break;
                 case PICKUP:
-                    instructions += "• TRAJET : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    instructions += "• TRAJET : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
                     break;
                 case DELIVERY:
-                    instructions += "• TRAJET : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n";
+                    instructions += "• TRAJET : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
                     break;
             }
             String pattern = "HH:mm";
@@ -62,25 +62,26 @@ public class EcritureXML {
             instructions += "  Durée du trajet : " + (t.getHeureArrivee().getTime()-t.getHeureDepart().getTime())/(60*1000) + " minutes\n";
             switch (t.getType()) {
                 case PICKUP:
-                    instructions += "  Temps sur place : " + t.getLivraison().getDureeEnlevement()/(60) + " minutes \n";
+                    instructions += "  Temps sur place : " + t.getLivraison().getDureeEnlevement()/(60) + " minutes \n\n";
                     break;
                 case DELIVERY:
-                    instructions += "  Temps sur place : " + t.getLivraison().getDureeLivraison()/(60) + " minutes \n";
+                    instructions += "  Temps sur place : " + t.getLivraison().getDureeLivraison()/(60) + " minutes \n\n";
                     break;
             }
-            instructions += "  Itineraire : \n" + t.toString() + "\n";
+            instructions += "  Itineraire : \n" + t.toString() + "\n\n";
 
             // ajouter aussi des lignes pour les temps d'attente aux intersections
         }
-        return instructions+"\n";
+        return instructions+"\n\n";
     }
 
     public void ecrireFichier(Tournee tournee, String chemin) throws Exception {
 
         if(chemin=="") return;
 
+        String nomFeuille = tournee.getDemande().getNomDemande();
         String extension = ".txt";
-        String fichier = chemin + extension;
+        String fichier = chemin + nomFeuille + extension;
 
         FileOutputStream fop =null;
         File file;
