@@ -92,7 +92,11 @@
                     <children>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
                         <Button fx:id="supprLivraison" text="Supprimer"/>
-                        <Button fx:id="retour" text="BACK" />
+                        <Button fx:id="retour">
+                            <graphic>
+                                <ImageView image="$undoImage" fitHeight="20.0" fitWidth="20.0" preserveRatio="true"></ImageView>
+                            </graphic>
+                        </Button>
                         <Button fx:id="suivant" text="NEXT" />
                         <Button fx:id="exportFeuille" text="Feuille de route"/>
                     </children>
