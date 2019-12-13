@@ -15,8 +15,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0"
-            prefWidth="1000.0"
+            prefHeight="1000.0"
+            prefWidth="1800.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
     <fx:define>
@@ -46,7 +46,7 @@
 
 
     <center>
-        <MapView fx:id="mapView" BorderPane.alignment="CENTER" minWidth="1000" minHeight="1000"/>
+        <MapView fx:id="mapView" BorderPane.alignment="CENTER"/>
     </center>
 
     <bottom>

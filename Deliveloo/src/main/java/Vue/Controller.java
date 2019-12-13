@@ -135,7 +135,7 @@ public class Controller implements ActionListener {
     /* cadrage de la map */
     public Extent mapExtent;
     /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 12;
+    public static final int ZOOM_DEFAULT = 14;
 
     /**
      * Attributs pour la tournee
@@ -469,6 +469,9 @@ public class Controller implements ActionListener {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(dEnlevement.getText(), dLivraison.getText());
             }
+            //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
+            mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
+            mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
             return null;
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -507,8 +510,9 @@ public class Controller implements ActionListener {
                 if (selectedDirectory == null) {
                     System.out.println("No Directory selected");
                 } else {
-                    String cheminFichier = selectedDirectory.getAbsolutePath();
-                    service.ecrireFichier(tournee, cheminFichier);
+                    //System.out.println(selectedDirectory.getAbsolutePath());
+                    EcritureXML ecr = new EcritureXML();
+                    ecr.ecrireFichier(tournee, selectedDirectory.getAbsolutePath());
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -525,6 +529,9 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             disableButtonsTournee(true);
             File selectedFile = null;
+            labelTourneeDistance.setText(" ");
+            labelTourneeNbLivraison.setText(" ");
+            labelTourneeTemps.setText(" ");
             mapView.removeCoordinateLine(trackPart);
             mapView.removeCoordinateLine(trackTrajet);
 
@@ -714,11 +721,10 @@ public class Controller implements ActionListener {
 
     private void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
-        if (demande != null) {
-            disableButtonsTournee(false); // les boutons tournées sont cliquables
+        if (demande != null) {disableButtonsTournee(false); // les boutons tournées sont cliquables
             // On supprime les infos de l'ancienne tournée de l'IHM
             clearTournee();
-            if (historique.size()==0 || historique.contains(tournee)!=true) {
+            if (historique.size() == 0 || historique.contains(tournee) != true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
