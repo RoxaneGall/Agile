@@ -382,7 +382,6 @@ public class Controller implements ActionListener {
             eventClick.consume();
             Coordinate pickUp = eventClick.getCoordinate();
             Intersection i = service.intersectionPlusProche(pickUp);
-            System.out.println("inter trouvée : " + i);
             if (i != null) {
                 int size = demande.getLivraisons().size() + 1;
                 int nbLivrAjoute = interLivraison.size();
@@ -477,7 +476,9 @@ public class Controller implements ActionListener {
         tournee = nvTournee;
         demande = nvTournee.getDemande();
         if (indexHistorique < historique.size()-1) {
-            for(int i = indexHistorique+1; i<historique.size(); i++) {
+            int historiqueSize = historique.size();
+            System.out.println("Ajout à l'index="+indexHistorique);
+            for(int i = historiqueSize-1; i>indexHistorique; i--) {
                 System.out.println("CLEAR historique for index="+i);
                 historique.remove(i);
             }
@@ -716,14 +717,14 @@ public class Controller implements ActionListener {
     private void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
         if (demande != null) {
-            disableButtonsTournee(false); // les boutons tournées sont cliquables
-            // On supprime les infos de l'ancienne tournée de l'IHM
-            clearTournee();
             if (historique.size()==0 || historique.contains(tournee)!=true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
             }
+            disableButtonsTournee(false); // les boutons tournées sont cliquables
+            // On supprime les infos de l'ancienne tournée de l'IHM
+            clearTournee();
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate origine;
