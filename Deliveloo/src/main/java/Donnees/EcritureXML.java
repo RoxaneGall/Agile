@@ -58,7 +58,7 @@ public class EcritureXML {
                     instructions += "• TRAJET : RETOUR À L'ENTREPOT \n\n";
                     break;
                 case PICKUP:
-                    instructions += "• TRAJET : Recupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
+                    instructions += "• TRAJET : Récupérer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
                     break;
                 case DELIVERY:
                     instructions += "• TRAJET : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
@@ -76,7 +76,7 @@ public class EcritureXML {
                     instructions += "  Temps sur place : " + t.getLivraison().getDureeLivraison()/(60) + " minutes \n\n";
                     break;
             }
-            instructions += "  Itineraire : \n" + t.toString() + "\n\n";
+            instructions += "  Itinéraire : \n" + t.toString() + "\n\n";
 
             // ajouter aussi des lignes pour les temps d'attente aux intersections
         }
