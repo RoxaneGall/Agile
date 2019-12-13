@@ -42,6 +42,16 @@ public class EcritureXML {
         String instructions="";
         ArrayList<Trajet> trajets = new ArrayList<>();
         trajets = tournee.getTrajets();
+
+        String pattern = "HH:mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+        instructions+="RECAP TOURNÉE:\n\n";
+        instructions += "  Heure de départ : " + simpleDateFormat.format(tournee.getDemande().getHeureDepart()) + "\n";
+        instructions += "  Heure d'arrivée : " + simpleDateFormat.format(tournee.getHeureArrivee()) + "\n";
+        instructions += "  Durée du trajet : " + (tournee.getTotalDuration()) + " minutes\n";
+        instructions += "  Distance totale : " + (tournee.getTotalDistance()/1000) + " km\n\n";
+        instructions += "–––––––––––––––––––––––––––\n";
         for (Trajet t : trajets){
             switch (t.getType()) {
                 case COMEBACKHOME:
@@ -54,8 +64,6 @@ public class EcritureXML {
                     instructions += "• TRAJET : Livrer le colis de la livraison numéro " + t.getLivraison().getId() + "\n\n";
                     break;
             }
-            String pattern = "HH:mm";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
             instructions += "  Heure de départ : " + simpleDateFormat.format(t.getHeureDepart()) + "\n";
             instructions += "  Heure d'arrivée : " + simpleDateFormat.format(t.getHeureArrivee()) + "\n";
@@ -81,7 +89,7 @@ public class EcritureXML {
 
         String nomFeuille = tournee.getDemande().getNomDemande();
         String extension = ".txt";
-        String fichier = chemin + nomFeuille + extension;
+        String fichier = chemin + "/" + nomFeuille + extension;
 
         FileOutputStream fop =null;
         File file;
