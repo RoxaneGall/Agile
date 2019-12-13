@@ -117,31 +117,4 @@ class LectureXMLTest {
         }
         assertTrue(!testList.equals(null));
     }
-
-    @Test
-    void chargerFichierErreurType_shouldThrowException(){
-        Graphe.shared.clearGraph();
-        try {
-            lectureXML.chargerPlan("../datas/fichierErreurType");
-            fail("Le test doit lancer une exception car une destination est un String.");
-        }catch(Exception e){}
-    }
-
-    @Test
-    void chargerFichierNoeudManquant_shouldThrowException(){
-        Graphe.shared.clearGraph();
-        try {
-            lectureXML.chargerPlan("../datas/fichierNoeudManquant");
-            fail("Le test doit lancer une exception car le noeud d'un tronçon manque.");
-        }catch(Exception e){}
-    }
-
-    @Test
-    void chargerFichierLongueurNégative_shouldThrowException(){
-        Graphe.shared.clearGraph();
-        try {
-            lectureXML.chargerPlan("../datas/fichierLongueurNegative");
-            fail("Le test doit lancer une exception car une longueur est négative.");
-        }catch(Exception e){}
-    }
 }

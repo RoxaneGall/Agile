@@ -71,7 +71,6 @@ public class LectureXML {
                     lg = Double.parseDouble(attributes.getNamedItem("longitude").getNodeValue());
                     idIntersection = Long.parseLong(attributes.getNamedItem("id").getNodeValue());
                 } catch (Exception e) {
-                    e.printStackTrace();
                     throw new Exception("Les attributs du noeud correspondant à l'intersection " + ++countInter + "sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
                             " latitude et longitude sont des Double et id est un long.", e);
@@ -83,9 +82,9 @@ public class LectureXML {
                 Graphe.shared.addIntersection(myIntersection);
             }
 
-            String nomRue = null;
-            long idOrigine = 0, idDestination = 0;
-            Double longueur = null;
+            String nomRue;
+            long idOrigine, idDestination;
+            Double longueur;
             Intersection destination;
             if (rootNodes.item(i).getNodeName().equals("troncon")) {
                 if (countInter == 0) {
@@ -96,21 +95,14 @@ public class LectureXML {
                     idOrigine = Long.parseLong(attributes.getNamedItem("origine").getNodeValue());
                     idDestination = Long.parseLong(attributes.getNamedItem("destination").getNodeValue());
                     longueur = Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
-                    if (longueur < 0.0) {
-                        System.out.println(longueur);
-                        throw new IllegalArgumentException();
+                    if (longueur < 0) {
+                        throw new Exception("La longueur du tronçon ne peut pas être négative. \n" +
+                                " Veuillez rectifier cette longueur erronée.");
                     }
-                } catch(NullPointerException npe) {
-                    throw new NullPointerException("Informations manquantes au tronçon " + countTroncon++ + "\n");
-                } catch (NumberFormatException nfe) {
+                } catch (Exception e) {
                     throw new Exception("Les attributs du noeud correspondant au tronçon " + countTroncon++ + " sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
-                            " origine et destination sont des long, nomRue est un String et longueur est un Double.", nfe);
-                } catch (IllegalArgumentException iae) {
-                    throw new IllegalArgumentException("La longueur du tronçon ne peut pas être négative. \n" +
-                            " Veuillez rectifier cette longueur erronée.");
-                }  catch (Exception e) {
-                    throw new Exception("Problème dans le chargement du plan", e);
+                            " origine et destination sont des long, nomRue est un String et longueur est un Double.", e);
                 }
                 destination = Graphe.shared.getIntersectionMap().get(idDestination);
                 if (destination == null) {
