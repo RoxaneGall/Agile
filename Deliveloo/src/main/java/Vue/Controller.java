@@ -135,7 +135,7 @@ public class Controller implements ActionListener {
     /* cadrage de la map */
     public Extent mapExtent;
     /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 12;
+    public static final int ZOOM_DEFAULT = 14;
 
     /**
      * Attributs pour la tournee
