@@ -78,8 +78,8 @@ class LectureXMLTest {
     @Test
     void chargerDemandeGrand7_shouldSucceed() throws Exception {
         Demande testDemandeGrand7 = lectureXML.chargerDemande("../datas/demandeGrand7.xml");
-        assertTrue((BooleanSupplier) testDemandeGrand7.getHeureDepart());
-        assertTrue((BooleanSupplier) testDemandeGrand7.getEntrepot());
+        assertNotNull(testDemandeGrand7.getHeureDepart());
+        assertNotNull(testDemandeGrand7.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeGrand7.getEntrepot()));
         assertTrue(testDemandeGrand7.getLivraisons().size()==7);
     }
@@ -87,8 +87,8 @@ class LectureXMLTest {
     @Test
     void chargerDemandeMoyen3_shouldSucceed() throws Exception {
         Demande testDemandeMoyen3 = lectureXML.chargerDemande("../datas/demandeMoyen3.xml");
-        assertTrue((BooleanSupplier) testDemandeMoyen3.getHeureDepart());
-        assertTrue((BooleanSupplier) testDemandeMoyen3.getEntrepot());
+        assertNotNull(testDemandeMoyen3.getHeureDepart());
+        assertNotNull(testDemandeMoyen3.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeMoyen3.getEntrepot()));
         assertTrue(testDemandeMoyen3.getLivraisons().size()==3);
     }
@@ -96,8 +96,8 @@ class LectureXMLTest {
     @Test
     void chargerDemandePetit1_shouldSucceed() throws Exception {
         Demande testDemandePetit1 = lectureXML.chargerDemande("../datas/demandePetit1.xml");
-        assertTrue((BooleanSupplier) testDemandePetit1.getHeureDepart());
-        assertTrue((BooleanSupplier) testDemandePetit1.getEntrepot());
+        assertNotNull(testDemandePetit1.getHeureDepart());
+        assertNotNull(testDemandePetit1.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandePetit1.getEntrepot()));
         assertTrue(testDemandePetit1.getLivraisons().size()==1);
     }
