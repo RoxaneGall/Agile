@@ -538,12 +538,15 @@ public class Controller implements ActionListener {
         });
     }
 
+
     /**
      *
      */
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
+            mapView.removeCoordinateLine(trackTrajet);
+            mapView.removeCoordinateLine(trackPart);
             ajoutLivraison.setDisable(true);
             supprLivraison.setDisable(true);
             File selectedFile = null;
@@ -604,9 +607,6 @@ public class Controller implements ActionListener {
                 Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
                 URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
                 markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
-                //  markerDelivery = Marker.createProvided(Marker.Provided.RED).setPosition(delivery);
-
-
                 deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
                 deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
             }
