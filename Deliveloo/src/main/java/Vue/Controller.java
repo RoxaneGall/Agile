@@ -468,6 +468,9 @@ public class Controller implements ActionListener {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(dEnlevement.getText(), dLivraison.getText());
             }
+            //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
+            mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
+            mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
             return null;
         });
         Optional<Pair<String, String>> result = dialog.showAndWait();
@@ -527,6 +530,9 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             disableButtonsTournee(true);
             File selectedFile = null;
+            labelTourneeDistance.setText(" ");
+            labelTourneeNbLivraison.setText(" ");
+            labelTourneeTemps.setText(" ");
             mapView.removeCoordinateLine(trackPart);
             mapView.removeCoordinateLine(trackTrajet);
 
