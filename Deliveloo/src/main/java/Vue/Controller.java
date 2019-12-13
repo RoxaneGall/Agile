@@ -525,6 +525,9 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             disableButtonsTournee(true);
             File selectedFile = null;
+            mapView.removeCoordinateLine(trackPart);
+            mapView.removeCoordinateLine(trackTrajet);
+
             try {
                 System.out.println("Chargement d'une demande");
                 selectedFile = fileChooser.showOpenDialog(primaryStage);
