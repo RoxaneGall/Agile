@@ -544,6 +544,7 @@ public class Controller implements ActionListener {
     private void setButtonChargerDemande() {
         chargerDemande.setOnAction(event -> {
             // enable le bouton charger demande avec l'event correspondant
+            mapView.removeCoordinateLine(trackTrajet);
             ajoutLivraison.setDisable(true);
             supprLivraison.setDisable(true);
             File selectedFile = null;
