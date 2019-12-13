@@ -197,6 +197,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                     idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                     SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
                     myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
+                    demande.setHeureDepart(myDate);
                 } catch (Exception e) {
                     throw new Exception("Les attributs de l'entrepot sont mal renseignés. \n" +
                             "Veuillez respecter le format des attributs suivant : \n" +
