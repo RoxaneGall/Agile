@@ -529,6 +529,9 @@ public class Controller implements ActionListener {
             // enable le bouton charger demande avec l'event correspondant
             disableButtonsTournee(true);
             File selectedFile = null;
+            labelTourneeDistance.setText(" ");
+            labelTourneeNbLivraison.setText(" ");
+            labelTourneeTemps.setText(" ");
             mapView.removeCoordinateLine(trackPart);
             mapView.removeCoordinateLine(trackTrajet);
 
