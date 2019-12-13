@@ -423,7 +423,6 @@ public class Controller implements ActionListener {
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
-            isAlreadyAddingLivraison = true;
         });
     }
 
@@ -467,7 +466,7 @@ public class Controller implements ActionListener {
 
         // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType && !dEnlevement.getText().isEmpty() && !dLivraison.getText().isEmpty()) {
+            if (dialogButton == loginButtonType) {
                 return new Pair<>(dEnlevement.getText(), dLivraison.getText());
             }
             //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
@@ -480,9 +479,9 @@ public class Controller implements ActionListener {
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
         demande = nvTournee.getDemande();
-        if (indexHistorique < historique.size() - 1) {
-            for (int i = indexHistorique + 1; i < historique.size(); i++) {
-                System.out.println("CLEAR historique for index=" + i);
+        if (indexHistorique < historique.size()-1) {
+            for(int i = indexHistorique+1; i<historique.size(); i++) {
+                System.out.println("CLEAR historique for index="+i);
                 historique.remove(i);
             }
         }
@@ -490,19 +489,13 @@ public class Controller implements ActionListener {
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
-    Boolean isAlreadyAddingLivraison = false;
 
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
-
-            if (!isAlreadyAddingLivraison) {
-                isAlreadyAddingLivraison = true;
-                ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
-                ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
-                addRightClickEvent(interLivraison);
-            }
+            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
+            ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
+            addRightClickEvent(interLivraison);
         });
-
     }
 
     /**
@@ -729,10 +722,7 @@ public class Controller implements ActionListener {
     private void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
         if (demande != null) {
-            disableButtonsTournee(false); // les boutons tournées sont cliquables
-            // On supprime les infos de l'ancienne tournée de l'IHM
-            clearTournee();
-            if (historique.size() == 0 || historique.contains(tournee) != true) {
+            if (historique.size()==0 || historique.contains(tournee)!=true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
@@ -742,9 +732,9 @@ public class Controller implements ActionListener {
             Coordinate origine;
             Trajet trajet;
 
-            labelTourneeDistance.setText("Distance: " + t.getTotalDistance() / 1000 + "km");
-            labelTourneeTemps.setText("Temps: " + t.getTotalDuration() + "min");
-            labelTourneeNbLivraison.setText("Nombre de livraisons: " + t.getDemande().getLivraisons().size());
+            labelTourneeDistance.setText("Distance: "+t.getTotalDistance()/1000+"km");
+            labelTourneeTemps.setText("Temps: "+t.getTotalDuration()+"min");
+            labelTourneeNbLivraison.setText("Nombre de livraisons: "+t.getDemande().getLivraisons().size());
 
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
@@ -763,7 +753,7 @@ public class Controller implements ActionListener {
                 String infoButton = "";
                 Long idLivr;
                 if (i == 0) {
-                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(t.getHeureArrivee());
+                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : "+ formater.format(t.getHeureArrivee());
 
                     ToggleButton button = new ToggleButton();
                     button.setText(infoButton);
@@ -779,7 +769,7 @@ public class Controller implements ActionListener {
                 ToggleButton button = new ToggleButton();
                 if (i == t.getTrajets().size() - 1) {
                     idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                    infoButton = i + 1 + " - Retour à l'entrepôt"  + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -790,9 +780,9 @@ public class Controller implements ActionListener {
                 } else {
                     idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
@@ -849,7 +839,7 @@ public class Controller implements ActionListener {
         } else {
             retour.setDisable(true);
         }
-        if (indexHistorique < historique.size() - 1) {
+        if (indexHistorique<historique.size()-1) {
             suivant.setDisable(value);
         } else {
             suivant.setDisable(true);

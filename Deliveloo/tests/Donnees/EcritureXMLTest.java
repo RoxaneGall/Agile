@@ -33,7 +33,7 @@ public class EcritureXMLTest {
         Intersection i = new Intersection(25610888,c);
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
         Date date = formatter.parse("8:0:0");
-        Demande d = new Demande(i,date);
+        Demande d = new Demande(i,date,"nomDemande");
         Service service = new Service();
         service.calculerTournee(d);
         Tournee t = service.recupererTournee();
@@ -50,7 +50,7 @@ public class EcritureXMLTest {
         Intersection i = new Intersection(25610888,c);
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
         Date date = formatter.parse("8:0:0");
-        Demande d = new Demande(i,date);
+        Demande d = new Demande(i,date,"nomDemande");
         Service service = new Service();
         service.calculerTournee(d);
         Tournee t = service.recupererTournee();
@@ -65,7 +65,7 @@ public class EcritureXMLTest {
         Intersection i = new Intersection(25610888,c);
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
         Date date = formatter.parse("8:0:0");
-        Demande d = new Demande(i,date);
+        Demande d = new Demande(i,date,"nomDemande");
         Service service = new Service();
         service.calculerTournee(d);
         Tournee t = service.recupererTournee();
@@ -81,7 +81,7 @@ public class EcritureXMLTest {
         Intersection i = new Intersection(25610888,c);
         SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
         Date date = formatter.parse("8:0:0");
-        Demande d = new Demande(i,date);
+        Demande d = new Demande(i,date,"nomDemande");
         Service service = new Service();
         service.calculerTournee(d);
         Tournee t = service.recupererTournee();

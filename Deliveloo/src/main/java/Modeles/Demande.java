@@ -11,11 +11,13 @@ public class Demande {
     private ArrayList<Livraison> livraisons;
     private Intersection entrepot;
     private Date heureDepart;
+    private String nomDemande;
 
-    public Demande(Intersection entrepot, Date heureDepart) {
+    public Demande(Intersection entrepot, Date heureDepart, String nomDemande) {
         this.livraisons = new ArrayList<>();
         this.entrepot = entrepot;
         this.heureDepart = heureDepart;
+        this.nomDemande = nomDemande;
     }
 
     public ArrayList<Livraison> getLivraisons() {
@@ -49,4 +51,8 @@ public class Demande {
     public void setHeureDepart(Date heureDepart) {
         this.heureDepart = heureDepart;
     }
+
+    public String getNomDemande() {return nomDemande;}
+
+    public void setNomDemande(String nomDemande){ this.nomDemande = nomDemande;}
 }
