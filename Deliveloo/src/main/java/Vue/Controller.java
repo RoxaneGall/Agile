@@ -570,8 +570,6 @@ public class Controller implements ActionListener {
                 Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
                 URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
                 markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
-                //    markerPickUp = Marker.createProvided(Marker.Provided.ORANGE).setPosition(pickUp);
-
                 Marker markerDelivery;
                 Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
                 URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
