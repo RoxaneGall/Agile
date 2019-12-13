@@ -478,6 +478,7 @@ public class Controller implements ActionListener {
         demande = nvTournee.getDemande();
         if (indexHistorique < historique.size()-1) {
             for(int i = indexHistorique+1; i<historique.size(); i++) {
+                System.out.println("CLEAR historique for index="+i);
                 historique.remove(i);
             }
         }
