@@ -1,8 +1,8 @@
 package Donnees;
 
-import Modeles.Demande;
-import Modeles.Intersection;
-import Modeles.Tournee;
+import Modele.Demande;
+import Modele.Intersection;
+import Modele.Tournee;
 import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.AfterEach;

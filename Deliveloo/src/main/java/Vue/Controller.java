@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modeles.*;
+import Modele.*;
 import Donnees.*;
 
 import javafx.geometry.Insets;
@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
-import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
-import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -312,6 +310,8 @@ public class Controller implements ActionListener {
      */
     public void chargerPlan(String path) {
         System.out.println("Chargement du plan " + path);
+        clearTournee();
+        clearDemande();
         try {
             ArrayList<Coordinate> limites = service.chargerPlan(path);
             System.out.println("Limites du plan :" + limites);
@@ -423,6 +423,7 @@ public class Controller implements ActionListener {
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
+            isAlreadyAdding=false;
         });
     }
 
@@ -479,9 +480,11 @@ public class Controller implements ActionListener {
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
         demande = nvTournee.getDemande();
+
         if (indexHistorique < historique.size()-1) {
-            for(int i = indexHistorique+1; i<historique.size(); i++) {
-                System.out.println("CLEAR historique for index="+i);
+            int historiqueSize = historique.size();
+            for (int i = historiqueSize - 1; i > indexHistorique; i--) {
+                System.out.println("CLEAR historique for index=" + i);
                 historique.remove(i);
             }
         }
@@ -489,12 +492,15 @@ public class Controller implements ActionListener {
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
-
+    Boolean isAlreadyAdding = false;
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
-            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
-            ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
-            addRightClickEvent(interLivraison);
+            if (!isAlreadyAdding){
+                isAlreadyAdding=true;
+                ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
+                ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
+                addRightClickEvent(interLivraison);
+            }
         });
     }
 
@@ -721,14 +727,15 @@ public class Controller implements ActionListener {
 
     private void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
-        if (demande != null) {disableButtonsTournee(false); // les boutons tournées sont cliquables
-            // On supprime les infos de l'ancienne tournée de l'IHM
-            clearTournee();
+        if (demande != null) {
             if (historique.size() == 0 || historique.contains(tournee) != true) {
                 // On ajoute la tournée à l'historique
                 historique.add(tournee);
                 indexHistorique++;
             }
+            disableButtonsTournee(false); // les boutons tournées sont cliquables
+            // On supprime les infos de l'ancienne tournée de l'IHM
+            clearTournee();
             // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
             int compteur = 1;
             Coordinate origine;

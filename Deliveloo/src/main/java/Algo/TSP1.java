@@ -1,6 +1,6 @@
 package Algo;
 
-import Modeles.Trajet;
+import Modele.Trajet;
 
 import java.util.ArrayList;
 import java.util.Comparator;

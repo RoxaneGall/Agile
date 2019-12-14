@@ -1,16 +1,12 @@
 package Algo;
 
 import Donnees.EcritureXML;
-import Donnees.LectureXML;
-import Modeles.Demande;
-import Modeles.Graphe;
-import Modeles.Tournee;
+import Modele.Demande;
+import Modele.Tournee;
 import Service.Service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TSP1Test {
 
