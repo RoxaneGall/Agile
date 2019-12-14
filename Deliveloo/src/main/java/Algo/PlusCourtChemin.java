@@ -1,8 +1,8 @@
 package Algo;
 
-import Modele.Intersection;
-import Modele.Trajet;
-import Modele.Troncon;
+import Modeles.Intersection;
+import Modeles.Trajet;
+import Modeles.Troncon;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
-import Modele.*;
+import Modeles.*;
 import org.w3c.dom.*;
 
 import java.io.IOException;

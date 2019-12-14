@@ -1,6 +1,12 @@
 package Vue;
 
+import Donnees.LectureXML;
+import Modeles.Demande;
+import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Extent;
+import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.Projection;
 import com.sun.javafx.application.ParametersImpl;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -10,6 +16,12 @@ import javafx.application.Application;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import javafx.application.Application;
+
+import javax.swing.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
     @Test

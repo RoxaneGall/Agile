@@ -1,4 +1,6 @@
-package Modele;
+package Modeles;
+
+import com.sothawo.mapjfx.Coordinate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
