@@ -35,7 +35,7 @@ public class Computations {
      */
     public static void betterResultFound() {
         ActionEvent action = new ActionEvent(tsp1,1,"newResultFound");
-        if (delegate!=null)
+        if (delegate != null)
             delegate.actionPerformed(action);
     }
 
@@ -44,7 +44,7 @@ public class Computations {
      */
     public static void lastResultIsBestResult() {
         ActionEvent action = new ActionEvent(tsp1,0,"ended");
-        if (delegate!=null)
+        if (delegate != null)
             delegate.actionPerformed(action);
     }
 
