@@ -35,7 +35,7 @@ public class LectureXML {
 
     public void chargerPlan(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
-            throw new Exception(01+"Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
+            throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
         }
 
         Document document = null;
@@ -156,7 +156,8 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         Intersection entrepot = new Intersection();
 
         Long countDeliveries= new Long(0);
-        Demande demande = new Demande(entrepot, myDate);
+        String nomDemande = cheminFichier.substring(cheminFichier.replace("\\","/").lastIndexOf("/")+1,cheminFichier.lastIndexOf("."));
+        Demande demande = new Demande(entrepot, myDate, nomDemande);
         for(int i=0; i<nbRootNodes; i++){
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
@@ -196,6 +197,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                     idEntrepot = Long.parseLong(attributes.getNamedItem("adresse").getNodeValue());
                     SimpleDateFormat formatter = new SimpleDateFormat("H:m:s");
                     myDate = formatter.parse(attributes.getNamedItem("heureDepart").getNodeValue());
+                    demande.setHeureDepart(myDate);
                 } catch (Exception e) {
                     throw new Exception("Les attributs de l'entrepot sont mal renseignés. \n" +
                             "Veuillez respecter le format des attributs suivant : \n" +
@@ -282,7 +284,7 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
                 res = i;
             }
         }
-        if (distanceMin>0.001)
+        if (distanceMin>0.002)
             return null;
         return res;
     }

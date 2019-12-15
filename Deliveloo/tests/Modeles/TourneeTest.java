@@ -24,7 +24,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 
@@ -51,7 +51,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d, "nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 
@@ -87,7 +87,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d, "nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 
@@ -150,7 +150,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 
@@ -180,7 +180,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 
@@ -221,7 +221,7 @@ class TourneeTest {
         Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
         Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
 
-        Demande dmd = new Demande( inter, d);
+        Demande dmd = new Demande( inter, d,"nomDemande");
         dmd.addLivraison(i1,i2,30,160);
         dmd.addLivraison(inter,i3,45,450);
 

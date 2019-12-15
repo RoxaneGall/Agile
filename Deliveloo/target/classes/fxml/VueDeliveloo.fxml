@@ -11,13 +11,20 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0"
             prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Vue.Controller">
+    <fx:define>
+        <Image fx:id="undoImage" url="file:../datas/logos/undo.png" />
+        <Image fx:id="redoImage" url="file:../datas/logos/redo.png" />
+    </fx:define>
     <top>
-        <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER" style="-fx-background-color: white;">
             <children>
                 <HBox fx:id="topControls" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                     <children>
@@ -43,39 +50,25 @@
     </center>
 
     <bottom>
-        <VBox prefHeight="80.0" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
-            <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="80.0" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER" style="-fx-background-color: white;">
+            <HBox prefHeight="80.0" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                 <children>
                     <Button fx:id="chargerPlan" text="Changer de plan"/>
                     <Button fx:id="chargerDemande" text="Charger Demande"/>
                     <Button fx:id="calculTournee" text="Calculer Tournée"/>
                     <Button fx:id="stopTournee" text="STOP"/>
-                    <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0"/>
+                    <ProgressIndicator fx:id="loading" layoutX="78.0" layoutY="55.0" maxHeight="40" maxWidth="40"/>
+                    <Label fx:id="labelTourneeDistance" text=""/>
+                    <Label fx:id="labelTourneeTemps" text=""/>
+                    <Label fx:id="labelTourneeNbLivraison" text=""/>
                 </children>
-                <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-                </padding>
             </HBox>
-            <HBox prefHeight="80.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
-                <children>
-                    <Label fx:id="labelCenter" text="Center: "/>
-                    <Label fx:id="labelExtent" text="Extent: "/>
-                    <Label fx:id="labelZoom" text="Zoom: "/>
-                    <Label fx:id="labelEvent" text="Event: "/>
-                </children>
-                <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-                </padding>
-            </HBox>
-            <padding>
-                <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
-            </padding>
         </VBox>
     </bottom>
     <right>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" style="-fx-background-color: white;">
             <children>
-                <ScrollPane fx:id="scroll" prefWidth="350.0" prefHeight="800.0">
+                <ScrollPane fx:id="scroll" prefWidth="200.0" prefHeight="800.0">
                     <content>
                         <VBox fx:id="detailsLivraisons" spacing="10.0">
                             <children>
@@ -88,11 +81,20 @@
                     </content>
                 </ScrollPane>
 
-                <HBox fx:id="addOrSuppr" prefHeight="40.0" alignment="CENTER" spacing="50.0" BorderPane.alignment="CENTER">
+                <HBox fx:id="addOrSuppr" prefHeight="40.0" alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                     <children>
                         <Button fx:id="ajoutLivraison" text="Ajouter"/>
                         <Button fx:id="supprLivraison" text="Supprimer"/>
-                        <Button fx:id="retour" text="BACK" />
+                        <Button fx:id="retour">
+                            <graphic>
+                                <ImageView image="$undoImage" fitHeight="20.0" fitWidth="20.0" preserveRatio="true"></ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="suivant">
+                            <graphic>
+                                <ImageView image="$redoImage" fitHeight="20.0" fitWidth="20.0" preserveRatio="true"></ImageView>
+                            </graphic>
+                        </Button>
                         <Button fx:id="exportFeuille" text="Feuille de route"/>
                     </children>
                     <padding>
