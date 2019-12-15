@@ -53,15 +53,20 @@ import static org.apache.commons.lang3.tuple.MutableTriple.of;
 
 public class Controller implements ActionListener {
 
+    /**
+     * Attributs utiles au fonctionnement global de l'IHM
+     */
     public Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser(); // explorateur pour sélectionner un fichier
     public DirectoryChooser directoryChooser = new DirectoryChooser(); // explorateur pour sélectionner un dossier
-    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm"); //
+    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm"); // permet de formater les objets Date au format HH:mm
+    public String path = "file://" + System.getProperty("user.dir").replace('\\', '/').substring(0, System.getProperty("user.dir").replace('\\', '/').lastIndexOf('/'));
+    // path correspondant au chemin du dossier contenant ce code
 
     /**
-     * JFX Elements des principales fonctionnalités de l'application
+     * Composants JFX des principales fonctionnalités de l'application
      * partie en bas (bottom) de l'IHM
      */
     @FXML
@@ -71,108 +76,90 @@ public class Controller implements ActionListener {
     @FXML
     public Button calculTournee; // calcul la tournée de la demande actuellement chargée
     @FXML
-    public Button stopTournee;
+    public Button stopTournee; // bouton de stop qui arrête le calcul de la tournée optimale en cours
     @FXML
-    public ProgressIndicator loading = new ProgressIndicator();
-    @FXML
-    public Text ajoutPickUp;
+    public ProgressIndicator loading = new ProgressIndicator(); // indicateur de calcul de la tournée optimale en cours
 
     /**
-     * Carte
+     * Composant JFX de la Carte
      */
     @FXML
-    public MapView mapView;
-
-    /**
-     * FX Elements de controle de l'affichage de la carte
-     * partie haute de l'IHM
-     */
-    /* the box containing the top controls, must be enabled when mapView is initialized */
-    @FXML
-    public HBox topControls; // POURQUOI ON DECLARE CETTE HBOX ET PAS LES AUTRES ?
-    /* slider pour régler le zoom */
-    @FXML
-    public Slider sliderZoom;
-    @FXML
-    public Button buttonZoom;
-    /* button to reset the map's extent. */
-    @FXML
-    public Button buttonResetExtent;
-
-    /**
-     * FX Elements d'affichage sur la tournée demandée
-     * panneau à droite de l'IHM
-     */
-    /* section contenant les infos sur les livraisons  */
-    @FXML
-    public VBox detailsLivraisons;
-    @FXML
-    public Button supprLivraison;
-    @FXML
-    public Button ajoutLivraison;
-    @FXML
-    public Button exportFeuille;
-    @FXML
-    public ScrollPane scroll;
-    @FXML
-    public ToggleGroup groupButtons = new ToggleGroup();
-
-    public ToggleButton lastSelected;
-    public ToggleButton lastPairSelected;
-    public HashMap<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> livrButtons = new HashMap<>();
-
-    /**
-     * FX elements d'affichage pour debug
-     * partie basse de l'IHM
-     */
-    /* Label de debug pour afficher les infos sur la map et les events */
-    @FXML
-    public Label labelTourneeDistance;
-    @FXML
-    public Label labelTourneeTemps;
-    @FXML
-    public Label labelTourneeNbLivraison;
-
-    public String path = "file://" + System.getProperty("user.dir").replace('\\', '/').substring(0, System.getProperty("user.dir").replace('\\', '/').lastIndexOf('/'));
-
+    public MapView mapView; // composant mapJFX de www.sothawo.com
     /**
      * Attributs pour définir le plan
      */
-    /* cadrage de la map */
-    public Extent mapExtent;
-    /* default zoom value. */
-    public static final int ZOOM_DEFAULT = 14;
+    public Extent mapExtent; // correspondant au cadrage de la carte
+    public static final int ZOOM_DEFAULT = 14; // valeur par défaut du ZOOM
 
+    /**
+     * Composants JFX de controle de l'affichage de la carte
+     * partie haute (top) de l'IHM
+     */
+    @FXML
+    public HBox topControls; // conteneur des controls de la carte
+    @FXML
+    public Slider sliderZoom; // slider pour régler le zoom
+    @FXML
+    public Button buttonZoom; // button pour reset le zoom de la carte
+    @FXML
+    public Button buttonResetExtent; // bouton pour reset le cadrage de la carte
+
+    /**
+     * Composants JFX  d'affichage de tournée
+     * partie droite (right) de l'IHM
+     */
+    @FXML
+    public VBox detailsLivraisons; // conteneur des détails des livraisons
+    @FXML
+    public ScrollPane scroll; // permet de pouvoir scroller sur le conteneur
+    @FXML
+    public Button supprLivraison; // bouton pour supprimer la livraison sélectionnée
+    @FXML
+    public Button ajoutLivraison; // bouton pour ajouter une livraison à la demande
+    @FXML
+    public Text ajoutPickUp; // texte donnant les instructions pour ajouter une livraison
+    @FXML
+    public Button exportFeuille; // bouton pour exporter une feuille de route
+
+    @FXML
+    public ToggleGroup groupButtons = new ToggleGroup(); // groupe des boutons de livraisons
+    public ToggleButton lastSelected; // dernier bouton sélectionné
+    public ToggleButton lastPairSelected; // bouton jumelé au dernier bouton sélectionné
+    /* Des boutons sont dits jumelés ou "paired" s'ils appartiennent à une même livraison (pick-up ou delivery) */
+    public HashMap<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> livrButtons = new HashMap<>(); // stockage des différents boutons et de leurs informations utiles
+
+    @FXML
+    public Label labelTourneeDistance; // distance totale de la tournée
+    @FXML
+    public Label labelTourneeTemps; // durée totale de la tournée
+    @FXML
+    public Label labelTourneeNbLivraison; // nombre de livraisons de la tournée
     /**
      * Attributs pour la tournee
      */
     public Demande demande; // demande de départ obtenue avec chargerDemande
-    public Tournee tournee; // tournee calculée, qui contient donc également la demande, utilisée également quand on modifie la demande avec Ajout/Suppr
-    public ArrayList<Tournee> historique = new ArrayList<>(); // liste historique des tournees calculées, au clique de précédent ou suivant on charge la tournee correspondante de l'historique
+    public Tournee tournee; // tournée calculée, utilisée quand on modifie la demande avec Ajout/Suppression de livraison
+    public ArrayList<Tournee> historique = new ArrayList<>(); // historique des tournees calculées
+    public int indexHistorique = -1; // au clique de précédent ou suivant on charge la tournee correspondante à cet index de l'historique
+    @FXML
     public Button retour;
+    @FXML
     public Button suivant;
-    public int indexHistorique = -1;
 
-    /* Entrepot */
     public Coordinate entrepot;
     public Marker entrepotMarker;
-    /* Livraisons */
-    public HashMap<Coordinate, Marker> deliveriesMarkers = new HashMap<>();
-    public HashMap<Coordinate, MapLabel> deliveriesNumbers = new HashMap<>();
+
+    public HashMap<Coordinate, Marker> deliveriesMarkers = new HashMap<>(); // marqueurs visuels des livraisons sur la carte
+    public HashMap<Coordinate, MapLabel> deliveriesNumbers = new HashMap<>(); // numéros correspondant à l'ordre de passge des livraisons
+
+    public CoordinateLine trackTrajet = new CoordinateLine(); // Ligne du trajet de la tournée
+    public ArrayList<Coordinate> tourneeCoordinate = new ArrayList<>(); // Coordonnées traversées par la tournée
+
+    public CoordinateLine trackPart = new CoordinateLine(); // Ligne du trajet d'une partie seulement de la tournée
+    public ArrayList<Coordinate> tourneePartCoordinate = new ArrayList<>(); // Coordonnées de la tournée traversées jusqu'à la livraison sélectionnée
 
     /**
-     * Attributs pour le trajet/la tournee
-     */
-    public ArrayList<Coordinate> tourneeCoordinate = new ArrayList<>();
-    public ArrayList<Coordinate> tourneePartCoordinate = new ArrayList<>();
-    /* Ligne du trajet de la tournée (Coordinateline) */
-    // Pour les couleurs en JFX : go là https://docs.oracle.com/javase/8/javafx/api/javafx/scene/paint/Color.html
-    public CoordinateLine trackTrajet = new CoordinateLine();
-    /* Ligne du trajet d'une partie seulement de la tournée (Coordinateline) */
-    public CoordinateLine trackPart = new CoordinateLine();
-
-    /**
-     * Parametres pour le serveur WMS
+     * Parametres pour le serveur WMS utilisés par la composant mapView
      */
     public WMSParam wmsParam = new WMSParam()
             .setUrl("http://ows.terrestris.de/osm/service?")
@@ -183,8 +170,9 @@ public class Controller implements ActionListener {
             .withAttributions(
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
 
-    public Controller() throws Exception {
-    }
+
+    public Controller() throws Exception {    }
+
 
     /**
      * Méthode d'initialisation de l'IHM
@@ -258,7 +246,8 @@ public class Controller implements ActionListener {
     }
 
     /**
-     *
+     * Méthode permettant de mettre en cache les données chargées de la carte
+     * Cela évite des rechargements nuisant au fonctionnement de l'application.
      */
     private void createMapCache() {
         // init MapView-Cache
@@ -273,30 +262,23 @@ public class Controller implements ActionListener {
         }
     }
 
-    /**
-     * Méthode appelée une fois que l'IHM est initialisée
-     * --> On charge le grand plan
-     */
-    private void afterMapIsInitialized() {
-        chargerPlan("../datas/grandPlan.xml");
-    }
-
-    /**
-     *
+     /**
+     *  Gestionnaire des évènements d'interaction avec la carte (déplacement, zoom)
      */
     public void eventHandlers() {
-
         // add an event handler for MapViewEvent#MAP_EXTENT and set the extent in the map
         mapView.addEventHandler(MapViewEvent.MAP_EXTENT, event -> {
             event.consume();
             mapView.setExtent(event.getExtent());
         });
-
         // add an event handler for extent changes and display them in the status label
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
         });
     }
-
+    
+    /**
+     *
+     */
     public void setButtonChargerPlan() {
         chargerPlan.setOnAction(event -> {
             selectPlan();
