@@ -15,8 +15,7 @@ class TSP1Test {
 
 
     @Test
-    void petitPlanEtPetiteDemande_timeoutNotExceeded1second()
-    {
+    void petitPlanEtPetiteDemande_timeoutNotExceeded1second() {
         //The following assertion succeeds.
         assertTimeout(ofSeconds(1), () -> {
             Service service = new Service();
@@ -28,8 +27,7 @@ class TSP1Test {
     }
 
     @Test
-    void moyenPlanEtMoyenneDemande_timeoutNotExceeded1second()
-    {
+    void moyenPlanEtMoyenneDemande_timeoutNotExceeded1second() {
         //The following assertion succeeds.
         assertTimeout(ofMillis(1500), () -> {
             Service service = new Service();
@@ -41,8 +39,7 @@ class TSP1Test {
     }
 
     @Test
-    void grandPlanEtGrandeDemande_timeoutNotExceeded1second()
-    {
+    void grandPlanEtGrandeDemande_timeoutNotExceeded1second() {
         //The following assertion succeeds.
         assertTimeout(ofSeconds(5), () -> {
             Service service = new Service();
@@ -80,7 +77,7 @@ class TSP1Test {
 
 
     @Test
-    void realiserTourneeDepuisPetitPlanEtDeuxLivraisonsMemeEndroit_shouldSucceed(){
+    void realiserTourneeDepuisPetitPlanEtDeuxLivraisonsMemeEndroit_shouldSucceed() {
         assertTimeout(ofSeconds(1), () -> {
             Service service = new Service();
             service.chargerPlan("../datas/petitPlan.xml");
@@ -91,7 +88,7 @@ class TSP1Test {
     }
 
     @Test
-    void realiserTourneeDepuisPetitPlanEtSamePUEtD_shouldSucceed(){
+    void realiserTourneeDepuisPetitPlanEtSamePUEtD_shouldSucceed() {
         assertTimeout(ofSeconds(1), () -> {
             Service service = new Service();
             service.chargerPlan("../datas/petitPlan.xml");

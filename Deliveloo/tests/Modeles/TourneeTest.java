@@ -19,14 +19,14 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d,"nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         tournee = new Tournee(dmd);
 
@@ -35,7 +35,7 @@ class TourneeTest {
 
         //Assert
         assertNotNull(actualD);
-        assertEquals(dmd,actualD);
+        assertEquals(dmd, actualD);
     }
 
     @Test
@@ -46,14 +46,14 @@ class TourneeTest {
         Date d = new Date();
 
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d, "nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);
@@ -69,9 +69,9 @@ class TourneeTest {
 
         //Assert
         assertNotNull(actualT);
-        assertEquals(t1,actualT.toArray()[0]);
-        assertEquals(t2,actualT.toArray()[1]);
-        assertEquals(t3,actualT.toArray()[2]);
+        assertEquals(t1, actualT.toArray()[0]);
+        assertEquals(t2, actualT.toArray()[1]);
+        assertEquals(t3, actualT.toArray()[2]);
     }
 
     @Test
@@ -82,14 +82,14 @@ class TourneeTest {
         Date d = new Date();
 
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d, "nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         Trajet t1 = new Trajet(i1);
 
@@ -101,7 +101,7 @@ class TourneeTest {
 
         //Assert
         assertNotNull(actualL);
-        assertEquals(0,actualL);
+        assertEquals(0, actualL);
     }
 
     /*@Test
@@ -145,14 +145,14 @@ class TourneeTest {
         Date d = new Date();
 
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d,"nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         Trajet t1 = new Trajet(i1);
 
@@ -164,8 +164,8 @@ class TourneeTest {
         //Assert
         ArrayList<Trajet> actualT = tournee.getTrajets();
         assertNotNull(actualT);
-        assertEquals(1,actualT.size());
-        assertEquals(t1,actualT.toArray()[0]);
+        assertEquals(1, actualT.size());
+        assertEquals(t1, actualT.toArray()[0]);
     }
 
     @Test
@@ -175,19 +175,19 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d,"nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);
         Trajet t3 = new Trajet(i3);
-        ArrayList<Trajet> ts= new ArrayList<>();
+        ArrayList<Trajet> ts = new ArrayList<>();
         ts.add(t1);
         ts.add(t2);
         ts.add(t3);
@@ -200,11 +200,11 @@ class TourneeTest {
         //Assert
         ArrayList<Trajet> actualT = tournee.getTrajets();
         assertNotNull(actualT);
-        assertEquals(ts.size(),actualT.size());
+        assertEquals(ts.size(), actualT.size());
 
         int i = 0;
-        for (Trajet t: ts) {
-            assertEquals(t,actualT.toArray()[i]);
+        for (Trajet t : ts) {
+            assertEquals(t, actualT.toArray()[i]);
             i++;
         }
     }
@@ -216,19 +216,19 @@ class TourneeTest {
         long initialId = 34;
         Date d = new Date();
 
-        Intersection inter = new Intersection(initialId,p);
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
+        Intersection inter = new Intersection(initialId, p);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
 
-        Demande dmd = new Demande( inter, d,"nomDemande");
-        dmd.addLivraison(i1,i2,30,160);
-        dmd.addLivraison(inter,i3,45,450);
+        Demande dmd = new Demande(inter, d, "nomDemande");
+        dmd.addLivraison(i1, i2, 30, 160);
+        dmd.addLivraison(inter, i3, 45, 450);
 
         Trajet t1 = new Trajet(i1);
         Trajet t2 = new Trajet(i2);
         Trajet t3 = new Trajet(i3);
-        ArrayList<Trajet> ts= new ArrayList<>();
+        ArrayList<Trajet> ts = new ArrayList<>();
         ts.add(t1);
         ts.add(t2);
         ts.add(t3);
@@ -241,12 +241,12 @@ class TourneeTest {
 
         //Assert
         String txt = "";
-        for (Trajet trajet: ts) {
+        for (Trajet trajet : ts) {
             txt += "\n" + trajet.toString();
         }
-        String expectedT =  "Tournee{" + "trajets=" + txt + '}';
+        String expectedT = "Tournee{" + "trajets=" + txt + '}';
 
         assertNotNull(actualT);
-        assertEquals(expectedT,actualT);
+        assertEquals(expectedT, actualT);
     }
 }

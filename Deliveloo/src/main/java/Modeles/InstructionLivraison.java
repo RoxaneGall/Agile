@@ -16,11 +16,16 @@ public class InstructionLivraison {
         @Override
         public String toString() {
             switch (this) {
-                case DROITE: return "prenez à droite";
-                case GAUCHE: return "prenez à gauche";
-                case LEGERDROIT: return "tournez légèrement à droite";
-                case LEGERGAUCHE: return "tournez légèrement à gauche";
-                case TOUTDROIT: return "continuez tout droit";
+                case DROITE:
+                    return "prenez à droite";
+                case GAUCHE:
+                    return "prenez à gauche";
+                case LEGERDROIT:
+                    return "tournez légèrement à droite";
+                case LEGERGAUCHE:
+                    return "tournez légèrement à gauche";
+                case TOUTDROIT:
+                    return "continuez tout droit";
             }
             return "";
         }
@@ -31,7 +36,6 @@ public class InstructionLivraison {
     private double distance;
 
     /**
-     *
      * @param nomRue
      * @param direction
      * @param distance
@@ -43,7 +47,6 @@ public class InstructionLivraison {
     }
 
     /**
-     *
      * @return le nom de la rue sur laquelle on se trouve
      */
     public String getNomRue() {
@@ -51,7 +54,6 @@ public class InstructionLivraison {
     }
 
     /**
-     *
      * @return la direction a prendre pour emprunter le troncon suivant
      */
     public Direction getDirection() {
@@ -59,7 +61,6 @@ public class InstructionLivraison {
     }
 
     /**
-     *
      * @return la distance sur laquelle on parcourt le troncon
      */
     public Double getDistance() {
@@ -70,10 +71,10 @@ public class InstructionLivraison {
     public String toString() {
         String rueTxt = "";
         if (nomRue != "") {
-            rueTxt = " sur "+nomRue;
+            rueTxt = " sur " + nomRue;
         }
         if (direction == Direction.NONE)
-            return "Continuez"+rueTxt+".";
-        return "Dans "+((int) distance)+" mètres, "+direction.toString()+rueTxt+".";
+            return "Continuez" + rueTxt + ".";
+        return "Dans " + ((int) distance) + " mètres, " + direction.toString() + rueTxt + ".";
     }
 }

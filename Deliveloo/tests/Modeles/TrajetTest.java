@@ -16,7 +16,7 @@ class TrajetTest {
     @Test
     void getHeureDepartTest_ShouldReturnHeureDepartAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
@@ -25,13 +25,13 @@ class TrajetTest {
         trajet.setHeureDepart(expectedH);
 
         //Act & Assert
-        assertEquals(expectedH,trajet.getHeureDepart());
+        assertEquals(expectedH, trajet.getHeureDepart());
     }
 
     @Test
     void setHeureDepartTest_ShouldModifyHeureDepartAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
@@ -41,13 +41,13 @@ class TrajetTest {
         trajet.setHeureDepart(expectedH);
 
         //Assert
-        assertEquals(expectedH,trajet.getHeureDepart());
+        assertEquals(expectedH, trajet.getHeureDepart());
     }
 
     @Test
     void getHeureArriveeTest_ShouldReturnHeureDepartAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
@@ -56,13 +56,13 @@ class TrajetTest {
         trajet.setHeureArrivee(expectedH);
 
         //Act & Assert
-        assertEquals(expectedH,trajet.getHeureArrivee());
+        assertEquals(expectedH, trajet.getHeureArrivee());
     }
 
     @Test
     void setHeureArriveeTest_ShouldModifyHeureDepartAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
@@ -71,26 +71,26 @@ class TrajetTest {
         trajet.setHeureArrivee(expectedH);
 
         //Act & Assert
-        assertEquals(expectedH,trajet.getHeureArrivee());
+        assertEquals(expectedH, trajet.getHeureArrivee());
     }
 
     @Test
     void getTypeTest_ShouldReturnTypeAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
         trajet.setType(Trajet.Type.PICKUP);
 
         //Act & Assert
-        assertEquals(Trajet.Type.PICKUP,trajet.getType());
+        assertEquals(Trajet.Type.PICKUP, trajet.getType());
     }
 
     @Test
     void setTypeTest_ShouldModifyTypeAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
 
         trajet = new Trajet(i1);
 
@@ -100,30 +100,30 @@ class TrajetTest {
         trajet.setType(Trajet.Type.PICKUP);
 
         //Assert
-        assertEquals(Trajet.Type.PICKUP,trajet.getType());
+        assertEquals(Trajet.Type.PICKUP, trajet.getType());
     }
 
     @Test
     void getLivraisonTest_ShouldReturnLivraisonAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Livraison l = new Livraison((long)0,i1,i2,30,160);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Livraison l = new Livraison((long) 0, i1, i2, 30, 160);
 
         trajet = new Trajet(i1);
 
         trajet.setLivraison(l);
 
         //Act & Assert
-        assertEquals(l,trajet.getLivraison());
+        assertEquals(l, trajet.getLivraison());
     }
 
     @Test
     void setLivraisonTest_ShouldModifyLivraisonAttribute() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Livraison l = new Livraison((long)0,i1,i2,30,160);
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Livraison l = new Livraison((long) 0, i1, i2, 30, 160);
 
         trajet = new Trajet(i1);
 
@@ -131,23 +131,23 @@ class TrajetTest {
         trajet.setLivraison(l);
 
         //Assert
-        assertEquals(l,trajet.getLivraison());
+        assertEquals(l, trajet.getLivraison());
     }
 
     @Test
     void getLongueurTest_ShouldReturnSumOfTronconLengths() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         trajet = new Trajet(i1);
         trajet.addTroncon(t12);
@@ -156,7 +156,7 @@ class TrajetTest {
         trajet.addTroncon(t45);
         trajet.addTroncon(t51);
 
-        Double expectedLong = t12.getLongueur()+ t23.getLongueur() + t34.getLongueur() + t45.getLongueur() + t51.getLongueur();
+        Double expectedLong = t12.getLongueur() + t23.getLongueur() + t34.getLongueur() + t45.getLongueur() + t51.getLongueur();
 
         //Act
         Double actualLong = trajet.getLongueur();
@@ -168,17 +168,17 @@ class TrajetTest {
     @Test
     void getOrigineTest_ShouldReturnOrigineIntersection() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         trajet = new Trajet(i1);
         trajet.addTroncon(t12);
@@ -192,23 +192,23 @@ class TrajetTest {
 
         //Act & Assert
         assertTrue(actualO instanceof Intersection);
-        assertEquals(i1,actualO);
+        assertEquals(i1, actualO);
     }
 
     @Test
     void getArriveeTest_ShouldReturnArriveeIntersection() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         trajet = new Trajet(i1);
         trajet.addTroncon(t12);
@@ -222,23 +222,23 @@ class TrajetTest {
 
         //Act & Assert
         assertTrue(actualO instanceof Intersection);
-        assertEquals(i1,actualO);
+        assertEquals(i1, actualO);
     }
 
     @Test
     void getTronconsTest_ShouldReturnTronconListWithCorrectSize() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         ArrayList<Troncon> ts = new ArrayList<>();
         ts.add(t12);
@@ -255,7 +255,7 @@ class TrajetTest {
 
         //Assert
         int i = 0;
-        for(Troncon t : ts) {
+        for (Troncon t : ts) {
             assertTrue(actualT.toArray()[i] instanceof Troncon);
             assertEquals(t, actualT.toArray()[i]);
             i++;
@@ -265,17 +265,17 @@ class TrajetTest {
     @Test
     void addTronconTest_ShouldIncreaseTronconsListSize() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         ArrayList<Troncon> ts = new ArrayList<>();
         ts.add(t12);
@@ -290,24 +290,24 @@ class TrajetTest {
         trajet.addTroncon(t12);
 
         //Assert
-        assertEquals(1,trajet.getTroncons().size());
-        assertEquals(t12,trajet.getTroncons().get(0));
+        assertEquals(1, trajet.getTroncons().size());
+        assertEquals(t12, trajet.getTroncons().get(0));
     }
 
     @Test
     void addTronconsTest_ShouldIncreaseTronconsListSize() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         ArrayList<Troncon> ts = new ArrayList<>();
         ts.add(t12);
@@ -323,9 +323,9 @@ class TrajetTest {
 
         //Assert
         ArrayList<Troncon> actualT = trajet.getTroncons();
-        assertEquals(ts.size(),actualT.size());
+        assertEquals(ts.size(), actualT.size());
         int i = 0;
-        for(Troncon t : ts) {
+        for (Troncon t : ts) {
             assertTrue(actualT.toArray()[i] instanceof Troncon);
             assertEquals(t, actualT.toArray()[i]);
             i++;
@@ -335,17 +335,17 @@ class TrajetTest {
     @Test
     void getInstructionsTest_ShouldReturnCorrectAngleValue() {
         //Arrange
-        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
-        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
-        Intersection i3 = new Intersection(3,new Coordinate(3.0,3.0));
-        Intersection i4 = new Intersection(4,new Coordinate(3.0,6.0));
-        Intersection i5 = new Intersection(5,new Coordinate(3.0,12.0));
+        Intersection i1 = new Intersection(1, new Coordinate(0.0, 0.0));
+        Intersection i2 = new Intersection(2, new Coordinate(0.0, 3.0));
+        Intersection i3 = new Intersection(3, new Coordinate(3.0, 3.0));
+        Intersection i4 = new Intersection(4, new Coordinate(3.0, 6.0));
+        Intersection i5 = new Intersection(5, new Coordinate(3.0, 12.0));
 
-        Troncon t12 = new Troncon(i2,"",2.0);
-        Troncon t23 = new Troncon(i3,"",2.0);
-        Troncon t34 = new Troncon(i4,"",2.0);
-        Troncon t45 = new Troncon(i5,"",2.0);
-        Troncon t51 = new Troncon(i1,"",2.0);
+        Troncon t12 = new Troncon(i2, "", 2.0);
+        Troncon t23 = new Troncon(i3, "", 2.0);
+        Troncon t34 = new Troncon(i4, "", 2.0);
+        Troncon t45 = new Troncon(i5, "", 2.0);
+        Troncon t51 = new Troncon(i1, "", 2.0);
 
         ArrayList<Troncon> ts = new ArrayList<>();
         ts.add(t12);

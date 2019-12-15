@@ -13,7 +13,6 @@ public class Livraison {
     Long id;
 
     /**
-     *
      * @param id
      * @param pickup
      * @param delivery
@@ -29,7 +28,6 @@ public class Livraison {
     }
 
     /**
-     *
      * @return id de la livraison
      */
     public Long getId() {
@@ -37,7 +35,6 @@ public class Livraison {
     }
 
     /**
-     *
      * @return l'intersection d'enlevement
      */
     public Intersection getPickup() {
@@ -46,6 +43,7 @@ public class Livraison {
 
     /**
      * modifie l'intersection d'enlevement
+     *
      * @param pickup
      */
     public void setPickup(Intersection pickup) {
@@ -53,7 +51,6 @@ public class Livraison {
     }
 
     /**
-     *
      * @return l'intersection de depot
      */
     public Intersection getDelivery() {
@@ -62,6 +59,7 @@ public class Livraison {
 
     /**
      * modifie le point de depot
+     *
      * @param delivery
      */
     public void setDelivery(Intersection delivery) {
@@ -69,35 +67,43 @@ public class Livraison {
     }
 
     /**
-     *
      * @return la duree d'enlevement
      */
-    public int getDureeEnlevement() { return dureeEnlevement; }
+    public int getDureeEnlevement() {
+        return dureeEnlevement;
+    }
 
     /**
-     *
      * @return la duree de depot
      */
-    public int getDureeLivraison() { return dureeLivraison; }
+    public int getDureeLivraison() {
+        return dureeLivraison;
+    }
 
     /**
      * modifie la duree d'enlevement
+     *
      * @param dureeEnlevement
      */
-    public void setDureeEnlevement(int dureeEnlevement) { this.dureeEnlevement = dureeEnlevement; }
+    public void setDureeEnlevement(int dureeEnlevement) {
+        this.dureeEnlevement = dureeEnlevement;
+    }
 
     /**
      * modifie la duree de depot
+     *
      * @param dureeLivraison
      */
-    public void setDureeLivraison(int dureeLivraison) { this.dureeLivraison = dureeLivraison; }
+    public void setDureeLivraison(int dureeLivraison) {
+        this.dureeLivraison = dureeLivraison;
+    }
 
     @Override
     public java.lang.String toString() {
         return "Livraison{" +
-                 pickup + " to " + delivery +
-                ", enlevement="+ dureeEnlevement +
-                "min(s), livraison="+ dureeLivraison +
+                pickup + " to " + delivery +
+                ", enlevement=" + dureeEnlevement +
+                "min(s), livraison=" + dureeLivraison +
                 "min(s)}";
     }
 }

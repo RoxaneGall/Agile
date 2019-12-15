@@ -15,7 +15,7 @@ class IntersectionTest {
         //Arrange
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
 
         //Act
         long actualId = inter.getId();
@@ -29,14 +29,14 @@ class IntersectionTest {
         //Arrange
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
         Troncon t = new Troncon(inter, "rue ahmed", 12.243);
 
         //Act
         inter.addTroncon(t);
 
         //Assert
-        assertEquals(1,inter.getTroncons().size());
+        assertEquals(1, inter.getTroncons().size());
 
     }
 
@@ -45,7 +45,7 @@ class IntersectionTest {
         //Arrange
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
         Troncon t = new Troncon(inter, "rue ahmed", 12.243);
         inter.addTroncon(t);
 
@@ -53,7 +53,7 @@ class IntersectionTest {
         Collection c = inter.getTroncons();
 
         //Assert
-        assertEquals(1,c.size());
+        assertEquals(1, c.size());
     }
 
     @Test
@@ -61,13 +61,13 @@ class IntersectionTest {
         //Arrange
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
 
         //Act
         Coordinate actualp = inter.getCoordinate();
 
         //Assert
-        assertEquals(p,actualp);
+        assertEquals(p, actualp);
     }
 
     @Test
@@ -75,13 +75,13 @@ class IntersectionTest {
         //Arrange
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
 
         //Act
         String actualT = inter.toString();
 
         //Assert
-        String expectedT = "Intersection{c=" + p.toString() + "nbTroncons="+ inter.getTroncons().size() + '}';
-        assertEquals(expectedT,actualT);
+        String expectedT = "Intersection{c=" + p.toString() + "nbTroncons=" + inter.getTroncons().size() + '}';
+        assertEquals(expectedT, actualT);
     }
 }

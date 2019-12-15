@@ -11,7 +11,7 @@ class InstructionLivraisonTest {
     @Test
     void getNomRueTest_ShouldReturnNomRueAttribute() {
         //Arrange
-        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT,12.2);
+        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT, 12.2);
 
         //Act
         String actualN = instrLiv.getNomRue();
@@ -25,7 +25,7 @@ class InstructionLivraisonTest {
     @Test
     void getDirectionTest_ShouldReturnDirectionInstruction() {
         //Arrange
-        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT,12.2);
+        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT, 12.2);
 
         //Act
         InstructionLivraison.Direction actualD = instrLiv.getDirection();
@@ -39,7 +39,7 @@ class InstructionLivraisonTest {
     @Test
     void getDistanceTest_ShouldReturnDistanceAttribute() {
         //Arrange
-        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT,12.2);
+        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT, 12.2);
 
         //Act
         double actualD = instrLiv.getDistance();
@@ -52,13 +52,13 @@ class InstructionLivraisonTest {
     @Test
     void testToStringTest_ShouldReturnCorrectText() {
         //Arrange
-        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT,12.2);
+        instrLiv = new InstructionLivraison("rue Ahmed", InstructionLivraison.Direction.LEGERDROIT, 12.2);
 
         //Act
         String actualT = instrLiv.toString();
 
         //Assert
         assertNotNull(actualT);
-        assertEquals("Dans 12 mètres, tournez légèrement à droite sur "+instrLiv.getNomRue()+".", actualT);
+        assertEquals("Dans 12 mètres, tournez légèrement à droite sur " + instrLiv.getNomRue() + ".", actualT);
     }
 }

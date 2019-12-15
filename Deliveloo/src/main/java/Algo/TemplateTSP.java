@@ -31,7 +31,7 @@ public abstract class TemplateTSP implements TSP {
         for (int i = 1; i < nbSommets; i++) nonVus.add(i);
         ArrayList<Integer> vus = new ArrayList<Integer>(nbSommets);
         vus.add(0); // le premier sommet visite est 0
-        branchAndBound(0,0, nonVus, vus, 0.0, cout, System.currentTimeMillis(), tpsLimite);
+        branchAndBound(0, 0, nonVus, vus, 0.0, cout, System.currentTimeMillis(), tpsLimite);
         Computations.lastResultIsBestResult();
     }
 
@@ -89,14 +89,14 @@ public abstract class TemplateTSP implements TSP {
                 coutMeilleureSolution = coutVus;
                 Computations.betterResultFound();
             }
-        } else if ((discrepancy<limitDiscrepancy)&&(coutVus + bound(sommetCrt, nonVus, cout) < coutMeilleureSolution)) {
+        } else if ((discrepancy < limitDiscrepancy) && (coutVus + bound(sommetCrt, nonVus, cout) < coutMeilleureSolution)) {
             Iterator<Integer> it = iterator(sommetCrt, nonVus, cout);
             int d = 0;
             while (it.hasNext()) {
                 Integer prochainSommet = it.next();
                 vus.add(prochainSommet);
                 nonVus.remove(prochainSommet);
-                branchAndBound(prochainSommet,discrepancy+d, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet].getLongueur(), cout, tpsDebut, tpsLimite);
+                branchAndBound(prochainSommet, discrepancy + d, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet].getLongueur(), cout, tpsDebut, tpsLimite);
                 vus.remove(prochainSommet);
                 nonVus.add(prochainSommet);
                 d++;

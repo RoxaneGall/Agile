@@ -19,16 +19,16 @@ class GrapheTest {
         graphe = new Graphe();
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
 
         graphe.addIntersection(inter);
 
         //Act
-        HashMap<Long,Intersection> actualI = graphe.getIntersectionMap();
+        HashMap<Long, Intersection> actualI = graphe.getIntersectionMap();
 
         //Assert
         assertNotNull(actualI);
-        assertEquals(inter,actualI.get(inter.getId()));
+        assertEquals(inter, actualI.get(inter.getId()));
     }
 
     @Test
@@ -37,17 +37,17 @@ class GrapheTest {
         graphe = new Graphe();
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
-        Troncon troncon = new Troncon(inter,"",5.43);
+        Intersection inter = new Intersection(initialId, p);
+        Troncon troncon = new Troncon(inter, "", 5.43);
         graphe.addIntersection(inter);
 
         //Act
-        graphe.addTroncon(troncon,inter.getId());
+        graphe.addTroncon(troncon, inter.getId());
 
         //Assert
         Collection<Troncon> actualT = graphe.getIntersectionMap().get(inter.getId()).getTroncons();
         assertNotNull(actualT);
-        assertEquals(troncon,actualT.toArray()[0]);
+        assertEquals(troncon, actualT.toArray()[0]);
     }
 
     @Test
@@ -55,15 +55,15 @@ class GrapheTest {
         graphe = new Graphe();
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
+        Intersection inter = new Intersection(initialId, p);
 
         //Act
         graphe.addIntersection(inter);
 
         //Assert
-        HashMap<Long,Intersection> actualI = graphe.getIntersectionMap();
+        HashMap<Long, Intersection> actualI = graphe.getIntersectionMap();
         assertNotNull(actualI);
-        assertEquals(1,actualI.size());
+        assertEquals(1, actualI.size());
     }
 
     @Test
@@ -72,16 +72,16 @@ class GrapheTest {
         graphe = new Graphe();
         Coordinate p = new Coordinate(4.112233, 5.32404);
         long initialId = 34;
-        Intersection inter = new Intersection(initialId,p);
-        Troncon troncon = new Troncon(inter,"",5.43);
+        Intersection inter = new Intersection(initialId, p);
+        Troncon troncon = new Troncon(inter, "", 5.43);
         graphe.addIntersection(inter);
-        graphe.addTroncon(troncon,inter.getId());
+        graphe.addTroncon(troncon, inter.getId());
 
         //Act
         graphe.clearGraph();
 
         //Assert
         assertNotNull(graphe);
-        assertEquals(0,graphe.getIntersectionMap().size());
+        assertEquals(0, graphe.getIntersectionMap().size());
     }
 }

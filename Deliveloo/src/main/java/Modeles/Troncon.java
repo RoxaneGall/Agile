@@ -11,11 +11,8 @@ public class Troncon {
     private Double longueur;
 
     /**
-     *
-     * @param destination
-     *        intersection de destination
-     * @param nom
-     *        nom du troncon
+     * @param destination intersection de destination
+     * @param nom         nom du troncon
      * @param longueur
      */
     public Troncon(Intersection destination, String nom, Double longueur) {
@@ -25,7 +22,6 @@ public class Troncon {
     }
 
     /**
-     *
      * @return l'intersection de destination
      */
     public Intersection getDestination() {
@@ -33,7 +29,6 @@ public class Troncon {
     }
 
     /**
-     *
      * @return le nom du troncon
      */
     public String getNom() {
@@ -41,7 +36,6 @@ public class Troncon {
     }
 
     /**
-     *
      * @return la longueur du troncon
      */
     public Double getLongueur() {
