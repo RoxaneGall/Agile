@@ -1,12 +1,12 @@
 package Vue;
 
-import Modele.Demande;
-import Modele.Tournee;
-import Modele.Trajet;
-import Modele.Troncon;
+import Modele.*;
 import Service.Service;
 import com.sothawo.mapjfx.*;
 import com.sun.javafx.application.ParametersImpl;
+import com.sun.javafx.application.PlatformImpl;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,93 +19,221 @@ import javafx.application.Application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import static com.sun.javafx.application.ParametersImpl.getParameters;
+
 class ControllerTest {
+
+    @Test
+    public void startAppTest() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new Main().start(new Stage()); // Create and
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        // initialize
+                        // your app.
+
+                    }
+                });
+            }
+        });
+        thread.start();// Initialize the thread
+        Thread.sleep(10000); // Time to use the app, with out this, the thread
+        // will be killed before you can tell.
+    }
+
+
     @Test
     public void mapExtentTest() throws Exception {
-        ArrayList<Coordinate> limites = new ArrayList<>();
-        Coordinate c1 = new Coordinate(45.778579, 4.852096);
-        Coordinate c2 = new Coordinate(45.781901, 4.791063);
-        Coordinate c3 = new Coordinate(45.730995, 4.859773);
-        Coordinate c4 = new Coordinate(45.714939, 4.901873);
-        limites.add(c1);
-        limites.add(c2);
-        limites.add(c3);
-        limites.add(c4);
-        Extent mapExtent = Extent.forCoordinates(limites);
-        // min latitude
-        Assertions.assertEquals(mapExtent.getMin().getLatitude(), c4.getLatitude());
-        // min longitude
-        Assertions.assertEquals(mapExtent.getMin().getLongitude(), c2.getLongitude());
-        // max latitude
-        Assertions.assertEquals(mapExtent.getMax().getLatitude(), c2.getLatitude());
-        // max longitude
-        Assertions.assertEquals(mapExtent.getMax().getLongitude(), c4.getLongitude());
-        System.out.println(" Extent Test : PASSED ");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Service service = new Service();
+                            ArrayList<Coordinate> limites = service.chargerPlan("../datas/grandPlan.xml");
+                            Controller contr = new Controller();
+                            contr.chargerPlan("../datas/grandPlan.xml");
+                            // max
+                            Assertions.assertEquals(contr.mapExtent.getMax(), limites.get(2));
+                            // min
+                            Assertions.assertEquals(contr.mapExtent.getMin(), limites.get(1));
+
+                            System.out.println(" Extent Test : PASSED ");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+            }
+        });
+        thread.start();
+        Thread.sleep(10000);
     }
+
 
     @Test
     public void markersPositionTest() throws Exception {
-        Service service = new Service();
-        service.chargerPlan("../datas/grandPlan.xml");
-        String path = "../datas/demandeGrand9.xml";
-        ArrayList<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<Pair<Marker, Marker>>();
-        Demande demande = service.chargerDemande(path);
-        for (int i = 0; i < demande.getLivraisons().size(); i++) {
-            Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-            Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-            Marker markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
-            Marker markerDelivery = Marker.createProvided(Marker.Provided.BLUE).setPosition(delivery);
-            ;
-            deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
-        }
-        for (int i = 0; i < deliveriesMarkers.size(); i++) {
-            Assertions.assertEquals(deliveriesMarkers.get(i).getKey().getPosition(), demande.getLivraisons().get(i).getPickup().getCoordinate());
-            Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
-            Assertions.assertEquals(deliveriesMarkers.get(i).getKey().getPosition(), demande.getLivraisons().get(i).getPickup().getCoordinate());
-            Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Service service = new Service();
+                            Controller contr = new Controller();
+                            contr.chargerPlan("../datas/grandPlan.xml");
+                            String path = "../datas/demandeGrand9.xml";
+                            Demande demande = service.chargerDemande(path);
+                            contr.afficherDemande();
+                            int i = 0;
+                            for (Map.Entry<Coordinate, Marker> entry : contr.deliveriesMarkers.entrySet()) {
+                                Assertions.assertTrue(entry.getValue().equals(demande.getLivraisons().get(i).getPickup().getCoordinate()) ||
+                                        entry.getValue().equals(demande.getLivraisons().get(i).getDelivery().getCoordinate()));
+                            }
 
-        System.out.println(" Deliveries markers position Test : PASSED ");
+                            System.out.println(" Deliveries markers position Test : PASSED ");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-
+                });
+            }
+        });
+        thread.start();
+        Thread.sleep(10000);
     }
 
     @Test
-    public void coordinateLinePositionTest() throws Exception {
-        Service service = new Service();
-        service.chargerPlan("../datas/grandPlan.xml");
-        String path = "../datas/demandeGrand9.xml";
-        Demande demande = service.chargerDemande(path);
-        service.calculerTournee(demande);
-        Tournee t = service.recupererTournee();
-        ArrayList<Coordinate> tourneeCoordinate = new ArrayList<>();
+    static void coordinateLinePositionTest() throws Exception {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Service service = new Service();
+                            service.chargerPlan("../datas/grandPlan.xml");
+                            String path = "../datas/demandeGrand9.xml";
+                            Demande demande = service.chargerDemande(path);
+                            service.calculerTournee(demande);
+                            Tournee t = service.recupererTournee();
+                            Controller contr = new Controller();
+                            contr.afficherTournee(t);
+                            ArrayList<Coordinate> tab = (ArrayList<Coordinate>) contr.trackTrajet.getCoordinateStream().collect(Collectors.toList());
+                            int i = 0;
+                            while (i < t.getTrajets().size()) {
+                                Assertions.assertEquals(tab.get(i), t.getTrajets().get(i).getOrigine().getCoordinate());
+                                int j = i + 1;
+                                for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                                    Assertions.assertEquals(tab.get(j), troncon.getDestination().getCoordinate());
+                                    j++;
+                                    i = j;
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-        for (int i = 0; i < t.getTrajets().size(); i++) {
-            Trajet trajet = t.getTrajets().get(i);
-            Coordinate origine = trajet.getOrigine().getCoordinate();
-            tourneeCoordinate.add(origine);
-            for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                tourneeCoordinate.add(troncon.getDestination().getCoordinate());
+                });
             }
-        }
-        CoordinateLine trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
-        ArrayList<Coordinate> tab = (ArrayList<Coordinate>) trackTrajet.getCoordinateStream().collect(Collectors.toList());
-        System.out.println(tab.size());
-        System.out.println(t.getTrajets().size());
-        int i = 0;
-        while (i < t.getTrajets().size()) {
-            Assertions.assertEquals(tab.get(i), t.getTrajets().get(i).getOrigine().getCoordinate());
-            int j = i + 1;
-            for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                Assertions.assertEquals(tab.get(j), troncon.getDestination().getCoordinate());
-                j++;
-                i = j;
+        });
+        thread.start();
+        Thread.sleep(10000);
+    }
+
+    @Test
+    public void ajouterLivraisonTest() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Controller contr = new Controller();
+                            contr.chargerPlan("../datas/grandPlan.xml");
+                            Service service = new Service();
+                            service.chargerDemande("../datas/grandeDemande9.xml");
+                            Intersection interPickUp = new Intersection(0, new Coordinate(45.778979, 4.852126));
+                            Intersection interDelivery = new Intersection(1, new Coordinate(45.738949, 4.34576));
+                            ArrayList<Intersection> inters = new ArrayList<>();
+                            int previousSize = contr.demande.getLivraisons().size();
+                            inters.add(interPickUp);
+                            inters.add(interDelivery);
+                            contr.ajouterLivraison(inters);
+                            Assertions.assertTrue(contr.demande.getLivraisons().size() == previousSize + 1);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
             }
-        }
-        System.out.println(" Coordinate line position Test : PASSED ");
+        });
+        thread.start();
+        Thread.sleep(10000);
+
+    }
+
+
+    @Test
+    public void boutonsLivraisonsTest() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new JFXPanel(); // Initializes the JavaFx Platform
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(10000);
+                            Service service = new Service();
+                            service.chargerPlan("../datas/grandPlan.xml");
+                            String path = "../datas/demandeGrand9.xml";
+                            Demande demande = service.chargerDemande(path);
+                            service.calculerTournee(demande);
+                            Tournee t = service.recupererTournee();
+                            Controller contr = new Controller();
+                            contr.afficherTournee(t);
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
+            }
+        });
+        thread.start();
+        Thread.sleep(10000);
+
+
 
     }
 

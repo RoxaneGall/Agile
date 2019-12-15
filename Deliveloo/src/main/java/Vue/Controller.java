@@ -186,7 +186,9 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        stopTournee.setDisable(true);
+        if(stopTournee!=null) {
+            stopTournee.setDisable(true);
+        }
 
         // init MapView-Cache
         createMapCache();
@@ -250,6 +252,10 @@ public class Controller implements ActionListener {
      */
     private void afterMapIsInitialized() {
         chargerPlan("../datas/grandPlan.xml");
+    }
+
+    public void initalizeMapView(){
+        mapView.initialize();
     }
 
     /**
@@ -330,6 +336,10 @@ public class Controller implements ActionListener {
             ArrayList<Coordinate> limites = service.chargerPlan(path);
             System.out.println("Limites du plan :" + limites);
             mapExtent = Extent.forCoordinates(limites);
+            System.out.println("extentMax :" + mapExtent.getMax());
+            System.out.println("extentMin :" + mapExtent.getMin());
+
+
             if (mapView != null) {
                 System.out.println("Extent of Map reset");
                 mapView.setExtent(mapExtent);
@@ -441,7 +451,7 @@ public class Controller implements ActionListener {
         });
     }
 
-    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+    public void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
             ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
@@ -593,7 +603,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void afficherDemande() {
+    void afficherDemande() {
         try {
             clearDemande(); // on supprime la demande d'avant
 
@@ -761,7 +771,7 @@ public class Controller implements ActionListener {
         tourneePartCoordinate.clear();
     }
 
-    private void afficherTournee(Tournee t) {
+    public void afficherTournee(Tournee t) {
         System.out.println("*****" + historique.size() + " index :" + indexHistorique);
         if (demande != null) {
             if (historique.size() == 0 || historique.contains(tournee) != true) {
