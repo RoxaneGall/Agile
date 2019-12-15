@@ -373,18 +373,18 @@ public class Controller implements ActionListener {
             Coordinate c2 = null;
             Long idLivrSupr = null;
             ToggleButton button1 = null;
-            for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry : livrButtons.entrySet()) {
+            for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry : livrButtons.entrySet()) {
                 if (entry.getKey().isSelected()) {
                     button1 = entry.getKey();
-                    c1 = entry.getValue().getKey();
-                    idLivrSupr = entry.getValue().getValue();
+                    c1 = entry.getValue().getLeft();
+                    idLivrSupr = entry.getValue().getMiddle();
                     break;
                 }
             }
 
-            for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry1 : livrButtons.entrySet()) {
-                if (entry1.getKey() != button1 && entry1.getValue().getValue() == idLivrSupr) {
-                    c2 = entry1.getValue().getKey();
+            for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
+                if (entry1.getKey() != button1 && entry1.getValue().getMiddle() == idLivrSupr) {
+                    c2 = entry1.getValue().getLeft();
                     break;
                 }
 
