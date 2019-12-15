@@ -45,6 +45,14 @@ public class LectureXML {
         }
     }
 
+    /**
+     * Charge le plan de la ville récupéré d'un fichier XML
+     *
+     * @param cheminFichier
+     * est le chemin d'accès sur le disque du fichier XML contenant les données du plan à charger
+     *
+     * @throws Exception
+     */
     public void chargerPlan(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
             throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
@@ -127,6 +135,19 @@ public class LectureXML {
         }
     }
 
+    /**
+     * Charge une demande de livraison(s) à partir d'un fichier XML
+     *
+     * @param cheminFichier
+     * est le chemin d'accès sur le disque du fichier XML
+     * contenant les données de la demande de livraison(s)
+     *
+     * @return la demande de livraison créée dans notre structure de données
+     * à l'aboutissement du chargement de la demande
+     *
+     * @throws Exception
+     *
+     */
     public Demande chargerDemande(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
             throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
@@ -221,6 +242,14 @@ public class LectureXML {
         return demande;
     }
 
+    /**
+     * Calcule les coordonnées des extrémités du plan
+     *
+     * @return la liste des coordonnées des quatre extrémités
+     * du plan calculées
+     *
+     * @throws Exception
+     */
     public ArrayList<Coordinate> getLimitesPlan() throws Exception {
         ArrayList<Coordinate> myList = new ArrayList<>();
 
@@ -263,7 +292,15 @@ public class LectureXML {
         return myList;
     }
 
-
+    /**
+     * Calcule l'intersection du graphe la plus proche d'un point donné
+     *
+     * @param c
+     * représente les coordonnées du point
+     * dont on veut l'intersection la plus proche
+     *
+     * @return l'intersection la plus proche du point donné
+     */
     public Intersection getIntersectionPlusProche(Coordinate c) {
 
         Intersection res = new Intersection();

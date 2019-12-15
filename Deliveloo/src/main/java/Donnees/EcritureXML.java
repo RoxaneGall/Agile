@@ -10,11 +10,24 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Classe se chargeant de l'écriture d'une feuille de route
+ *
+ * @author H4132
+ */
 public class EcritureXML {
 
     public EcritureXML(){
     }
 
+    /**
+     * Génère les instructions relatives à une tournée
+     *
+     * @param tournee
+     * est la tournée pour laquelle il faut générer des instructions
+     *
+     * @return les instructions
+     */
     public String genererInstructionsPourTournee(Tournee tournee){
         String instructions="";
         ArrayList<Trajet> trajets = new ArrayList<>();
@@ -60,6 +73,18 @@ public class EcritureXML {
         return instructions+"\n\n";
     }
 
+    /**
+     * Crée un fichier textuel représentant la feuille de route
+     * avec les instructions pour une tournée
+     *
+     * @param tournee
+     * est la tournée pour laquelle on veut générer une feuille de route
+     *
+     * @param chemin
+     * est le chemin d'accès sur le disque qu'aura le fichier créé
+     *
+     * @throws Exception
+     */
     public void ecrireFichier(Tournee tournee, String chemin) throws Exception {
 
         if(chemin=="") return;
