@@ -194,6 +194,7 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
+        stopTournee.setDisable(true);
 
         // init MapView-Cache
         createMapCache();
@@ -602,7 +603,7 @@ public class Controller implements ActionListener {
             clearDemande(); // on supprime la demande d'avant
 
             entrepot = demande.getEntrepot().getCoordinate();
-            URL imageURLEntrepot = new URL(path + "URL A INSERER");
+            URL imageURLEntrepot = new URL(path +  "/datas/logos/entrepot.png");
             entrepotMarker = new Marker(imageURLEntrepot, -32, -64).setPosition(entrepot).setVisible(true);
             mapView.addMarker(entrepotMarker);
 
@@ -635,6 +636,7 @@ public class Controller implements ActionListener {
             try {
                 calculerTourneeOptimale();
             } catch (Exception ex) {
+                System.out.println("NEW EXCEPTIOOON");
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur Calcul de Tournee");
                 alert.setHeaderText("Erreur Calcul de Tournee");
@@ -645,13 +647,14 @@ public class Controller implements ActionListener {
         });
     }
 
-    private void calculerTourneeOptimale() {
+    private void calculerTourneeOptimale() throws Exception {
         System.out.println("Calcul d'une tournée");
         try {
             if (demande != null) {
                 arreterChargementMeilleureTournee();
                 Computations.setDelegate(this);
                 loading.visibleProperty().setValue(true);
+                stopTournee.setDisable(false);
                 Thread t1 = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -660,10 +663,10 @@ public class Controller implements ActionListener {
                 });
                 t1.start();
             } else {
-                System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+                throw new Exception("Aucune demande à traiter. Veuillez charger une demande pour calculer une tournée");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new Exception(ex.getMessage(), ex);
         }
     }
 
@@ -937,6 +940,7 @@ public class Controller implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ended")) {
             loading.visibleProperty().setValue(false);
+            stopTournee.setDisable(true);
         } else if (e.getActionCommand().equals("newResultFound")) {
             afficherTourneeCalculee();
         }
