@@ -48,7 +48,7 @@ public abstract class TemplateTSP implements TSP {
      *
      * @param sommetCourant
      * @param nonVus        : tableau des sommets restant a visiter
-     * @param cout          : cout[i][j] = longueur pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
+     * @param cout          : cout[i][j] = longueur pour aller de i a j, avec {@literal 0 \<= i < nbSommets et 0 <= j < nbSommets}
      * @return une borne inferieure du cout des permutations commencant par sommetCourant,
      * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
      */
@@ -59,7 +59,7 @@ public abstract class TemplateTSP implements TSP {
      *
      * @param sommetCrt
      * @param nonVus    : tableau des sommets restant a visiter
-     * @param cout      : cout[i][j] = longueur pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
+     * @param cout      : cout[i][j] = longueur pour aller de i a j, avec {@literal 0 <= i < nbSommets et 0 <= j < nbSommets}
      * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
      */
     //Prendre en compte la notion de précédence
