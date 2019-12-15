@@ -602,7 +602,8 @@ public class Controller implements ActionListener {
             clearDemande(); // on supprime la demande d'avant
 
             entrepot = demande.getEntrepot().getCoordinate();
-            entrepotMarker = Marker.createProvided(Marker.Provided.GREEN).setPosition(entrepot).setVisible(true);
+            URL imageURLEntrepot = new URL(path + "URL A INSERER");
+            entrepotMarker = new Marker(imageURLEntrepot, -32, -64).setPosition(entrepot).setVisible(true);
             mapView.addMarker(entrepotMarker);
 
             for (int i = 0; i < demande.getLivraisons().size(); i++) {
