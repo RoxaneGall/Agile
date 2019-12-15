@@ -85,13 +85,11 @@ class ControllerTest {
                             Assertions.assertEquals(contr.mapExtent.getMax(), limites.get(2));
                             // min
                             Assertions.assertEquals(contr.mapExtent.getMin(), limites.get(1));
-
                             System.out.println(" Extent Test : PASSED ");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-
                 });
             }
         });

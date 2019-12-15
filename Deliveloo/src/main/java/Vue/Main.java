@@ -43,5 +43,6 @@ public class Main extends Application {
         final Projection projection = getParameters().getUnnamed().contains("wgs84")
                 ? Projection.WGS_84 : Projection.WEB_MERCATOR;
         controller.initializeView(scene, projection, primaryStage);
+        System.out.println(primaryStage);
     }
 }
