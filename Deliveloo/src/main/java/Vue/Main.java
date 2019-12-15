@@ -14,13 +14,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static javafx.application.Application.launch;
 
 /**
  * Demo application for the mapjfx component.
  *
  * @author P.J. Meisch (pj.meisch@sothawo.com).
  */
-public class Main extends Controller {
+public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);

@@ -441,7 +441,7 @@ public class Controller implements ActionListener {
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
-            isAlreadyAdding=false;
+            isAlreadyAdding = false;
         });
     }
 
@@ -511,10 +511,11 @@ public class Controller implements ActionListener {
     }
 
     Boolean isAlreadyAdding = false;
+
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
-            if (!isAlreadyAdding){
-                isAlreadyAdding=true;
+            if (!isAlreadyAdding) {
+                isAlreadyAdding = true;
                 ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
                 ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
                 addRightClickEvent(interLivraison);
@@ -630,7 +631,16 @@ public class Controller implements ActionListener {
 
     private void setButtonCalculerTourneeOptimale() {
         calculTournee.setOnAction(event -> {
-            calculerTourneeOptimale();
+            try {
+                calculerTourneeOptimale();
+            } catch (Exception ex) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Erreur Calcul de Tournee");
+                alert.setHeaderText("Erreur Calcul de Tournee");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+                ex.printStackTrace();
+            }
         });
     }
 
@@ -648,11 +658,9 @@ public class Controller implements ActionListener {
                     }
                 });
                 t1.start();
-
             } else {
                 System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -728,7 +736,7 @@ public class Controller implements ActionListener {
         int i = 0;
         do {
             tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-        } while (tourneeCoordinate.get(i-1) != entry.getKey());
+        } while (tourneeCoordinate.get(i - 1) != entry.getKey());
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
