@@ -1,7 +1,10 @@
 package Vue;
 
+import Modele.Demande;
+import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
 import com.sothawo.mapjfx.Extent;
+import com.sothawo.mapjfx.Marker;
 import com.sothawo.mapjfx.Projection;
 import com.sun.javafx.application.ParametersImpl;
 import javafx.fxml.FXMLLoader;
@@ -40,8 +43,32 @@ class ControllerTest {
         System.out.println(" Extent Test : PASSED ");
     }
 
+    @Test
+    public void markersPositionTest() throws Exception {
+
+        ArrayList<Pair<Marker, Marker>> deliveriesMarkers = new ArrayList<Pair<Marker, Marker>>();
+        Service service = new Service();
+        service.chargerPlan("../datas/grandPlan.xml");
+        String path = "../datas/demandeGrand7.xml";
+        Demande demande = service.chargerDemande(path);
+        for (int i = 0; i < demande.getLivraisons().size(); i++) {
+            Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+            Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+            Marker markerPickUp = Marker.createProvided(Marker.Provided.BLUE).setPosition(pickUp);
+            Marker markerDelivery = Marker.createProvided(Marker.Provided.BLUE).setPosition(delivery);;
+            deliveriesMarkers.add(new Pair<Marker, Marker>(markerPickUp, markerDelivery));
+        }
+        for (int i = 0; i < deliveriesMarkers.size(); i++) {
+            Assertions.assertEquals(deliveriesMarkers.get(i).getKey().getPosition(), demande.getLivraisons().get(i).getPickup().getCoordinate());
+            Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
+            Assertions.assertEquals(deliveriesMarkers.get(i).getKey().getPosition(), demande.getLivraisons().get(i).getPickup().getCoordinate());
+            Assertions.assertEquals(deliveriesMarkers.get(i).getValue().getPosition(), demande.getLivraisons().get(i).getDelivery().getCoordinate());
+        }
+
+        System.out.println(" Deliveries markers position Test : PASSED ");
 
 
+    }
 
 
 }
