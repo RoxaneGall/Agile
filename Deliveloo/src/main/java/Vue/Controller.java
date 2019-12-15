@@ -878,24 +878,16 @@ public class Controller implements ActionListener {
      * La tournée est un attribut global du Controller
      */
     public void afficherTournee() {
-        ajoutLivraison.setDisable(true);
-        supprLivraison.setDisable(true);
-        retour.setDisable(true);
-        exportFeuille.setDisable(true);
-        suivant.setDisable(true);
-
-
         /* On ajoute la tournée à l'historique */
         if (historique.size() == 0 || historique.contains(tournee) != true) {
             // On ajoute la tournée à l'historique
             historique.add(tournee);
             indexHistorique++;
         }
-
-        disableButtonsTournee(false); // les boutons tournées sont cliquables
-
         // On supprime les infos de l'ancienne tournée de l'IHM
         clearTournee();
+
+        disableButtonsTournee(false); // les boutons tournées sont cliquables
 
         // On affiche les informations générales de la tournée
         labelTourneeDistance.setText("Distance: " + tournee.getTotalDistance() / 1000 + "km");
