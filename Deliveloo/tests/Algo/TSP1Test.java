@@ -26,8 +26,8 @@ class TSP1Test {
 
     void realiserTourneeDepuisGrandPlanEt15Livraisons_shouldSucceed() throws Exception {
         Service service = new Service();
-        service.chargerPlan("datas/grandPlan.xml");
-        Demande demande = service.chargerDemande("datas/demandeTest5.xml");
+        service.chargerPlan("../datas/grandPlan.xml");
+        Demande demande = service.chargerDemande("../datas/demandeTest5.xml");
         service.calculerTournee(demande);
         Tournee t = service.recupererTournee();
         System.out.println(t.getDemande().getHeureDepart());
