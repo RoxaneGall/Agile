@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modeles.*;
+import Modele.*;
 import Donnees.*;
 
 import javafx.geometry.Insets;
@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
-import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
-import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -35,9 +33,12 @@ import javafx.scene.control.Alert.AlertType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,23 +48,24 @@ import javafx.util.Pair;
 
 public class Controller implements ActionListener {
 
-    /**
-     * FX Elements pour charger les plans et demandes
-     * partie en bas de l'IHM
-     */
+
     public Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
     public FileChooser fileChooser = new FileChooser();
     public DirectoryChooser directoryChooser = new DirectoryChooser();
     public SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
-    ;
+
+    /**
+     * JFX Elements des principales fonctionnalités de l'application
+     * partie en bas (bottom) de l'IHM
+     */
     @FXML
-    public Button chargerPlan;
+    public Button chargerPlan; // permet d'ouvrir un explorateur de fichier et de sélectionner un fichier .xml représentant un plan
     @FXML
-    public Button chargerDemande;
+    public Button chargerDemande; // pour sélectionner un fichier de demande
     @FXML
-    public Button calculTournee;
+    public Button calculTournee; // calcul la tournée de la demande actuellement chargée
     @FXML
     public Button stopTournee;
     @FXML
@@ -194,8 +196,7 @@ public class Controller implements ActionListener {
         loading.visibleProperty().setValue(false);
 
         // init MapView-Cache
-        final OfflineCache offlineCache = mapView.getOfflineCache();
-        final String cacheDir = System.getProperty("java.io.tmpdir") + "/mapjfx-cache";
+        createMapCache();
 
         // set the custom css file for the MapView
         mapView.setCustomMapviewCssURL(getClass().getResource("/custom_mapview.css"));
@@ -251,6 +252,21 @@ public class Controller implements ActionListener {
         mapView.setZoom(ZOOM_DEFAULT);
     }
 
+    /**
+     *
+     */
+    private void createMapCache() {
+        // init MapView-Cache
+        final OfflineCache offlineCache = mapView.getOfflineCache();
+        final String cacheDir = System.getProperty("java.io.tmpdir") + "/mapjfx-cache";
+        try {
+            Files.createDirectories(Paths.get(cacheDir));
+            offlineCache.setCacheDirectory(cacheDir);
+            offlineCache.setActive(true);
+        } catch (Exception e) {
+            System.out.println("could not activate offline cache :" + e.getStackTrace());
+        }
+    }
 
     /**
      * Méthode appelée une fois que l'IHM est initialisée
@@ -482,9 +498,9 @@ public class Controller implements ActionListener {
         Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
         tournee = nvTournee;
         demande = nvTournee.getDemande();
-
-        if (indexHistorique < historique.size()-1) {
+        if (indexHistorique < historique.size() - 1) {
             int historiqueSize = historique.size();
+            System.out.println("Ajout à l'index=" + indexHistorique);
             for (int i = historiqueSize - 1; i > indexHistorique; i--) {
                 System.out.println("CLEAR historique for index=" + i);
                 historique.remove(i);
@@ -711,9 +727,9 @@ public class Controller implements ActionListener {
         pairedButton.setStyle("-fx-base: lightblue;");
 
         int i = 0;
-        while (tourneeCoordinate.get(i) != entry.getKey()) {
+        do {
             tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-        }
+        } while (tourneeCoordinate.get(i-1) != entry.getKey());
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
@@ -744,9 +760,9 @@ public class Controller implements ActionListener {
             Coordinate origine;
             Trajet trajet;
 
-            labelTourneeDistance.setText("Distance: "+t.getTotalDistance()/1000+"km");
-            labelTourneeTemps.setText("Temps: "+t.getTotalDuration()+"min");
-            labelTourneeNbLivraison.setText("Nombre de livraisons: "+t.getDemande().getLivraisons().size());
+            labelTourneeDistance.setText("Distance: " + t.getTotalDistance() / 1000 + "km");
+            labelTourneeTemps.setText("Temps: " + t.getTotalDuration() + "min");
+            labelTourneeNbLivraison.setText("Nombre de livraisons: " + t.getDemande().getLivraisons().size());
 
             for (int i = 0; i < t.getTrajets().size(); i++) {
                 trajet = t.getTrajets().get(i);
@@ -765,7 +781,7 @@ public class Controller implements ActionListener {
                 String infoButton = "";
                 Long idLivr;
                 if (i == 0) {
-                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : "+ formater.format(t.getHeureArrivee());
+                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(t.getHeureArrivee());
 
                     ToggleButton button = new ToggleButton();
                     button.setText(infoButton);
@@ -781,7 +797,7 @@ public class Controller implements ActionListener {
                 ToggleButton button = new ToggleButton();
                 if (i == t.getTrajets().size() - 1) {
                     idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt"  + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
+                    infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
                             entrepotSelected(button);
@@ -792,9 +808,9 @@ public class Controller implements ActionListener {
                 } else {
                     idLivr = trajet.getLivraison().getId();
                     if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
+                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
                     } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee()) ;
+                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
                     }
                     button.setOnAction(event -> {
                         if (button.isSelected()) {
@@ -832,6 +848,8 @@ public class Controller implements ActionListener {
     public void clearTournee() {
         mapView.removeCoordinateLine(trackTrajet);
         tourneeCoordinate.clear();
+        mapView.removeCoordinateLine(trackPart);
+        tourneePartCoordinate.clear();
         detailsLivraisons.getChildren().clear();
         livrButtons.clear();
         for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
@@ -851,7 +869,7 @@ public class Controller implements ActionListener {
         } else {
             retour.setDisable(true);
         }
-        if (indexHistorique<historique.size()-1) {
+        if (indexHistorique < historique.size() - 1) {
             suivant.setDisable(value);
         } else {
             suivant.setDisable(true);

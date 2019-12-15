@@ -1,12 +1,9 @@
-package Modeles;
+package Modele;
 
-import Donnees.LectureXML;
 import com.sothawo.mapjfx.Coordinate;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
 
 
 class TronconTest {

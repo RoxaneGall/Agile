@@ -1,4 +1,4 @@
-package Modeles;
+package Modele;
 
 import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.Test;

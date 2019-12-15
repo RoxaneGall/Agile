@@ -3,11 +3,13 @@ package Service;
 import Algo.Computations;
 import Donnees.EcritureXML;
 import Donnees.*;
-import Modeles.*;
+import Modele.*;
 import com.sothawo.mapjfx.Coordinate;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 public class Service {
 
@@ -21,7 +23,7 @@ public class Service {
         ecr = new EcritureXML();
     }
 
-    public ArrayList<Coordinate> chargerPlan( String path) throws Exception {
+    public ArrayList<Coordinate> chargerPlan(String path) throws Exception {
         Graphe.shared.clearGraph();
         lec.chargerPlan(path);
         ArrayList<Coordinate> limites = lec.getLimitesPlan();
