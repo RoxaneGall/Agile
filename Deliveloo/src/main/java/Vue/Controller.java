@@ -246,6 +246,13 @@ public class Controller implements ActionListener {
     }
 
     /**
+     * Méthode appelée une fois que l'IHM est initialisée, on charge par défaut le grand Plan
+     */
+    private void afterMapIsInitialized() {
+        chargerPlan("../datas/grandPlan.xml");
+    }
+
+    /**
      * Méthode permettant de mettre en cache les données chargées de la carte
      * Cela évite des rechargements nuisant au fonctionnement de l'application.
      */
@@ -275,7 +282,7 @@ public class Controller implements ActionListener {
         mapView.addEventHandler(MapViewEvent.MAP_POINTER_MOVED, event -> {
         });
     }
-    
+
     /**
      *
      */
@@ -286,7 +293,9 @@ public class Controller implements ActionListener {
     }
 
     /**
-     *
+     *  Action réalisée lorsque l'utilisateur souhaite charger un plan
+     *  Un explorateur de fichier est ouvert et l'utilisateur peut sélectionner le fichier à charger comme nouveau plan
+     *  Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
      */
     public void selectPlan() {
         File selectedFile = null;
