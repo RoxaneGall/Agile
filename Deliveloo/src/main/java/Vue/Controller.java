@@ -802,6 +802,7 @@ public class Controller implements ActionListener {
 
     /**
      * Méthode qui renvoie le bouton jumelé au bouton passé en paramètre
+     *
      * @param button
      * @return bouton jumelé
      */
@@ -819,6 +820,7 @@ public class Controller implements ActionListener {
 
     /**
      * Affiche le tracé de la tournée jusqu'au point sélectionné, surligné en bleu
+     *
      * @param button bouton sélectionné
      */
     private void afficherTrajetJusquaPointSelectionne(ToggleButton button, ToggleButton pairedButton) {
@@ -857,108 +859,103 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * Méthode qui
+     * Méthode qui affiche la tournée en cours
+     * <p>
+     * La tournée est un attribut global du Controller
      */
     public void afficherTournee() {
-        System.out.println("*****" + historique.size() + " index :" + indexHistorique);
-        if (demande != null) {
-            if (historique.size() == 0 || historique.contains(tournee) != true) {
-                // On ajoute la tournée à l'historique
-                historique.add(tournee);
-                indexHistorique++;
+
+        /* On ajoute la tournée à l'historique */
+        if (historique.size() == 0 || historique.contains(tournee) != true) {
+            // On ajoute la tournée à l'historique
+            historique.add(tournee);
+            indexHistorique++;
+        }
+
+        disableButtonsTournee(false); // les boutons tournées sont cliquables
+
+        // On supprime les infos de l'ancienne tournée de l'IHM
+        clearTournee();
+
+        // On affiche les informations générales de la tournée
+        labelTourneeDistance.setText("Distance: " + tournee.getTotalDistance() / 1000 + "km");
+        labelTourneeTemps.setText("Temps: " + tournee.getTotalDuration() + "min");
+        labelTourneeNbLivraison.setText("Nombre de livraisons: " + tournee.getDemande().getLivraisons().size());
+
+        // On parcourt tous les trajets de la tournée pour créer le te tracé du trajet réalisé et les boutons avec les détails de chaque point de livraison
+        int compteur = 1;
+        Coordinate origine;
+        Trajet trajet;
+        for (int i = 0; i < tournee.getTrajets().size(); i++) {
+            trajet = tournee.getTrajets().get(i);
+            origine = trajet.getOrigine().getCoordinate();
+            tourneeCoordinate.add(origine);
+
+            MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(tournee.getTrajets().get(i).getArrivee().getCoordinate()).setVisible(true);
+            mapView.addLabel(l);
+            deliveriesNumbers.put(trajet.getArrivee().getCoordinate(), l);
+            compteur++;
+            for (Troncon troncon : tournee.getTrajets().get(i).getTroncons()) {
+                tourneeCoordinate.add(troncon.getDestination().getCoordinate());
             }
-            disableButtonsTournee(false); // les boutons tournées sont cliquables
-            // On supprime les infos de l'ancienne tournée de l'IHM
-            clearTournee();
-            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-            int compteur = 1;
-            Coordinate origine;
-            Trajet trajet;
-
-            labelTourneeDistance.setText("Distance: " + tournee.getTotalDistance() / 1000 + "km");
-            labelTourneeTemps.setText("Temps: " + tournee.getTotalDuration() + "min");
-            labelTourneeNbLivraison.setText("Nombre de livraisons: " + tournee.getDemande().getLivraisons().size());
-
-            for (int i = 0; i < tournee.getTrajets().size(); i++) {
-                trajet = tournee.getTrajets().get(i);
-                origine = trajet.getOrigine().getCoordinate();
-                tourneeCoordinate.add(origine);
-
-                MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(tournee.getTrajets().get(i).getArrivee().getCoordinate()).setVisible(true);
-                mapView.addLabel(l);
-                deliveriesNumbers.put(trajet.getArrivee().getCoordinate(), l);
-                compteur++;
-
-                for (Troncon troncon : tournee.getTrajets().get(i).getTroncons()) {
-                    tourneeCoordinate.add(troncon.getDestination().getCoordinate());
-                }
-
-                String infoButton = "";
-                Long idLivr;
-                if (i == 0) {
-                    infoButton = "Entrepôt \nDépart : " + formater.format(tournee.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(tournee.getHeureArrivee());
-
-                    ToggleButton button = new ToggleButton();
-                    button.setText(infoButton);
-                    button.setPrefWidth(250.0);
-                    button.setAlignment(Pos.TOP_LEFT);
-                    button.setToggleGroup(groupButtons);
-                    detailsLivraisons.getChildren().add(button);
-                    button.setOnAction(event -> {
-                        entrepotDeselected(button);
-                    });
-                }
+            String infoButton = "";
+            Long idLivr;
+            if (i == 0) {
+                infoButton = "Entrepôt \nDépart : " + formater.format(tournee.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(tournee.getHeureArrivee());
 
                 ToggleButton button = new ToggleButton();
-                if (i == tournee.getTrajets().size() - 1) {
-                    idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
-                    button.setOnAction(event -> {
-                        if (button.isSelected()) {
-                            entrepotSelected(button);
-                        } else {
-                            entrepotDeselected(button);
-                        }
-                    });
-                } else {
-                    idLivr = trajet.getLivraison().getId();
-                    if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
-                    } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
-                    }
-                    button.setOnAction(event -> {
-                        if (button.isSelected()) {
-                            livraisonSelected(button);
-                        } else {
-                            livraisonDeselected(button);
-                        }
-                    });
-                }
                 button.setText(infoButton);
                 button.setPrefWidth(250.0);
                 button.setAlignment(Pos.TOP_LEFT);
-                button.setId("" + i);
                 button.setToggleGroup(groupButtons);
-
-                livrButtons.put(button, Triple.of(trajet.getArrivee().getCoordinate(), idLivr, trajet.getType()));
                 detailsLivraisons.getChildren().add(button);
+                button.setOnAction(event -> {
+                    entrepotDeselected(button);
+                });
             }
 
-            //infoButton = "Fin de tournée - \n Arrivée : " + formater.format(trajet.getHeureArrivee());
+            ToggleButton button = new ToggleButton();
+            if (i == tournee.getTrajets().size() - 1) {
+                idLivr = (long) -1;
+                infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                button.setOnAction(event -> {
+                    if (button.isSelected()) {
+                        entrepotSelected(button);
+                    } else {
+                        entrepotDeselected(button);
+                    }
+                });
+            } else {
+                idLivr = trajet.getLivraison().getId();
+                if (trajet.getType() == Trajet.Type.PICKUP) {
+                    infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                } else {
+                    infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                }
+                button.setOnAction(event -> {
+                    if (button.isSelected()) {
+                        livraisonSelected(button);
+                    } else {
+                        livraisonDeselected(button);
+                    }
+                });
+            }
+            button.setText(infoButton);
+            button.setPrefWidth(250.0);
+            button.setAlignment(Pos.TOP_LEFT);
+            button.setId("" + i);
+            button.setToggleGroup(groupButtons);
 
-            detailsLivraisons.setVisible(true);
-
-            trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
-            trackTrajet.setVisible(true);
-
-            // add the tracks
-            mapView.addCoordinateLine(trackTrajet);
-            // System.out.println("Tournee: " + trackTrajet.toString());
-
-        } else {
-            System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+            livrButtons.put(button, Triple.of(trajet.getArrivee().getCoordinate(), idLivr, trajet.getType()));
+            detailsLivraisons.getChildren().add(button);
         }
+        detailsLivraisons.setVisible(true);
+
+        /* On affiche le trajet de la tournée */
+        trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
+        trackTrajet.setVisible(true);
+        mapView.addCoordinateLine(trackTrajet);
+
     }
 
     /**
