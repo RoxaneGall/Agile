@@ -536,7 +536,7 @@ public class Controller implements ActionListener {
      *
      * @param interLivraison intersections des points de livraison à ajouter
      */
-    void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+    public void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
 
             ajoutPickUp.setText("");
@@ -658,7 +658,7 @@ public class Controller implements ActionListener {
      * réinitialise les attributs concernant la demande
      * active les boutons cliquables une fois une demande chargée
      */
-    void afficherDemande() {
+    public void afficherDemande() {
         try {
             clearDemande(); // on supprime la demande d'avant
 
