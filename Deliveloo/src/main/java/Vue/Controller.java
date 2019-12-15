@@ -730,7 +730,7 @@ public class Controller implements ActionListener {
         ToggleButton pairedButton = null;
         Triple<Coordinate, Long, Trajet.Type> entry = livrButtons.get(button);
         for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
-            if (button != entry1.getKey() && entry1.getValue().getLeft() == entry.getLeft()) {
+            if (button != entry1.getKey() && entry1.getValue().getMiddle() == entry.getMiddle()) {
                 pairedButton = entry1.getKey();
                 break;
             }
@@ -741,14 +741,21 @@ public class Controller implements ActionListener {
         pairedButton.setStyle("-fx-base: lightblue;");
 
         int i = 0;
-        Boolean nextIter = true;
+        Boolean nextIter;
         do {
-            tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-            System.out.println(tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft()));
+            nextIter = true;
             if (livrButtons.get(button).getRight() == DELIVERY) {
                 nextIter = tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft());
+                if (nextIter && tourneePartCoordinate.contains(entry.getLeft())) {
+                    tourneePartCoordinate.remove(entry.getLeft());
+                }
             }
-        } while (tourneeCoordinate.get(i - 1) != entry.getLeft());
+
+            tourneePartCoordinate.add(tourneeCoordinate.get(i++));
+            System.out.println("Track contient coordonné du pick-Up :"+nextIter);
+            System.out.println("Track contient coordonné du delivery :"+tourneePartCoordinate.contains(entry.getLeft()));
+            System.out.println("JE CONTINUE A BOUCLER ?"+(!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter));
+        } while (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter);
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
