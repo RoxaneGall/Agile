@@ -1,6 +1,13 @@
 package Vue;
 
-import Modele.*;
+import Donnees.LectureXML;
+import Modeles.*;
+import Service.Service;
+import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Extent;
+import com.sothawo.mapjfx.Marker;
+import com.sothawo.mapjfx.Projection;
+import Modeles.Demande;
 import Service.Service;
 import com.sothawo.mapjfx.*;
 import com.sun.javafx.application.ParametersImpl;
@@ -24,6 +31,11 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static com.sun.javafx.application.ParametersImpl.getParameters;
+import javafx.application.Application;
+
+import javax.swing.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
 

@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modele.*;
+import Modeles.*;
 import Donnees.*;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -11,7 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
+import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
+import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -48,7 +50,7 @@ import Service.Service;
 import javafx.util.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import static Modele.Trajet.Type.DELIVERY;
+import static Modeles.Trajet.Type.DELIVERY;
 import static org.apache.commons.lang3.tuple.MutableTriple.of;
 
 public class Controller implements ActionListener {

@@ -1,15 +1,138 @@
-package Modele;
+package Modeles;
 
 import com.sothawo.mapjfx.Coordinate;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TrajetTest {
 
     Trajet trajet;
+
+    @Test
+    void getHeureDepartTest_ShouldReturnHeureDepartAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        Date expectedH = new Date();
+
+        trajet.setHeureDepart(expectedH);
+
+        //Act & Assert
+        assertEquals(expectedH,trajet.getHeureDepart());
+    }
+
+    @Test
+    void setHeureDepartTest_ShouldModifyHeureDepartAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        Date expectedH = new Date();
+
+        //Act
+        trajet.setHeureDepart(expectedH);
+
+        //Assert
+        assertEquals(expectedH,trajet.getHeureDepart());
+    }
+
+    @Test
+    void getHeureArriveeTest_ShouldReturnHeureDepartAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        Date expectedH = new Date();
+
+        trajet.setHeureArrivee(expectedH);
+
+        //Act & Assert
+        assertEquals(expectedH,trajet.getHeureArrivee());
+    }
+
+    @Test
+    void setHeureArriveeTest_ShouldModifyHeureDepartAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        Date expectedH = new Date();
+
+        trajet.setHeureArrivee(expectedH);
+
+        //Act & Assert
+        assertEquals(expectedH,trajet.getHeureArrivee());
+    }
+
+    @Test
+    void getTypeTest_ShouldReturnTypeAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        trajet.setType(Trajet.Type.PICKUP);
+
+        //Act & Assert
+        assertEquals(Trajet.Type.PICKUP,trajet.getType());
+    }
+
+    @Test
+    void setTypeTest_ShouldModifyTypeAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+
+        trajet = new Trajet(i1);
+
+        Date expectedH = new Date();
+
+        //Act
+        trajet.setType(Trajet.Type.PICKUP);
+
+        //Assert
+        assertEquals(Trajet.Type.PICKUP,trajet.getType());
+    }
+
+    @Test
+    void getLivraisonTest_ShouldReturnLivraisonAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
+        Livraison l = new Livraison((long)0,i1,i2,30,160);
+
+        trajet = new Trajet(i1);
+
+        trajet.setLivraison(l);
+
+        //Act & Assert
+        assertEquals(l,trajet.getLivraison());
+    }
+
+    @Test
+    void setLivraisonTest_ShouldModifyLivraisonAttribute() {
+        //Arrange
+        Intersection i1 = new Intersection(1,new Coordinate(0.0,0.0));
+        Intersection i2 = new Intersection(2,new Coordinate(0.0,3.0));
+        Livraison l = new Livraison((long)0,i1,i2,30,160);
+
+        trajet = new Trajet(i1);
+
+        //Act
+        trajet.setLivraison(l);
+
+        //Assert
+        assertEquals(l,trajet.getLivraison());
+    }
 
     @Test
     void getLongueurTest_ShouldReturnSumOfTronconLengths() {

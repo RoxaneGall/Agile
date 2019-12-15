@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 
-import Modele.*;
+import Modeles.*;
 import org.w3c.dom.*;
 
 import java.io.IOException;
@@ -19,10 +19,22 @@ import org.xml.sax.SAXException;
 
 import static java.lang.Math.*;
 
+/**
+ * Classe se chargeant de la lecture des fichiers XML
+ *
+ * @author H4132
+ *
+ */
 public class LectureXML {
-    //map(idIntersection,Intersection);
-
+    /**
+     * Crée une instance de l'API DocumentBuilderFactory à partir de laquelle on peut avoir un parseur
+     * qui va produire des arbres d'objets DOM a partir du fichier XML chargé.
+     */
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    /**
+     * DocumentBuilder est une API pour avoir un parseur qui produit des
+     * arbres d'objets DOM a partir d'un objet XML.
+     */
     DocumentBuilder parser;
 
     public LectureXML() {
@@ -33,6 +45,14 @@ public class LectureXML {
         }
     }
 
+    /**
+     * Charge le plan de la ville récupéré d'un fichier XML
+     *
+     * @param cheminFichier
+     * est le chemin d'accès sur le disque du fichier XML contenant les données du plan à charger
+     *
+     * @throws Exception
+     */
     public void chargerPlan(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
             throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
@@ -115,18 +135,19 @@ public class LectureXML {
         }
     }
 
-    /*Charger plan :
-- Le fichier chargé n’est pas un .xml
-- Le fichier chargé est vide ou ne correspond pas au format requis
-- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur
-Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on affiche un message d'erreur à l'utilisateur*/
-
-    /*Charger demande :
-- Le fichier chargé n’est pas un .xml
-- Le fichier chargé est vide ou ne correspond pas au format requis
-- Un point d’intersection n’est pas compris dans la zone du plan de Lyon et ne peut donc pas être pris en compte
-- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur*/
-
+    /**
+     * Charge une demande de livraison(s) à partir d'un fichier XML
+     *
+     * @param cheminFichier
+     * est le chemin d'accès sur le disque du fichier XML
+     * contenant les données de la demande de livraison(s)
+     *
+     * @return la demande de livraison créée dans notre structure de données
+     * à l'aboutissement du chargement de la demande
+     *
+     * @throws Exception
+     *
+     */
     public Demande chargerDemande(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
             throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
@@ -221,6 +242,14 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         return demande;
     }
 
+    /**
+     * Calcule les coordonnées des extrémités du plan
+     *
+     * @return la liste des coordonnées des quatre extrémités
+     * du plan calculées
+     *
+     * @throws Exception
+     */
     public ArrayList<Coordinate> getLimitesPlan() throws Exception {
         ArrayList<Coordinate> myList = new ArrayList<>();
 
@@ -263,7 +292,15 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
         return myList;
     }
 
-
+    /**
+     * Calcule l'intersection du graphe la plus proche d'un point donné
+     *
+     * @param c
+     * représente les coordonnées du point
+     * dont on veut l'intersection la plus proche
+     *
+     * @return l'intersection la plus proche du point donné
+     */
     public Intersection getIntersectionPlusProche(Coordinate c) {
 
         Intersection res = new Intersection();
@@ -279,12 +316,12 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 
             Double distance = sqrt(pow(diffLongitude,2)+pow(difflatitude,2));
 
-            if (distance<distanceMin) {
-                distanceMin=distance;
+            if (distance < distanceMin) {
+                distanceMin = distance;
                 res = i;
             }
         }
-        if (distanceMin>0.002)
+        if (distanceMin > 0.002)
             return null;
         return res;
     }

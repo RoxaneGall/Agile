@@ -1,6 +1,8 @@
-package Modele;
+package Modeles;
 
 import com.sothawo.mapjfx.Coordinate;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -66,5 +68,20 @@ class IntersectionTest {
 
         //Assert
         assertEquals(p,actualp);
+    }
+
+    @Test
+    void toStringTest_ShouldReturnCorrectText() {
+        //Arrange
+        Coordinate p = new Coordinate(4.112233, 5.32404);
+        long initialId = 34;
+        Intersection inter = new Intersection(initialId,p);
+
+        //Act
+        String actualT = inter.toString();
+
+        //Assert
+        String expectedT = "Intersection{c=" + p.toString() + "nbTroncons="+ inter.getTroncons().size() + '}';
+        assertEquals(expectedT,actualT);
     }
 }
