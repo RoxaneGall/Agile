@@ -54,19 +54,7 @@ class TSP1Test {
     }
 
     @Test
-    void realiserTourneeDepuisGrandPlanEt15Livraisons_shouldSucceed(){
-        assertTimeout(ofMinutes(5), () -> {
-            Service service = new Service();
-            service.chargerPlan("../datas/grandPlan.xml");
-            Demande demande = service.chargerDemande("../datas/demandeTest5.xml");
-            service.calculerTournee(demande);
-            Tournee t = service.recupererTournee();
-        });
-    }
-
-
-    @Test
-    void realiserTourneeDepuisGrandPlanEt12Livraisons_shouldSucceed(){
+    void realiserTourneeDepuisGrandPlanEt12Livraisons_shouldSucceed() {
         assertTimeout(ofMinutes(1), () -> {
             Service service = new Service();
             service.chargerPlan("../datas/grandPlan.xml");
@@ -74,6 +62,7 @@ class TSP1Test {
             service.calculerTournee(demande);
             Tournee t = service.recupererTournee();
         });
+    }
 
     @Test
     void realiserTourneeDepuisGrandPlanEt15Livraisons_shouldSucceed() throws Exception {
@@ -90,9 +79,8 @@ class TSP1Test {
     }
 
 
-
     @Test
-    void realiserTourneeDepuisPetitPlanEtDeuxLivraisonsMemeEndroit_shouldSucceed() {
+    void realiserTourneeDepuisPetitPlanEtDeuxLivraisonsMemeEndroit_shouldSucceed(){
         assertTimeout(ofSeconds(1), () -> {
             Service service = new Service();
             service.chargerPlan("../datas/petitPlan.xml");

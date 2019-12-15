@@ -102,9 +102,10 @@ public class LectureXML {
                 Graphe.shared.addIntersection(myIntersection);
             }
 
-            String nomRue;
-            long idOrigine, idDestination;
-            Double longueur;
+
+            String nomRue = null;
+            long idOrigine = 0, idDestination = 0;
+            Double longueur = null;
             Intersection destination;
             if (rootNodes.item(i).getNodeName().equals("troncon")) {
                 if (countInter == 0) {
@@ -115,14 +116,21 @@ public class LectureXML {
                     idOrigine = Long.parseLong(attributes.getNamedItem("origine").getNodeValue());
                     idDestination = Long.parseLong(attributes.getNamedItem("destination").getNodeValue());
                     longueur = Double.parseDouble(attributes.getNamedItem("longueur").getNodeValue());
-                    if (longueur < 0) {
-                        throw new Exception("La longueur du tronçon ne peut pas être négative. \n" +
-                                " Veuillez rectifier cette longueur erronée.");
+                    if (longueur < 0.0) {
+                        System.out.println(longueur);
+                        throw new IllegalArgumentException();
                     }
-                } catch (Exception e) {
+                } catch(NullPointerException npe) {
+                    throw new NullPointerException("Informations manquantes au tronçon " + countTroncon++ + "\n");
+                } catch (NumberFormatException nfe) {
                     throw new Exception("Les attributs du noeud correspondant au tronçon " + countTroncon++ + " sont mal renseignés. " +
                             "Veuillez respecter le format des attributs suivant : \n" +
-                            " origine et destination sont des long, nomRue est un String et longueur est un Double.", e);
+                            " origine et destination sont des long, nomRue est un String et longueur est un Double.", nfe);
+                } catch (IllegalArgumentException iae) {
+                    throw new IllegalArgumentException("La longueur du tronçon ne peut pas être négative. \n" +
+                            " Veuillez rectifier cette longueur erronée.");
+                }  catch (Exception e) {
+                    throw new Exception("Problème dans le chargement du plan", e);
                 }
                 destination = Graphe.shared.getIntersectionMap().get(idDestination);
                 if (destination == null) {
