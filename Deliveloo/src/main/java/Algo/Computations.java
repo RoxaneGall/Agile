@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Computations {
+public class Computations extends PlusCourtChemin {
 
     private static ActionListener delegate = null;
     private static TSP1 tsp1 = new TSP1();
