@@ -4,6 +4,7 @@ import Algo.Computations;
 import Modele.*;
 import Donnees.*;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -45,16 +46,19 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import Service.Service;
 import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+
+import static Modele.Trajet.Type.DELIVERY;
+import static org.apache.commons.lang3.tuple.MutableTriple.of;
 
 public class Controller implements ActionListener {
-
 
     public Scene scene;
     public Service service = new Service();
     public Stage primaryStage = new Stage();
-    public FileChooser fileChooser = new FileChooser();
-    public DirectoryChooser directoryChooser = new DirectoryChooser();
-    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
+    public FileChooser fileChooser = new FileChooser(); // explorateur pour sélectionner un fichier
+    public DirectoryChooser directoryChooser = new DirectoryChooser(); // explorateur pour sélectionner un dossier
+    public SimpleDateFormat formater = new SimpleDateFormat("HH:mm"); //
 
     /**
      * JFX Elements des principales fonctionnalités de l'application
@@ -115,7 +119,7 @@ public class Controller implements ActionListener {
 
     public ToggleButton lastSelected;
     public ToggleButton lastPairSelected;
-    public HashMap<ToggleButton, Pair<Coordinate, Long>> livrButtons = new HashMap<>();
+    public HashMap<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> livrButtons = new HashMap<>();
 
     /**
      * FX elements d'affichage pour debug
@@ -365,17 +369,17 @@ public class Controller implements ActionListener {
             Coordinate c1 = null;
             Coordinate c2 = null;
             Long idLivrSupr = null;
-            for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry : livrButtons.entrySet()) {
+            for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry : livrButtons.entrySet()) {
                 if (entry.getKey().isSelected()) {
-                    c1 = entry.getValue().getKey();
-                    idLivrSupr = entry.getValue().getValue();
+                    c1 = entry.getValue().getLeft();
+                    idLivrSupr = entry.getValue().getMiddle();
                     break;
                 }
             }
 
-            for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry1 : livrButtons.entrySet()) {
-                if (c1 != entry1.getValue().getKey() && entry1.getValue().getValue() == idLivrSupr) {
-                    c2 = entry1.getValue().getKey();
+            for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
+                if (c1 != entry1.getValue().getLeft() && entry1.getValue().getMiddle() == idLivrSupr) {
+                    c2 = entry1.getValue().getLeft();
                     break;
                 }
 
@@ -724,13 +728,12 @@ public class Controller implements ActionListener {
         tourneePartCoordinate.clear();
 
         ToggleButton pairedButton = null;
-        Pair<Coordinate, Long> entry = livrButtons.get(button);
-        for (Map.Entry<ToggleButton, Pair<Coordinate, Long>> entry1 : livrButtons.entrySet()) {
-            if (button != entry1.getKey() && entry1.getValue().getValue() == entry.getValue()) {
+        Triple<Coordinate, Long, Trajet.Type> entry = livrButtons.get(button);
+        for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
+            if (button != entry1.getKey() && entry1.getValue().getLeft() == entry.getLeft()) {
                 pairedButton = entry1.getKey();
                 break;
             }
-
         }
         lastSelected = button;
         lastPairSelected = pairedButton;
@@ -738,9 +741,14 @@ public class Controller implements ActionListener {
         pairedButton.setStyle("-fx-base: lightblue;");
 
         int i = 0;
+        Boolean nextIter = true;
         do {
             tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-        } while (tourneeCoordinate.get(i - 1) != entry.getKey());
+            System.out.println(tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft()));
+            if (livrButtons.get(button).getRight() == DELIVERY) {
+                nextIter = tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft());
+            }
+        } while (tourneeCoordinate.get(i - 1) != entry.getLeft());
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
         mapView.addCoordinateLine(trackPart);
@@ -836,7 +844,8 @@ public class Controller implements ActionListener {
                 button.setAlignment(Pos.TOP_LEFT);
                 button.setId("" + i);
                 button.setToggleGroup(groupButtons);
-                livrButtons.put(button, new Pair<>(trajet.getArrivee().getCoordinate(), idLivr));
+
+                livrButtons.put(button, Triple.of(trajet.getArrivee().getCoordinate(), idLivr, trajet.getType()));
                 detailsLivraisons.getChildren().add(button);
             }
 
