@@ -46,7 +46,7 @@
 
 
     <center>
-        <MapView fx:id="mapView" BorderPane.alignment="CENTER" minWidth="1000" minHeight="1000"/>
+        <MapView fx:id="mapView" BorderPane.alignment="CENTER"/>
     </center>
 
     <bottom>

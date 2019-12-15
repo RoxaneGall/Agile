@@ -8,11 +8,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Classe representant les sommets du graphe de la ville. Possede une liste de troncons lies a l'intersection
+ */
 public class Intersection {
     private long id;
     private Coordinate coord;
     private ArrayList<Troncon> troncons;
 
+    /**
+     *
+     * @param id
+     * @param c
+     */
     public Intersection(long id, Coordinate c) {
         this.id = id;
         this.coord = c;
@@ -22,24 +30,45 @@ public class Intersection {
     public Intersection() {
 
     }
-    public void setIntersection(Intersection i){
+
+    /**
+     *
+     * @param i
+     */
+    public Intersection(Intersection i){
         this.coord=i.coord;
         this.id=i.id;
         this.troncons=i.troncons;
     }
 
+    /**
+     *
+     * @return l'identifiant de l'intersection
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * lie un troncon a l'intersection
+     * @param t
+     */
     public void addTroncon(Troncon t) {
         troncons.add(t);
     }
 
+    /**
+     *
+     * @return les coordonnees de l'intersection
+     */
     public Coordinate getCoordinate() {
         return coord;
     }
 
+    /**
+     *
+     * @return les troncons lies a l'intersection
+     */
     public Collection<Troncon> getTroncons() {
         return troncons;
     }

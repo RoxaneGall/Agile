@@ -14,30 +14,61 @@ public class Computations {
     private static ActionListener delegate = null;
     private static TSP1 tsp1 = new TSP1();
 
+    /**
+     * @param al
+     * Action Listener sur lequel Computations va pouvoir declencher des actions
+     * Comme la notification de nouveau meilleur trajet calculé
+     */
     public static void setDelegate(ActionListener al) {
         delegate = al;
     }
 
+    /**
+     * Arreter les calculs en cours
+    */
     public static void endComputations() {
         tsp1.setEnd(true);
     }
 
+    /**
+     * Declenche la notification "Meilleur Trajet trouvé"
+     */
     public static void betterResultFound() {
         ActionEvent action = new ActionEvent(tsp1,1,"newResultFound");
         if (delegate!=null)
             delegate.actionPerformed(action);
     }
 
+    /**
+     * Declenche la notification calcul terminé, le dernier trajet est le meilleur
+     */
     public static void lastResultIsBestResult() {
         ActionEvent action = new ActionEvent(tsp1,0,"ended");
         if (delegate!=null)
             delegate.actionPerformed(action);
     }
 
+
+    /**
+     * Declenche le calcul de la meilleure tournée
+     *
+     * @param couts
+     * Tableau des plus court chemin entre tous les sommets du graphe
+     */
     public static void runTSP(Trajet[][] couts) {
         tsp1.chercheSolution(Integer.MAX_VALUE, couts.length,couts);
     }
 
+
+    /**
+     * @param couts
+     * Tableau des plus court chemin entre tous les sommets du graphe
+     *
+     * @param demande
+     * Demande associé à la tournée en calcul
+     *
+     * @return la meilleure tournée actuellement calculée
+     */
     public static Tournee getTourneeFromDemande(Trajet[][] couts, Demande demande)
     {
         Tournee tournee = new Tournee(demande);
@@ -93,6 +124,11 @@ public class Computations {
         return tournee;
     }
 
+    /**
+     * @param origine Intersection d'origine
+     * @param arrivee Intersection d'arrivée
+     * @return le plus court chemin entre l'origine et l'arrivée
+     */
     public static Trajet getMeilleurTrajet(Intersection origine,
                                            Intersection arrivee)
     {

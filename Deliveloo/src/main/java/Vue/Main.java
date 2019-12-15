@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static javafx.application.Application.launch;
 
 /**
  * Demo application for the mapjfx component.
@@ -42,5 +43,6 @@ public class Main extends Application {
         final Projection projection = getParameters().getUnnamed().contains("wgs84")
                 ? Projection.WGS_84 : Projection.WEB_MERCATOR;
         controller.initializeView(scene, projection, primaryStage);
+        System.out.println(primaryStage);
     }
 }
