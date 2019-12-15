@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 import static java.lang.Math.*;
 
 public class LectureXML {
-    //map(idIntersection,Intersection);
 
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder parser;
@@ -114,18 +113,6 @@ public class LectureXML {
             }
         }
     }
-
-    /*Charger plan :
-- Le fichier chargé n’est pas un .xml
-- Le fichier chargé est vide ou ne correspond pas au format requis
-- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur
-Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on affiche un message d'erreur à l'utilisateur*/
-
-    /*Charger demande :
-- Le fichier chargé n’est pas un .xml
-- Le fichier chargé est vide ou ne correspond pas au format requis
-- Un point d’intersection n’est pas compris dans la zone du plan de Lyon et ne peut donc pas être pris en compte
-- Impossible de lire le fichier (fichier protégé en lecture) ou autre erreur*/
 
     public Demande chargerDemande(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
@@ -279,12 +266,12 @@ Faudrait que tu renvoies à l'IHM des trucs différents selon l'erreur ou qu'on 
 
             Double distance = sqrt(pow(diffLongitude,2)+pow(difflatitude,2));
 
-            if (distance<distanceMin) {
-                distanceMin=distance;
+            if (distance < distanceMin) {
+                distanceMin = distance;
                 res = i;
             }
         }
-        if (distanceMin>0.002)
+        if (distanceMin > 0.002)
             return null;
         return res;
     }
