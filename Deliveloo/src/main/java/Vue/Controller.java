@@ -173,7 +173,8 @@ public class Controller implements ActionListener {
                     "'Tiles &copy; <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>'");
 
 
-    public Controller() throws Exception {    }
+    public Controller() throws Exception {
+    }
 
 
     /**
@@ -188,7 +189,7 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
         loading.visibleProperty().setValue(false);
-        if(stopTournee!=null) {
+        if (stopTournee != null) {
             stopTournee.setDisable(true);
         }
 
@@ -256,7 +257,7 @@ public class Controller implements ActionListener {
         chargerPlan("../datas/grandPlan.xml");
     }
 
-    public void initalizeMapView(){
+    public void initalizeMapView() {
         mapView.initialize();
     }
 
@@ -277,8 +278,8 @@ public class Controller implements ActionListener {
         }
     }
 
-     /**
-     *  Gestionnaire des évènements d'interaction avec la carte (déplacement, zoom)
+    /**
+     * Gestionnaire des évènements d'interaction avec la carte (déplacement, zoom)
      */
     public void eventHandlers() {
         // add an event handler for MapViewEvent#MAP_EXTENT and set the extent in the map
@@ -301,9 +302,9 @@ public class Controller implements ActionListener {
     }
 
     /**
-     *  Action réalisée lorsque l'utilisateur souhaite charger un plan
-     *  Un explorateur de fichier est ouvert et l'utilisateur peut sélectionner le fichier à charger comme nouveau plan
-     *  Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
+     * Action réalisée lorsque l'utilisateur souhaite charger un plan
+     * Un explorateur de fichier est ouvert et l'utilisateur peut sélectionner le fichier à charger comme nouveau plan
+     * Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
      */
     public void selectPlan() {
         File selectedFile = null;
@@ -405,17 +406,35 @@ public class Controller implements ActionListener {
         });
     }
 
+    /**
+     * Méthode qui permet d'activer l'événement de l'ajout d'une livraison au bouton "ajoutLivraison"
+     */
+    Boolean isAlreadyAdded = false; //paramètre qui permet de savoir si une livraison a été ajoutée
+
+    private void setButtonAjoutLivraison() {
+        ajoutLivraison.setOnAction(event -> {
+            if (!isAlreadyAdded) {
+                isAlreadyAdded = true;
+                ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
+                ArrayList<Intersection> interLivraison = new ArrayList<Intersection>(); //liste où stocker les deux intersections : pick et delivery
+                addRightClickEvent(interLivraison);
+            }
+        });
+    }
+
+    /**
+     * Méthode qui permet d'identifier la coordonnée du point sélectionner quand l'utilisateur fait un clic droit sur la map
+     */
     private void addRightClickEvent(ArrayList<Intersection> interLivraison) {
 
         mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
             eventClick.consume();
-            Coordinate pickUp = eventClick.getCoordinate();
-            Intersection i = service.intersectionPlusProche(pickUp);
-            System.out.println("inter trouvée : " + i);
-            if (i != null) {
+            Coordinate coord = eventClick.getCoordinate(); //on récupère le point sélectionné
+            Intersection i = service.intersectionPlusProche(coord); //on cherche l'intersection la plus proche au point
+            if (i != null) { //si le point sélectionné est compris dans le plan
                 int size = demande.getLivraisons().size() + 1;
                 int nbLivrAjoute = interLivraison.size();
-                if (nbLivrAjoute == 0) { //premier clic
+                if (nbLivrAjoute == 0) { //premier point sélectionné qui correspond au point pickUp
                     URL imageURL = null;
                     try {
                         imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
@@ -428,7 +447,7 @@ public class Controller implements ActionListener {
                     interLivraison.add(i);
                     ajouterLivraison(interLivraison);
                 }
-                if (nbLivrAjoute == 1) { //deuxieme clic
+                if (nbLivrAjoute == 1) { //deuxième point sélectionné qui correspond au point delivery
                     URL imageURL = null;
                     try {
                         imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
@@ -441,98 +460,85 @@ public class Controller implements ActionListener {
                     interLivraison.add(i);
                     ajouterLivraison(interLivraison);
                 }
-                if (nbLivrAjoute == 2) {
+                if (nbLivrAjoute == 2) { //si on sélectionne plus que 2 points
                     ajoutPickUp.setText("Livraison ajoutée !");
                 }
-            }
-            if (i == null) {
+            } else { //si le point sélectionné n'est pas compris dans le plan
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur ajout livraison");
                 alert.setHeaderText("Erreur ajout livraison");
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
-            isAlreadyAdding = false;
+            isAlreadyAdded = false;
         });
     }
 
-    public void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+    /**
+     * Méthode qui permet d'ajouter la livraison à la demande et de recalculer la tournée en ayant les
+     * moins de modifications possibles.
+     */
+    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
+
             ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
-            genererLivraison(interPickUp, interDelivery);
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+
+            // Set the button types.
+            ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+            gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+            TextField dEnlevement = new TextField();
+            dEnlevement.setPromptText("Durée d'enlèvement : ");
+            TextField dLivraison = new TextField();
+            dLivraison.setPromptText("Durée de livraison : ");
+
+            gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
+            gridPane.add(dEnlevement, 1, 0);
+            gridPane.add(new Label("Durée de livraison : "), 2, 0);
+            gridPane.add(dLivraison, 3, 0);
+
+            dialog.getDialogPane().setContent(gridPane);
+
+            // Request focus on the username field by default.
+            Platform.runLater(() -> dEnlevement.requestFocus());
+
+            // Convert the result to a username-password-pair when the login button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == loginButtonType) {
+                    return new Pair<>(dEnlevement.getText(), dLivraison.getText());
+                }
+                //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
+                mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
+                mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
+                return null;
+            });
+            Optional<Pair<String, String>> result = dialog.showAndWait();
+
+            Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+            tournee = nvTournee;
+            demande = nvTournee.getDemande();
+            if (indexHistorique < historique.size() - 1) {
+                int historiqueSize = historique.size();
+                System.out.println("Ajout à l'index=" + indexHistorique);
+                for (int i = historiqueSize - 1; i > indexHistorique; i--) {
+                    System.out.println("CLEAR historique for index=" + i);
+                    historique.remove(i);
+                }
+            }
+            afficherTournee(nvTournee);
             ajoutPickUp.setText("Livraison ajoutée !");
         }
     }
 
-    private void genererLivraison(Intersection interPickUp, Intersection interDelivery) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
-
-        // Set the button types.
-        ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField dEnlevement = new TextField();
-        dEnlevement.setPromptText("Durée d'enlèvement : ");
-        TextField dLivraison = new TextField();
-        dLivraison.setPromptText("Durée de livraison : ");
-
-        gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
-        gridPane.add(dEnlevement, 1, 0);
-        gridPane.add(new Label("Durée de livraison : "), 2, 0);
-        gridPane.add(dLivraison, 3, 0);
-
-        dialog.getDialogPane().setContent(gridPane);
-
-        // Request focus on the username field by default.
-        Platform.runLater(() -> dEnlevement.requestFocus());
-
-        // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                return new Pair<>(dEnlevement.getText(), dLivraison.getText());
-            }
-            //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
-            mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
-            mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
-            return null;
-        });
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-
-        Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
-        tournee = nvTournee;
-        demande = nvTournee.getDemande();
-        if (indexHistorique < historique.size() - 1) {
-            int historiqueSize = historique.size();
-            System.out.println("Ajout à l'index=" + indexHistorique);
-            for (int i = historiqueSize - 1; i > indexHistorique; i--) {
-                System.out.println("CLEAR historique for index=" + i);
-                historique.remove(i);
-            }
-        }
-        afficherTournee(nvTournee);
-        ajoutPickUp.setText("Livraison ajoutée !");
-    }
-
-    Boolean isAlreadyAdding = false;
-
-    private void setButtonAjoutLivraison() {
-        ajoutLivraison.setOnAction(event -> {
-            if (!isAlreadyAdding) {
-                isAlreadyAdding = true;
-                ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
-                ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
-                addRightClickEvent(interLivraison);
-            }
-        });
-    }
 
     /**
      *
@@ -613,7 +619,7 @@ public class Controller implements ActionListener {
             clearDemande(); // on supprime la demande d'avant
 
             entrepot = demande.getEntrepot().getCoordinate();
-            URL imageURLEntrepot = new URL(path +  "/datas/logos/entrepot.png");
+            URL imageURLEntrepot = new URL(path + "/datas/logos/entrepot.png");
             entrepotMarker = new Marker(imageURLEntrepot, -32, -64).setPosition(entrepot).setVisible(true);
             mapView.addMarker(entrepotMarker);
 
@@ -758,9 +764,9 @@ public class Controller implements ActionListener {
             }
 
             tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-            System.out.println("Track contient coordonné du pick-Up :"+nextIter);
-            System.out.println("Track contient coordonné du delivery :"+tourneePartCoordinate.contains(entry.getLeft()));
-            System.out.println("JE CONTINUE A BOUCLER ?"+(!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter));
+            System.out.println("Track contient coordonné du pick-Up :" + nextIter);
+            System.out.println("Track contient coordonné du delivery :" + tourneePartCoordinate.contains(entry.getLeft()));
+            System.out.println("JE CONTINUE A BOUCLER ?" + (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter));
         } while (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter);
         trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
         trackPart.setVisible(true);
