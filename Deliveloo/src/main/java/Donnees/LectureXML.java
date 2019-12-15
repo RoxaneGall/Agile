@@ -19,9 +19,22 @@ import org.xml.sax.SAXException;
 
 import static java.lang.Math.*;
 
+/**
+ * Classe se chargeant de la lecture des fichiers XML
+ *
+ * @author H4132
+ *
+ */
 public class LectureXML {
-
+    /**
+     * Crée une instance de l'API DocumentBuilderFactory à partir de laquelle on peut avoir un parseur
+     * qui va produire des arbres d'objets DOM a partir du fichier XML chargé.
+     */
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    /**
+     * DocumentBuilder est une API pour avoir un parseur qui produit des
+     * arbres d'objets DOM a partir d'un objet XML.
+     */
     DocumentBuilder parser;
 
     public LectureXML() {
