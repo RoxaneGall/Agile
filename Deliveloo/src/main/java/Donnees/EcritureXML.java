@@ -41,7 +41,7 @@ public class EcritureXML {
         instructions += "  Heure d'arrivée : " + simpleDateFormat.format(tournee.getHeureArrivee()) + "\n";
         instructions += "  Durée du trajet : " + (tournee.getTotalDuration()) + " minutes\n";
         instructions += "  Distance totale : " + (tournee.getTotalDistance()/1000) + " km\n\n";
-        instructions += "–––––––––––––––––––––––––––\n";
+        instructions += "–––––––––––––––––––––––––––\n\n";
         for (Trajet t : trajets){
             switch (t.getType()) {
                 case COMEBACKHOME:

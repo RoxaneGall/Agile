@@ -372,8 +372,10 @@ public class Controller implements ActionListener {
             Coordinate c1 = null;
             Coordinate c2 = null;
             Long idLivrSupr = null;
+            ToggleButton button1 = null;
             for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry : livrButtons.entrySet()) {
                 if (entry.getKey().isSelected()) {
+                    button1 = entry.getKey();
                     c1 = entry.getValue().getLeft();
                     idLivrSupr = entry.getValue().getMiddle();
                     break;
@@ -381,7 +383,7 @@ public class Controller implements ActionListener {
             }
 
             for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
-                if (c1 != entry1.getValue().getLeft() && entry1.getValue().getMiddle() == idLivrSupr) {
+                if (entry1.getKey() != button1 && entry1.getValue().getMiddle() == idLivrSupr) {
                     c2 = entry1.getValue().getLeft();
                     break;
                 }
@@ -394,8 +396,9 @@ public class Controller implements ActionListener {
             deleteLabelByCoord(c2);
             tournee = service.supprimerLivraison(tournee, idLivrSupr);
             demande = tournee.getDemande();
-            afficherTournee(tournee);
+            afficherDemande();
             mapView.removeCoordinateLine(trackPart);
+            afficherTournee(tournee);
 
             //TODO : c coordonnée du premier point à supprimer, c2 coordonnée du 2ème point à supprimer
             //TODO : remplacer cette méthode calculerTournee Optimale
