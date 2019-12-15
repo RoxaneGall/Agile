@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modele.*;
+import Modeles.*;
 import Donnees.*;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -11,7 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
+import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
+import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -48,7 +50,7 @@ import Service.Service;
 import javafx.util.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import static Modele.Trajet.Type.DELIVERY;
+import static Modeles.Trajet.Type.DELIVERY;
 import static org.apache.commons.lang3.tuple.MutableTriple.of;
 
 public class Controller implements ActionListener {
@@ -191,6 +193,9 @@ public class Controller implements ActionListener {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
         directoryChooser.setInitialDirectory(new File("../datas"));
 
+        loading.visibleProperty().setValue(false);
+        stopTournee.setDisable(true);
+
         // initialisation MapView-Cache
         createMapCache();
 
@@ -231,6 +236,10 @@ public class Controller implements ActionListener {
      */
     private void afterMapIsInitialized() {
         chargerPlan("../datas/grandPlan.xml");
+    }
+
+    public void initalizeMapView() {
+        mapView.initialize();
     }
 
     /**
@@ -404,6 +413,10 @@ public class Controller implements ActionListener {
             ArrayList<Coordinate> limites = service.chargerPlan(path); // charge le plan en mémoire
             // limites correspond à une liste des quatres coins du plan
             mapExtent = Extent.forCoordinates(limites);
+            System.out.println("extentMax :" + mapExtent.getMax());
+            System.out.println("extentMin :" + mapExtent.getMin());
+
+
             if (mapView != null) {
                 mapView.setExtent(mapExtent); // cadre la carte en fonction du plan chargé
             }
@@ -424,586 +437,587 @@ public class Controller implements ActionListener {
      *
      * @return un triplet des informations (coordonnée, lidentifiant de la livraison et type) du point sélectionné
      */
+
     private Triple<Coordinate, Long, Trajet.Type> recupererInfosCliquées() {
         Triple<Coordinate, Long, Trajet.Type> selected = null;
         for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry : livrButtons.entrySet()) { // parcours la liste des boutons de livraison
             if (entry.getKey().isSelected()) {
                 selected = entry.getValue();
                 break;
-            }
-        }
-        return selected;
-    }
-
-    /**
-     * Renvoie la coordonnée du point jumelé à celui sélectionné (par le bouton qui lui est associé)
-     *
-     * @param coord      coordonnée du point sélectionné
-     * @param idLivrSupr identifiant de la livraison dont le point est sélectionné
-     * @return
-     */
-    private Coordinate recupererPairedCoord(Coordinate coord, Long idLivrSupr) {
-        Coordinate paired = null;
-        for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
-            if (coord != entry1.getValue().getLeft() && entry1.getValue().getMiddle() == idLivrSupr) {
-                paired = entry1.getValue().getLeft();
-                break;
-            }
-        }
-        return paired;
-    }
-
-
-    /**
-     *
-     * @param interLivraison
-     */
-    private void addRightClickEvent(ArrayList<Intersection> interLivraison) {
-
-        mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
-            eventClick.consume();
-            Coordinate pickUp = eventClick.getCoordinate();
-            Intersection i = service.intersectionPlusProche(pickUp);
-            System.out.println("inter trouvée : " + i);
-            if (i != null) {
-                int size = demande.getLivraisons().size() + 1;
-                int nbLivrAjoute = interLivraison.size();
-                if (nbLivrAjoute == 0) { //premier clic
-                    URL imageURL = null;
-                    try {
-                        imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        }
                     }
-                    Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
-                    mapView.addMarker(m);
-                    deliveriesMarkers.put(m.getPosition(), m);
-                    interLivraison.add(i);
-                    ajouterLivraison(interLivraison);
+                    return selected;
                 }
-                if (nbLivrAjoute == 1) { //deuxieme clic
-                    URL imageURL = null;
-                    try {
-                        imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
+
+                /**
+                 * Renvoie la coordonnée du point jumelé à celui sélectionné (par le bouton qui lui est associé)
+                 *
+                 * @param coord      coordonnée du point sélectionné
+                 * @param idLivrSupr identifiant de la livraison dont le point est sélectionné
+                 * @return
+                 */
+                private Coordinate recupererPairedCoord (Coordinate coord, Long idLivrSupr){
+                    Coordinate paired = null;
+                    for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
+                        if (coord != entry1.getValue().getLeft() && entry1.getValue().getMiddle() == idLivrSupr) {
+                            paired = entry1.getValue().getLeft();
+                            break;
+                        }
                     }
-                    Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
-                    mapView.addMarker(m);
-                    deliveriesMarkers.put(m.getPosition(), m);
-                    interLivraison.add(i);
-                    ajouterLivraison(interLivraison);
+                    return paired;
+            }
+
+
+            /**
+             *
+             * @param interLivraison
+             */
+            private void addRightClickEvent (ArrayList < Intersection > interLivraison) {
+
+                mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
+                    eventClick.consume();
+                    Coordinate pickUp = eventClick.getCoordinate();
+                    Intersection i = service.intersectionPlusProche(pickUp);
+                    System.out.println("inter trouvée : " + i);
+                    if (i != null) {
+                        int size = demande.getLivraisons().size() + 1;
+                        int nbLivrAjoute = interLivraison.size();
+                        if (nbLivrAjoute == 0) { //premier clic
+                            URL imageURL = null;
+                            try {
+                                imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                            Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                            mapView.addMarker(m);
+                            deliveriesMarkers.put(m.getPosition(), m);
+                            interLivraison.add(i);
+                            ajouterLivraison(interLivraison);
+                        }
+                        if (nbLivrAjoute == 1) { //deuxieme clic
+                            URL imageURL = null;
+                            try {
+                                imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                            Marker m = new Marker(imageURL, -32, -64).setPosition(i.getCoordinate()).setVisible(true);
+                            mapView.addMarker(m);
+                            deliveriesMarkers.put(m.getPosition(), m);
+                            interLivraison.add(i);
+                            ajouterLivraison(interLivraison);
+                        }
+                        if (nbLivrAjoute == 2) {
+                            ajoutPickUp.setText("Livraison ajoutée !");
+                        }
+                    }
+                    if (i == null) {
+                        Alert alert = new Alert(AlertType.WARNING);
+                        alert.setTitle("Erreur ajout livraison");
+                        alert.setHeaderText("Erreur ajout livraison");
+                        alert.setContentText("Veuillez sélectionner un point dans le plan !");
+                        alert.show();
+                    }
+                    isAlreadyAdding = false;
+                });
+            }
+
+            /**
+             *
+             * @param interLivraison intersections des points de livraison à ajouter
+             */
+            private void ajouterLivraison (ArrayList < Intersection > interLivraison) {
+                    if (interLivraison.size() == 2) {
+                        ajoutPickUp.setText("");
+                        Intersection interPickUp = interLivraison.get(0);
+                        Intersection interDelivery = interLivraison.get(1);
+                        genererLivraison(interPickUp, interDelivery);
+                        ajoutPickUp.setText("Livraison ajoutée !");
+                    }
                 }
-                if (nbLivrAjoute == 2) {
+
+                /**
+                 *
+                 * @param interPickUp
+                 * @param interDelivery
+                 */
+                private void genererLivraison (Intersection interPickUp, Intersection interDelivery){
+                    Dialog<Pair<String, String>> dialog = new Dialog<>();
+                    dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+
+                    // Set the button types.
+                    ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+                    GridPane gridPane = new GridPane();
+                    gridPane.setHgap(10);
+                    gridPane.setVgap(10);
+                    gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+                    TextField dEnlevement = new TextField();
+                    dEnlevement.setPromptText("Durée d'enlèvement : ");
+                    TextField dLivraison = new TextField();
+                    dLivraison.setPromptText("Durée de livraison : ");
+
+                    gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
+                    gridPane.add(dEnlevement, 1, 0);
+                    gridPane.add(new Label("Durée de livraison : "), 2, 0);
+                    gridPane.add(dLivraison, 3, 0);
+
+                    dialog.getDialogPane().setContent(gridPane);
+
+                    // Request focus on the username field by default.
+                    Platform.runLater(() -> dEnlevement.requestFocus());
+
+                    // Convert the result to a username-password-pair when the login button is clicked.
+                    dialog.setResultConverter(dialogButton -> {
+                        if (dialogButton == loginButtonType) {
+                            return new Pair<>(dEnlevement.getText(), dLivraison.getText());
+                        }
+                        //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
+                        mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
+                        mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
+                        return null;
+                    });
+                    Optional<Pair<String, String>> result = dialog.showAndWait();
+
+                    Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
+                    tournee = nvTournee;
+                    demande = nvTournee.getDemande();
+                    if (indexHistorique < historique.size() - 1) {
+                        int historiqueSize = historique.size();
+                        System.out.println("Ajout à l'index=" + indexHistorique);
+                        for (int i = historiqueSize - 1; i > indexHistorique; i--) {
+                            System.out.println("CLEAR historique for index=" + i);
+                            historique.remove(i);
+                        }
+                    }
+                    afficherTournee(nvTournee);
                     ajoutPickUp.setText("Livraison ajoutée !");
                 }
-            }
-            if (i == null) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Erreur ajout livraison");
-                alert.setHeaderText("Erreur ajout livraison");
-                alert.setContentText("Veuillez sélectionner un point dans le plan !");
-                alert.show();
-            }
-            isAlreadyAdding = false;
-        });
-    }
 
-    /**
-     *
-     * @param interLivraison intersections des points de livraison à ajouter
-     */
-    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
-        if (interLivraison.size() == 2) {
-            ajoutPickUp.setText("");
-            Intersection interPickUp = interLivraison.get(0);
-            Intersection interDelivery = interLivraison.get(1);
-            genererLivraison(interPickUp, interDelivery);
-            ajoutPickUp.setText("Livraison ajoutée !");
-        }
-    }
+                Boolean isAlreadyAdding = false;
 
-    /**
-     *
-     * @param interPickUp
-     * @param interDelivery
-     */
-    private void genererLivraison(Intersection interPickUp, Intersection interDelivery) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
+                /**
+                 * Un explorateur de fichier s'ouvre et l'utilisateur peut sélectionner le fichier à charger comme nouvelle demande
+                 * Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
+                 */
+                private File selectDemande () {
+                    File selectedFile = null;
+                    try {
+                        System.out.println("Chargement d'une demande");
+                        selectedFile = fileChooser.showOpenDialog(primaryStage);
+                        demande = service.chargerDemande(selectedFile.getAbsolutePath());
+                        historique.clear();
+                        indexHistorique = -1;
+                    } catch (Exception e) {
+                        Alert alert = new Alert(AlertType.WARNING);
+                        alert.setTitle("Erreur chargement demande");
+                        alert.setHeaderText("Erreur chargement demande");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
+                    }
+                    return selectedFile;
+                }
 
-        // Set the button types.
-        ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+                /**
+                 * Supprime de l'IHM les composants décrivant la demande (comme les marqueurs des points de livraison sur la carte)
+                 * La demande est un attribut global à cette classe IHM
+                 * réinitialise les attributs concernant la demande et désactive les boutons cliquables une fois une demande chargée
+                 */
+                private void clearDemande () {
+                    try {
+                        scroll.setContent(null);
+                        if (entrepotMarker != null) {
+                            mapView.removeMarker(entrepotMarker);
+                        }
+                        for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                            mapView.removeMarker(entry.getValue());
+                        }
+                        deliveriesMarkers.clear();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 150, 10, 10));
+                /**
+                 * Affiche sur l'IHM les composant décrivant la demande (comme les marqueurs des points de livraison sur la carte)
+                 * La demande est un attribut global à cette classe IHM
+                 * réinitialise les attributs concernant la demande
+                 * active les boutons cliquables une fois une demande chargée
+                 */
+                private void afficherDemande () {
+                        try {
+                            clearDemande(); // on supprime la demande d'avant
 
-        TextField dEnlevement = new TextField();
-        dEnlevement.setPromptText("Durée d'enlèvement : ");
-        TextField dLivraison = new TextField();
-        dLivraison.setPromptText("Durée de livraison : ");
+                            /* On récupère l'entrepot et crée son marqueur */
+                            entrepot = demande.getEntrepot().getCoordinate();
+                            URL imageURLEntrepot = new URL(path + "/datas/logos/entrepot.png");
+                            entrepotMarker = new Marker(imageURLEntrepot, -32, -64).setPosition(entrepot).setVisible(true);
+                            mapView.addMarker(entrepotMarker);
 
-        gridPane.add(new Label("Durée d'enlèvement :"), 0, 0);
-        gridPane.add(dEnlevement, 1, 0);
-        gridPane.add(new Label("Durée de livraison : "), 2, 0);
-        gridPane.add(dLivraison, 3, 0);
+                            /* On récupère les points de livraison puis on crée les marqueurs correspondant */
+                            for (int i = 0; i < demande.getLivraisons().size(); i++) {
+                                Marker markerPickUp;
+                                Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
+                                URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
+                                markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
+                                Marker markerDelivery;
+                                Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
+                                URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
+                                markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
+                                deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
+                                deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
+                            }
 
-        dialog.getDialogPane().setContent(gridPane);
+                            /* On affiche sur la carte tous les marqueurs préalablement créés */
+                            for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
+                                entry.getValue().setVisible(true);
+                                mapView.addMarker(entry.getValue().setVisible(true));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-        // Request focus on the username field by default.
-        Platform.runLater(() -> dEnlevement.requestFocus());
+                    /**
+                     * Cette méthode crée un thread qui calcule la tournée optimale pour la demande en cours
+                     * Si un calcul était déjà en cours, il est arrêté.
+                     * Elle met également à jour les éléments de l'IHM concernés :
+                     * l'indicateur de chargement indique qu'une calcule est en cours,
+                     * et le bouton STOP qui permet d'arrêter le calcul est cliquable
+                     * @throws Exception
+                     */
+                    private void calculerTourneeOptimale () throws Exception {
+                        System.out.println("Calcul d'une tournée");
+                        try {
+                            if (demande != null) {
+                                arreterChargementMeilleureTournee(); // on arrête le calcul de la tournée optimale s'il y en avait un en cours
+                                Computations.setDelegate(this);
+                                loading.visibleProperty().setValue(true);
+                                stopTournee.setDisable(false);
+                                Thread t1 = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        service.calculerTournee(demande); // l'algorithme de calcule de la tournée optimale est appelée
+                                    }
+                                });
+                                t1.start();
+                            } else {
+                                throw new Exception("Aucune demande à traiter. Veuillez charger une demande pour calculer une tournée");
+                            }
+                        } catch (Exception ex) {
+                            throw new Exception(ex.getMessage(), ex);
+                        }
+                    }
 
-        // Convert the result to a username-password-pair when the login button is clicked.
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == loginButtonType) {
-                return new Pair<>(dEnlevement.getText(), dLivraison.getText());
-            }
-            //On supprime les markers ajoutés si on rentre pas la durée d'enlèvement et de livraison
-            mapView.removeMarker(deliveriesMarkers.get(interPickUp.getCoordinate()));
-            mapView.removeMarker(deliveriesMarkers.get(interDelivery.getCoordinate()));
-            return null;
-        });
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+                    /**
+                     * Arrête le calcul de la tournée optimale
+                     */
+                    private void arreterChargementMeilleureTournee () {
+                        Computations.endComputations();
+                    }
 
-        Tournee nvTournee = service.ajouterLivraison(tournee, interPickUp, interDelivery, Integer.parseInt(result.get().getKey()), Integer.parseInt(result.get().getValue()));
-        tournee = nvTournee;
-        demande = nvTournee.getDemande();
-        if (indexHistorique < historique.size() - 1) {
-            int historiqueSize = historique.size();
-            System.out.println("Ajout à l'index=" + indexHistorique);
-            for (int i = historiqueSize - 1; i > indexHistorique; i--) {
-                System.out.println("CLEAR historique for index=" + i);
-                historique.remove(i);
-            }
-        }
-        afficherTournee(nvTournee);
-        ajoutPickUp.setText("Livraison ajoutée !");
-    }
+                    /**
+                     * Affiche la dernière tournée optimale calculée
+                     */
+                    private void afficherTourneeCalculee () {
+                        tournee = service.recupererTournee();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                afficherTournee(tournee);
+                            }
+                        });
+                    }
 
-    Boolean isAlreadyAdding = false;
+                    /**
+                     * Méthode appelée lorsque le bouton de l'entrepôt est sélectionné
+                     * Le bouton cliqué est surligné en bleu, les boutons mis en évidence auparavant ne le sont plus
+                     * Le trajet de toute la tournée est surligné en bleu
+                     * @param button bouton de l'entrepôt sélectionné
+                     */
+                    private void entrepotSelected (ToggleButton button){
+                        if (lastSelected != null) {
+                            lastSelected.setStyle(null);
+                        }
+                        if (lastPairSelected != null) {
+                            lastPairSelected.setStyle(null);
+                        }
+                        lastSelected = button;
+                        mapView.removeCoordinateLine(trackPart);
+                        tourneePartCoordinate.clear();
+                        button.setStyle("-fx-base: lightblue;");
+                        mapView.removeCoordinateLine(trackTrajet);
 
-    /**
-     * Un explorateur de fichier s'ouvre et l'utilisateur peut sélectionner le fichier à charger comme nouvelle demande
-     * Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
-     */
-    private File selectDemande() {
-        File selectedFile = null;
-        try {
-            System.out.println("Chargement d'une demande");
-            selectedFile = fileChooser.showOpenDialog(primaryStage);
-            demande = service.chargerDemande(selectedFile.getAbsolutePath());
-            historique.clear();
-            indexHistorique = -1;
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Erreur chargement demande");
-            alert.setHeaderText("Erreur chargement demande");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
-        return selectedFile;
-    }
+                        trackTrajet.setColor(Color.DARKTURQUOISE).setWidth(8).setVisible(true);
+                        mapView.addCoordinateLine(trackTrajet);
+                    }
 
-    /**
-     * Supprime de l'IHM les composants décrivant la demande (comme les marqueurs des points de livraison sur la carte)
-     * La demande est un attribut global à cette classe IHM
-     * réinitialise les attributs concernant la demande et désactive les boutons cliquables une fois une demande chargée
-     */
-    private void clearDemande() {
-        try {
-            scroll.setContent(null);
-            if (entrepotMarker != null) {
-                mapView.removeMarker(entrepotMarker);
-            }
-            for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
-                mapView.removeMarker(entry.getValue());
-            }
-            deliveriesMarkers.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                    /**
+                     * Méthode appelée lorsque le bouton de l'entrepôt est désélectionné
+                     * Le bouton cliqué n'est plus surligné, le trajet de la tournée est de nouveau rouge
+                     * @param button bouton de l'entrepôt désélectionné
+                     */
+                    private void entrepotDeselected (ToggleButton button){
+                        button.setStyle(null);
+                        mapView.removeCoordinateLine(trackTrajet);
+                        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
+                        mapView.addCoordinateLine(trackTrajet);
+                    }
 
-    /**
-     * Affiche sur l'IHM les composant décrivant la demande (comme les marqueurs des points de livraison sur la carte)
-     * La demande est un attribut global à cette classe IHM
-     * réinitialise les attributs concernant la demande
-     * active les boutons cliquables une fois une demande chargée
-     */
-    private void afficherDemande() {
-        try {
-            clearDemande(); // on supprime la demande d'avant
+                    /**
+                     * Méthode appelée lorsque le bouton d'un point de livraison est sélectionné
+                     * Le bouton cliqué est surligné en bleu, les boutons mis en évidence auparavant ne le sont plus
+                     * Le trajet de la tournée jusqu'à ce point est surligné en bleu
+                     * @param button bouton sélectionné
+                     */
+                    private void livraisonSelected (ToggleButton button){
+                        if (lastSelected != null) {
+                            lastSelected.setStyle(null);
+                        }
+                        if (lastPairSelected != null) {
+                            lastPairSelected.setStyle(null);
+                        }
 
-            /* On récupère l'entrepot et crée son marqueur */
-            entrepot = demande.getEntrepot().getCoordinate();
-            URL imageURLEntrepot = new URL(path + "/datas/logos/entrepot.png");
-            entrepotMarker = new Marker(imageURLEntrepot, -32, -64).setPosition(entrepot).setVisible(true);
-            mapView.addMarker(entrepotMarker);
+                        mapView.removeCoordinateLine(trackTrajet);
+                        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
+                        mapView.addCoordinateLine(trackTrajet);
 
-            /* On récupère les points de livraison puis on crée les marqueurs correspondant */
-            for (int i = 0; i < demande.getLivraisons().size(); i++) {
-                Marker markerPickUp;
-                Coordinate pickUp = demande.getLivraisons().get(i).getPickup().getCoordinate();
-                URL imageURL = new URL(path + "/datas/logos/p_" + i + ".png");
-                markerPickUp = new Marker(imageURL, -32, -64).setPosition(pickUp);
-                Marker markerDelivery;
-                Coordinate delivery = demande.getLivraisons().get(i).getDelivery().getCoordinate();
-                URL imageURL2 = new URL(path + "/datas/logos/d_" + i + ".png");
-                markerDelivery = new Marker(imageURL2, -32, -64).setPosition(delivery);
-                deliveriesMarkers.put(markerPickUp.getPosition(), markerPickUp);
-                deliveriesMarkers.put(markerDelivery.getPosition(), markerDelivery);
-            }
+                        mapView.removeCoordinateLine(trackPart);
+                        tourneePartCoordinate.clear();
 
-            /* On affiche sur la carte tous les marqueurs préalablement créés */
-            for (Map.Entry<Coordinate, Marker> entry : deliveriesMarkers.entrySet()) {
-                entry.getValue().setVisible(true);
-                mapView.addMarker(entry.getValue().setVisible(true));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                        ToggleButton pairedButton = null;
+                        Triple<Coordinate, Long, Trajet.Type> entry = livrButtons.get(button);
+                        for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
+                            if (button != entry1.getKey() && entry1.getValue().getMiddle() == entry.getMiddle()) {
+                                pairedButton = entry1.getKey();
+                                break;
+                            }
+                        }
+                        lastSelected = button;
+                        lastPairSelected = pairedButton;
+                        button.setStyle("-fx-base: lightblue;");
+                        pairedButton.setStyle("-fx-base: lightblue;");
 
-    /**
-     * Cette méthode crée un thread qui calcule la tournée optimale pour la demande en cours
-     * Si un calcul était déjà en cours, il est arrêté.
-     * Elle met également à jour les éléments de l'IHM concernés :
-     * l'indicateur de chargement indique qu'une calcule est en cours,
-     * et le bouton STOP qui permet d'arrêter le calcul est cliquable
-     * @throws Exception
-     */
-    private void calculerTourneeOptimale() throws Exception {
-        System.out.println("Calcul d'une tournée");
-        try {
-            if (demande != null) {
-                arreterChargementMeilleureTournee(); // on arrête le calcul de la tournée optimale s'il y en avait un en cours
-                Computations.setDelegate(this);
-                loading.visibleProperty().setValue(true);
-                stopTournee.setDisable(false);
-                Thread t1 = new Thread(new Runnable() {
+                        int i = 0;
+                        Boolean nextIter;
+                        do {
+                            nextIter = true;
+                            if (livrButtons.get(button).getRight() == DELIVERY) {
+                                nextIter = tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft());
+                                if (nextIter && tourneePartCoordinate.contains(entry.getLeft())) {
+                                    tourneePartCoordinate.remove(entry.getLeft());
+                                }
+                            }
+
+                            tourneePartCoordinate.add(tourneeCoordinate.get(i++));
+                            System.out.println("Track contient coordonné du pick-Up :" + nextIter);
+                            System.out.println("Track contient coordonné du delivery :" + tourneePartCoordinate.contains(entry.getLeft()));
+                            System.out.println("JE CONTINUE A BOUCLER ?" + (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter));
+                        } while (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter);
+                        trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
+                        trackPart.setVisible(true);
+                        mapView.addCoordinateLine(trackPart);
+                    }
+
+                    /**
+                     * Méthode appelée lorsque le bouton d'un point de livraison est désélectionné
+                     * Le bouton cliqué n'est plus mis en évidence
+                     * Le trajet de la tournée jusqu'à ce point n'est plus surligné en bleu
+                     * @param button bouton sélectionné
+                     */
+                    private void livraisonDeselected (ToggleButton button){
+                        button.setStyle(null);
+                        if (lastPairSelected != null) {
+                            lastPairSelected.setStyle(null);
+                        }
+                        mapView.removeCoordinateLine(trackPart);
+                        tourneePartCoordinate.clear();
+                    }
+
+                    public void afficherTournee (Tournee t){
+                        System.out.println("*****" + historique.size() + " index :" + indexHistorique);
+                        if (demande != null) {
+                            if (historique.size() == 0 || historique.contains(tournee) != true) {
+                                // On ajoute la tournée à l'historique
+                                historique.add(tournee);
+                                indexHistorique++;
+                            }
+                            disableButtonsTournee(false); // les boutons tournées sont cliquables
+                            // On supprime les infos de l'ancienne tournée de l'IHM
+                            clearTournee();
+                            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
+                            int compteur = 1;
+                            Coordinate origine;
+                            Trajet trajet;
+
+                            labelTourneeDistance.setText("Distance: " + t.getTotalDistance() / 1000 + "km");
+                            labelTourneeTemps.setText("Temps: " + t.getTotalDuration() + "min");
+                            labelTourneeNbLivraison.setText("Nombre de livraisons: " + t.getDemande().getLivraisons().size());
+
+                            for (int i = 0; i < t.getTrajets().size(); i++) {
+                                trajet = t.getTrajets().get(i);
+                                origine = trajet.getOrigine().getCoordinate();
+                                tourneeCoordinate.add(origine);
+
+                                MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getArrivee().getCoordinate()).setVisible(true);
+                                mapView.addLabel(l);
+                                deliveriesNumbers.put(trajet.getArrivee().getCoordinate(), l);
+                                compteur++;
+
+                                for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
+                                    tourneeCoordinate.add(troncon.getDestination().getCoordinate());
+                                }
+
+                                String infoButton = "";
+                                Long idLivr;
+                                if (i == 0) {
+                                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(t.getHeureArrivee());
+
+                                    ToggleButton button = new ToggleButton();
+                                    button.setText(infoButton);
+                                    button.setPrefWidth(250.0);
+                                    button.setAlignment(Pos.TOP_LEFT);
+                                    button.setToggleGroup(groupButtons);
+                                    detailsLivraisons.getChildren().add(button);
+                                    button.setOnAction(event -> {
+                                        entrepotDeselected(button);
+                                    });
+                                }
+
+                                ToggleButton button = new ToggleButton();
+                                if (i == t.getTrajets().size() - 1) {
+                                    idLivr = (long) -1;
+                                    infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                                    button.setOnAction(event -> {
+                                        if (button.isSelected()) {
+                                            entrepotSelected(button);
+                                        } else {
+                                            entrepotDeselected(button);
+                                        }
+                                    });
+                                } else {
+                                    idLivr = trajet.getLivraison().getId();
+                                    if (trajet.getType() == Trajet.Type.PICKUP) {
+                                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                                    } else {
+                                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
+                                    }
+                                    button.setOnAction(event -> {
+                                        if (button.isSelected()) {
+                                            livraisonSelected(button);
+                                        } else {
+                                            livraisonDeselected(button);
+                                        }
+                                    });
+                                }
+                                button.setText(infoButton);
+                                button.setPrefWidth(250.0);
+                                button.setAlignment(Pos.TOP_LEFT);
+                                button.setId("" + i);
+                                button.setToggleGroup(groupButtons);
+
+                                livrButtons.put(button, Triple.of(trajet.getArrivee().getCoordinate(), idLivr, trajet.getType()));
+                                detailsLivraisons.getChildren().add(button);
+                            }
+
+                            //infoButton = "Fin de tournée - \n Arrivée : " + formater.format(trajet.getHeureArrivee());
+
+                            detailsLivraisons.setVisible(true);
+
+                            trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
+                            trackTrajet.setVisible(true);
+
+                            // add the tracks
+                            mapView.addCoordinateLine(trackTrajet);
+                            // System.out.println("Tournee: " + trackTrajet.toString());
+
+                        } else {
+                            System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
+                        }
+                    }
+
+                    /**
+                     * Supprime de l'IHM les composants décrivant la tournée : le trajet de la tournée, les numéros qui indiquent
+                     * l'ordre de passage du livreur aux points de livraison sur la carte, le trajet surligné, les boutons de détails des points de livraisons
+                     * Réinitialise les attributs concernant la tournée
+                     * La tournée est un attribut global du Controller
+                     */
+                    public void clearTournee () {
+                        labelTourneeDistance.setText(" ");
+                        labelTourneeNbLivraison.setText(" ");
+                        labelTourneeTemps.setText(" ");
+
+                        disableButtonsTournee(true);
+
+                        mapView.removeCoordinateLine(trackTrajet);
+                        tourneeCoordinate.clear();
+                        mapView.removeCoordinateLine(trackPart);
+                        tourneePartCoordinate.clear();
+                        detailsLivraisons.getChildren().clear();
+                        livrButtons.clear();
+                        for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
+                            mapView.removeLabel(entry.getValue());
+                        }
+                        deliveriesNumbers.clear();
+                        scroll.setVisible(true);
+                        scroll.setContent(detailsLivraisons);
+                    }
+
+                    public void disableButtonsTournee ( boolean value){
+                        ajoutLivraison.setDisable(value);
+                        supprLivraison.setDisable(value);
+                        exportFeuille.setDisable(value);
+                        if (historique.size() > 1 && indexHistorique > 0) {
+                            retour.setDisable(value);
+                        } else {
+                            retour.setDisable(true);
+                        }
+                        if (indexHistorique < historique.size() - 1) {
+                            suivant.setDisable(value);
+                        } else {
+                            suivant.setDisable(true);
+                        }
+                    }
+
+                    /** Active ou désactive les boutons de controle de la carte
+                     * @param flag true s'il faut désactiver les controles, false sinon
+                     */
+                    private void setTopControlsDisable ( boolean flag){
+                        topControls.setDisable(flag);
+                    }
+
+                    /**
+                     * Suppime le marqueur dont la coordonnée est passée en paramètres, de l'IHM et de la liste des marqueurs
+                     * @param c coordonnée du marqueur à supprimer
+                     */
+                    public void deleteMarkerByCoord (Coordinate c){
+                        mapView.removeMarker(deliveriesMarkers.get(c));
+                        deliveriesMarkers.remove(c);
+                    }
+
+                    /**
+                     * Suppime le label dont la coordonnée est passée en paramètres, de l'IHM et de la liste des labels
+                     * @param c coordonnée du marqueur à supprimer
+                     */
+                    public void deleteLabelByCoord (Coordinate c){
+                        mapView.removeLabel(deliveriesNumbers.get(c));
+                        deliveriesNumbers.remove(c);
+                    }
+
+                    /**
+                     *
+                     * @param e
+                     */
                     @Override
-                    public void run() {
-                        service.calculerTournee(demande); // l'algorithme de calcule de la tournée optimale est appelée
-                    }
-                });
-                t1.start();
-            } else {
-                throw new Exception("Aucune demande à traiter. Veuillez charger une demande pour calculer une tournée");
-            }
-        } catch (Exception ex) {
-            throw new Exception(ex.getMessage(), ex);
-        }
-    }
-
-    /**
-     * Arrête le calcul de la tournée optimale
-     */
-    private void arreterChargementMeilleureTournee() {
-        Computations.endComputations();
-    }
-
-    /**
-     * Affiche la dernière tournée optimale calculée
-     */
-    private void afficherTourneeCalculee() {
-        tournee = service.recupererTournee();
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                afficherTournee(tournee);
-            }
-        });
-    }
-
-    /**
-     * Méthode appelée lorsque le bouton de l'entrepôt est sélectionné
-     * Le bouton cliqué est surligné en bleu, les boutons mis en évidence auparavant ne le sont plus
-     * Le trajet de toute la tournée est surligné en bleu
-     * @param button bouton de l'entrepôt sélectionné
-     */
-    private void entrepotSelected(ToggleButton button) {
-        if (lastSelected != null) {
-            lastSelected.setStyle(null);
-        }
-        if (lastPairSelected != null) {
-            lastPairSelected.setStyle(null);
-        }
-        lastSelected = button;
-        mapView.removeCoordinateLine(trackPart);
-        tourneePartCoordinate.clear();
-        button.setStyle("-fx-base: lightblue;");
-        mapView.removeCoordinateLine(trackTrajet);
-
-        trackTrajet.setColor(Color.DARKTURQUOISE).setWidth(8).setVisible(true);
-        mapView.addCoordinateLine(trackTrajet);
-    }
-
-    /**
-     * Méthode appelée lorsque le bouton de l'entrepôt est désélectionné
-     * Le bouton cliqué n'est plus surligné, le trajet de la tournée est de nouveau rouge
-     * @param button bouton de l'entrepôt désélectionné
-     */
-    private void entrepotDeselected(ToggleButton button) {
-        button.setStyle(null);
-        mapView.removeCoordinateLine(trackTrajet);
-        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
-        mapView.addCoordinateLine(trackTrajet);
-    }
-
-    /**
-     * Méthode appelée lorsque le bouton d'un point de livraison est sélectionné
-     * Le bouton cliqué est surligné en bleu, les boutons mis en évidence auparavant ne le sont plus
-     * Le trajet de la tournée jusqu'à ce point est surligné en bleu
-     * @param button bouton sélectionné
-     */
-    private void livraisonSelected(ToggleButton button) {
-        if (lastSelected != null) {
-            lastSelected.setStyle(null);
-        }
-        if (lastPairSelected != null) {
-            lastPairSelected.setStyle(null);
-        }
-
-        mapView.removeCoordinateLine(trackTrajet);
-        trackTrajet.setColor(Color.DARKRED).setWidth(8).setVisible(true);
-        mapView.addCoordinateLine(trackTrajet);
-
-        mapView.removeCoordinateLine(trackPart);
-        tourneePartCoordinate.clear();
-
-        ToggleButton pairedButton = null;
-        Triple<Coordinate, Long, Trajet.Type> entry = livrButtons.get(button);
-        for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry1 : livrButtons.entrySet()) {
-            if (button != entry1.getKey() && entry1.getValue().getMiddle() == entry.getMiddle()) {
-                pairedButton = entry1.getKey();
-                break;
-            }
-        }
-        lastSelected = button;
-        lastPairSelected = pairedButton;
-        button.setStyle("-fx-base: lightblue;");
-        pairedButton.setStyle("-fx-base: lightblue;");
-
-        int i = 0;
-        Boolean nextIter;
-        do {
-            nextIter = true;
-            if (livrButtons.get(button).getRight() == DELIVERY) {
-                nextIter = tourneePartCoordinate.contains(livrButtons.get(pairedButton).getLeft());
-                if (nextIter && tourneePartCoordinate.contains(entry.getLeft())) {
-                    tourneePartCoordinate.remove(entry.getLeft());
-                }
-            }
-
-            tourneePartCoordinate.add(tourneeCoordinate.get(i++));
-            System.out.println("Track contient coordonné du pick-Up :" + nextIter);
-            System.out.println("Track contient coordonné du delivery :" + tourneePartCoordinate.contains(entry.getLeft()));
-            System.out.println("JE CONTINUE A BOUCLER ?" + (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter));
-        } while (!tourneePartCoordinate.contains(entry.getLeft()) || !nextIter);
-        trackPart = new CoordinateLine(tourneePartCoordinate).setColor(Color.DARKTURQUOISE).setWidth(8);
-        trackPart.setVisible(true);
-        mapView.addCoordinateLine(trackPart);
-    }
-
-    /**
-     * Méthode appelée lorsque le bouton d'un point de livraison est désélectionné
-     * Le bouton cliqué n'est plus mis en évidence
-     * Le trajet de la tournée jusqu'à ce point n'est plus surligné en bleu
-     * @param button bouton sélectionné
-     */
-    private void livraisonDeselected(ToggleButton button) {
-        button.setStyle(null);
-        if (lastPairSelected != null) {
-            lastPairSelected.setStyle(null);
-        }
-        mapView.removeCoordinateLine(trackPart);
-        tourneePartCoordinate.clear();
-    }
-
-    private void afficherTournee(Tournee t) {
-        System.out.println("*****" + historique.size() + " index :" + indexHistorique);
-        if (demande != null) {
-            if (historique.size() == 0 || historique.contains(tournee) != true) {
-                // On ajoute la tournée à l'historique
-                historique.add(tournee);
-                indexHistorique++;
-            }
-            disableButtonsTournee(false); // les boutons tournées sont cliquables
-            // On supprime les infos de l'ancienne tournée de l'IHM
-            clearTournee();
-            // On parcourt la tournée pour ajouter toutes les coordonnées par laquelle le trajet passe à la List de Coordinate tournee
-            int compteur = 1;
-            Coordinate origine;
-            Trajet trajet;
-
-            labelTourneeDistance.setText("Distance: " + t.getTotalDistance() / 1000 + "km");
-            labelTourneeTemps.setText("Temps: " + t.getTotalDuration() + "min");
-            labelTourneeNbLivraison.setText("Nombre de livraisons: " + t.getDemande().getLivraisons().size());
-
-            for (int i = 0; i < t.getTrajets().size(); i++) {
-                trajet = t.getTrajets().get(i);
-                origine = trajet.getOrigine().getCoordinate();
-                tourneeCoordinate.add(origine);
-
-                MapLabel l = new MapLabel(Integer.toString(compteur), 10, -10).setPosition(t.getTrajets().get(i).getArrivee().getCoordinate()).setVisible(true);
-                mapView.addLabel(l);
-                deliveriesNumbers.put(trajet.getArrivee().getCoordinate(), l);
-                compteur++;
-
-                for (Troncon troncon : t.getTrajets().get(i).getTroncons()) {
-                    tourneeCoordinate.add(troncon.getDestination().getCoordinate());
-                }
-
-                String infoButton = "";
-                Long idLivr;
-                if (i == 0) {
-                    infoButton = "Entrepôt \nDépart : " + formater.format(t.getDemande().getHeureDepart()) + "\nRetour : " + formater.format(t.getHeureArrivee());
-
-                    ToggleButton button = new ToggleButton();
-                    button.setText(infoButton);
-                    button.setPrefWidth(250.0);
-                    button.setAlignment(Pos.TOP_LEFT);
-                    button.setToggleGroup(groupButtons);
-                    detailsLivraisons.getChildren().add(button);
-                    button.setOnAction(event -> {
-                        entrepotDeselected(button);
-                    });
-                }
-
-                ToggleButton button = new ToggleButton();
-                if (i == t.getTrajets().size() - 1) {
-                    idLivr = (long) -1;
-                    infoButton = i + 1 + " - Retour à l'entrepôt" + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
-                    button.setOnAction(event -> {
-                        if (button.isSelected()) {
-                            entrepotSelected(button);
-                        } else {
-                            entrepotDeselected(button);
+                    public void actionPerformed (ActionEvent e){
+                        if (e.getActionCommand().equals("ended")) {
+                            loading.visibleProperty().setValue(false);
+                            stopTournee.setDisable(true);
+                        } else if (e.getActionCommand().equals("newResultFound")) {
+                            afficherTourneeCalculee();
                         }
-                    });
-                } else {
-                    idLivr = trajet.getLivraison().getId();
-                    if (trajet.getType() == Trajet.Type.PICKUP) {
-                        infoButton = i + 1 + " - PICKUP Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
-                    } else {
-                        infoButton = i + 1 + " - DELIVERY Livraison n°" + trajet.getLivraison().getId() + "\nDépart : " + formater.format(trajet.getHeureDepart()) + "    Arrivée : " + formater.format(trajet.getHeureArrivee());
                     }
-                    button.setOnAction(event -> {
-                        if (button.isSelected()) {
-                            livraisonSelected(button);
-                        } else {
-                            livraisonDeselected(button);
-                        }
-                    });
                 }
-                button.setText(infoButton);
-                button.setPrefWidth(250.0);
-                button.setAlignment(Pos.TOP_LEFT);
-                button.setId("" + i);
-                button.setToggleGroup(groupButtons);
-
-                livrButtons.put(button, Triple.of(trajet.getArrivee().getCoordinate(), idLivr, trajet.getType()));
-                detailsLivraisons.getChildren().add(button);
-            }
-
-            //infoButton = "Fin de tournée - \n Arrivée : " + formater.format(trajet.getHeureArrivee());
-
-            detailsLivraisons.setVisible(true);
-
-            trackTrajet = new CoordinateLine(tourneeCoordinate).setColor(Color.DARKRED).setWidth(8);
-            trackTrajet.setVisible(true);
-
-            // add the tracks
-            mapView.addCoordinateLine(trackTrajet);
-            // System.out.println("Tournee: " + trackTrajet.toString());
-
-        } else {
-            System.out.println("IMPOSSIBLE DE CALCULER UNE TOURNEE aucune demande n'a été chargée");
-        }
-    }
-
-    /**
-     * Supprime de l'IHM les composants décrivant la tournée : le trajet de la tournée, les numéros qui indiquent
-     * l'ordre de passage du livreur aux points de livraison sur la carte, le trajet surligné, les boutons de détails des points de livraisons
-     * Réinitialise les attributs concernant la tournée
-     * La tournée est un attribut global du Controller
-     */
-    public void clearTournee() {
-        labelTourneeDistance.setText(" ");
-        labelTourneeNbLivraison.setText(" ");
-        labelTourneeTemps.setText(" ");
-
-        disableButtonsTournee(true);
-
-        mapView.removeCoordinateLine(trackTrajet);
-        tourneeCoordinate.clear();
-        mapView.removeCoordinateLine(trackPart);
-        tourneePartCoordinate.clear();
-        detailsLivraisons.getChildren().clear();
-        livrButtons.clear();
-        for (Map.Entry<Coordinate, MapLabel> entry : deliveriesNumbers.entrySet()) {
-            mapView.removeLabel(entry.getValue());
-        }
-        deliveriesNumbers.clear();
-        scroll.setVisible(true);
-        scroll.setContent(detailsLivraisons);
-    }
-
-    public void disableButtonsTournee(boolean value) {
-        ajoutLivraison.setDisable(value);
-        supprLivraison.setDisable(value);
-        exportFeuille.setDisable(value);
-        if (historique.size() > 1 && indexHistorique > 0) {
-            retour.setDisable(value);
-        } else {
-            retour.setDisable(true);
-        }
-        if (indexHistorique < historique.size() - 1) {
-            suivant.setDisable(value);
-        } else {
-            suivant.setDisable(true);
-        }
-    }
-
-    /** Active ou désactive les boutons de controle de la carte
-     * @param flag true s'il faut désactiver les controles, false sinon
-     */
-    private void setTopControlsDisable(boolean flag) {
-        topControls.setDisable(flag);
-    }
-
-    /**
-     * Suppime le marqueur dont la coordonnée est passée en paramètres, de l'IHM et de la liste des marqueurs
-     * @param c coordonnée du marqueur à supprimer
-     */
-    public void deleteMarkerByCoord(Coordinate c) {
-        mapView.removeMarker(deliveriesMarkers.get(c));
-        deliveriesMarkers.remove(c);
-    }
-
-    /**
-     * Suppime le label dont la coordonnée est passée en paramètres, de l'IHM et de la liste des labels
-     * @param c coordonnée du marqueur à supprimer
-     */
-    public void deleteLabelByCoord(Coordinate c) {
-        mapView.removeLabel(deliveriesNumbers.get(c));
-        deliveriesNumbers.remove(c);
-    }
-
-    /**
-     *
-     * @param e
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("ended")) {
-            loading.visibleProperty().setValue(false);
-            stopTournee.setDisable(true);
-        } else if (e.getActionCommand().equals("newResultFound")) {
-            afficherTourneeCalculee();
-        }
-    }
-}

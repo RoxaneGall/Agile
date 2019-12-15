@@ -1,19 +1,18 @@
 package Donnees;
 
-import Modele.Demande;
-import Modele.Intersection;
-import Modele.Tournee;
+import Modeles.Demande;
+import Modeles.Intersection;
+import Modeles.Tournee;
 import Service.Service;
 import com.sothawo.mapjfx.Coordinate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class EcritureXMLTest {
     EcritureXML ecritureXML;

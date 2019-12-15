@@ -1,14 +1,19 @@
 package Algo;
 
-import Modele.Intersection;
-import Modele.Trajet;
-import Modele.Troncon;
+import Modeles.Intersection;
+import Modeles.Trajet;
+import Modeles.Troncon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlusCourtChemin {
 
+    /**
+     * @param origine Intersection d'origine
+     * @param arrivee Intersection d'arrivée
+     * @return le plus court chemin entre l'origine et l'arrivée
+     */
     public static HashMap<Long, Trajet> dijkstra(Intersection origine,
                                                  Intersection arrivee)
     {
@@ -43,6 +48,11 @@ public class PlusCourtChemin {
 
     }
 
+    /**
+     * @param trajetsPourIntersection meilleur trajet pour chaque id d'intersection
+     * @param consideredIntersections intersections en "gris", déjà visités mais pas encore validées
+     * @return l'intersection avec le cout le plus faible, le plus proche du depart
+     */
     public static Intersection selectNearestIntersection(HashMap<Long,Trajet> trajetsPourIntersection,
                                                          ArrayList<Long> consideredIntersections)
     {
@@ -65,6 +75,13 @@ public class PlusCourtChemin {
     }
 
 
+    /**
+     * ajouter ou remplace le newTrajet dans trajetsPourIntersection si necessaire
+     *
+     * @param newTrajet nouveau trajet trouvé
+     * @param trajetsPourIntersection meilleur trajet pour chaque id d'intersection
+     * @param consideredIntersections intersections en "gris", déjà visités mais pas encore validées
+     */
     public static void relacher(Trajet newTrajet,
                                 HashMap<Long, Trajet> trajetsPourIntersection,
                                 ArrayList<Long> consideredIntersections)
@@ -82,6 +99,11 @@ public class PlusCourtChemin {
         }
     }
 
+    /**
+     * @param arc Troncon entre deux intersections
+     * @param previousTrajet Trajet auquel on veut ajouter le troncon
+     * @return nouveau trajet somme de l'ancien trajet et du troncon
+     */
     public static Trajet newTrajetFromAddingTronconToTrajet(Troncon arc,
                                                             Trajet previousTrajet)
     {

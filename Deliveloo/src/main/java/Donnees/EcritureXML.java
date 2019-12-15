@@ -1,45 +1,33 @@
 package Donnees;
 
-import Modele.Tournee;
-import Modele.Trajet;
+import Modeles.Tournee;
+import Modeles.Trajet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.Scanner;
 
+/**
+ * Classe se chargeant de l'écriture d'une feuille de route
+ *
+ * @author H4132
+ */
 public class EcritureXML {
 
     public EcritureXML(){
     }
 
-    /*public String genererNomFichierDeTournee(Tournee tournee) throws Exception {
-
-        String nomFichier="";
-        int nbDeliv = tournee.getDemande().getLivraisons().size();
-        String dateDemande = tournee.getDemande().getHeureDepart().toString();
-        if (nbDeliv == 0) {
-            throw new Exception("Cette tournée est réalisée à partir d'une demande composée d'aucune livraison.");
-        } else if (nbDeliv > 0 && nbDeliv < 3) {
-            nomFichier = "petiteTournee" + nbDeliv+"_"+dateDemande;
-        } else if (nbDeliv >= 3 && nbDeliv < 7) {
-            nomFichier = "moyenneTournee" + nbDeliv+"_"+dateDemande;
-        } else if (nbDeliv > 7 && nbDeliv < 10) {
-            nomFichier = "grandeTournee" + nbDeliv+"_"+dateDemande;
-        } else {
-            nomFichier = "tresGrandeTournee" + nbDeliv+"_"+dateDemande;
-        }
-
-        if(nomFichier.equals("")) {
-            throw new Exception("Le fichier doit avoir un nom pour être créé.");
-        }else return nomFichier;
-    }*/
-
+    /**
+     * Génère les instructions relatives à une tournée
+     *
+     * @param tournee
+     * est la tournée pour laquelle il faut générer des instructions
+     *
+     * @return les instructions
+     */
     public String genererInstructionsPourTournee(Tournee tournee){
         String instructions="";
         ArrayList<Trajet> trajets = new ArrayList<>();
@@ -53,7 +41,7 @@ public class EcritureXML {
         instructions += "  Heure d'arrivée : " + simpleDateFormat.format(tournee.getHeureArrivee()) + "\n";
         instructions += "  Durée du trajet : " + (tournee.getTotalDuration()) + " minutes\n";
         instructions += "  Distance totale : " + (tournee.getTotalDistance()/1000) + " km\n\n";
-        instructions += "–––––––––––––––––––––––––––\n";
+        instructions += "–––––––––––––––––––––––––––\n\n";
         for (Trajet t : trajets){
             switch (t.getType()) {
                 case COMEBACKHOME:
@@ -85,6 +73,18 @@ public class EcritureXML {
         return instructions+"\n\n";
     }
 
+    /**
+     * Crée un fichier textuel représentant la feuille de route
+     * avec les instructions pour une tournée
+     *
+     * @param tournee
+     * est la tournée pour laquelle on veut générer une feuille de route
+     *
+     * @param chemin
+     * est le chemin d'accès sur le disque qu'aura le fichier créé
+     *
+     * @throws Exception
+     */
     public void ecrireFichier(Tournee tournee, String chemin) throws Exception {
 
         if(chemin=="") return;

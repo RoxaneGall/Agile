@@ -1,6 +1,6 @@
 package Algo;
 
-import Modele.Trajet;
+import Modeles.Trajet;
 
 import java.util.ArrayList;
 import java.util.Iterator;

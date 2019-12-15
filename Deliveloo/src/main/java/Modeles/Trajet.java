@@ -1,4 +1,4 @@
-package Modele;
+package Modeles;
 
 import com.sothawo.mapjfx.Coordinate;
 
@@ -8,7 +8,11 @@ import java.util.Date;
 
 import static java.lang.StrictMath.atan2;
 
-
+/**
+ * Classe representant le trajet entre deux points d'une tournee. On garde donc les points et les heures de depart et d'arrivee,
+ * les troncons qu'il faut prendre pour faire le trajet, ainsi que le type de l'action effectuee a l'arrivee (pickup/delivery/retour
+ * a l'entrepot) et la livraison que cette action concerne.
+ */
 public class Trajet {
     private ArrayList<Troncon> troncons;
     private Intersection origine;
@@ -19,12 +23,19 @@ public class Trajet {
     private Type type;
     private Livraison livraison;
 
+    /**
+     * Type d'action realisee a l'arrivee
+     */
     public enum Type {
         PICKUP,
         DELIVERY,
         COMEBACKHOME;
     }
 
+    /**
+     *
+     * @param origine
+     */
     public Trajet(Intersection origine) {
         this.origine = origine;
         this.troncons = new ArrayList<Troncon>();
@@ -32,6 +43,10 @@ public class Trajet {
         this.longueur = 0.0;
     }
 
+    /**
+     * Constructeur de copie
+     * @param trajet
+     */
     public Trajet(Trajet trajet) {
         this.origine = trajet.getOrigine();
         this.troncons = trajet.getTroncons();
@@ -42,71 +57,138 @@ public class Trajet {
     }
 
 
+    /**
+     *
+     * @return l'heure de depart
+     */
     public Date getHeureDepart() {
         return heureDepart;
     }
 
+    /**
+     * modifie l'heure de depart
+     * @param heureDepart
+     */
     public void setHeureDepart(Date heureDepart) {
         this.heureDepart = heureDepart;
     }
 
+    /**
+     *
+     * @return l'heure d'arrivee
+     */
     public Date getHeureArrivee() {
         return heureArrivee;
     }
 
+    /**
+     * modifie l'heure d'arrivee
+     * @param heureArrivee
+     */
     public void setHeureArrivee(Date heureArrivee) {
         this.heureArrivee = heureArrivee;
     }
 
+    /**
+     *
+     * @return retourne le type d'action
+     */
     public Type getType() {
         return type;
     }
 
+    /**
+     * modifie le type d'action
+     * @param type
+     */
     public void setType(Type type) {
         this.type = type;
     }
 
+    /**
+     *
+     * @return la livraison concernee par l'action
+     */
     public Livraison getLivraison() {
         return livraison;
     }
 
+    /**
+     * modifie la livraison concernee
+     * @param livraison
+     */
     public void setLivraison(Livraison livraison) {
         this.livraison = livraison;
     }
 
+    /**
+     *
+     * @return la longueur du trajet
+     */
     public Double getLongueur() {
         return longueur;
     }
 
+    /**
+     *
+     * @return l'intersection d'origine du trajet
+     */
     public Intersection getOrigine() {
         return origine;
     }
 
+    /**
+     *
+     * @return l'intersection d'arrivee du trajet
+     */
     public Intersection getArrivee() {
         return arrivee;
     }
 
+    /**
+     *
+     * @return les troncons du trajet
+     */
     public ArrayList<Troncon> getTroncons() {
         return troncons;
     }
 
+    /**
+     * ajoute une liste de troncons au trajet
+     * @param troncons
+     */
     public void addTroncons(ArrayList<Troncon> troncons) {
         for (Troncon troncon: troncons) {
             addTroncon(troncon);
         }
     }
 
+    /**
+     * ajoute un troncon au trajet
+     * @param troncon
+     */
     public void addTroncon(Troncon troncon) {
         this.troncons.add(troncon);
         this.arrivee = troncon.getDestination();
         this.longueur += troncon.getLongueur();
     }
 
+    /**
+     * calcul l'angle lors d'un changement de troncon
+     * @param P1
+     * @param P2
+     * @param P3
+     * @return l'angle entre les troncons empruntes
+     */
     private double computeAngle(Coordinate P1, Coordinate P2, Coordinate P3) {
         return atan2(P3.getLatitude() - P1.getLatitude(), P3.getLongitude() - P1.getLongitude()) -
                 atan2(P2.getLatitude() - P1.getLatitude(), P2.getLongitude() - P1.getLongitude());
     }
 
+    /**
+     *
+     * @return les instructions du trajet
+     */
     public ArrayList<InstructionLivraison> getInstructions() {
         ArrayList<InstructionLivraison> instructions = new ArrayList<>();
         Intersection lastLocation = origine;
