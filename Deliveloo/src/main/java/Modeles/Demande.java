@@ -19,6 +19,7 @@ public class Demande {
      *
      * @param entrepot
      * @param heureDepart
+     * @param nomDemande
      */
     public Demande(Intersection entrepot, Date heureDepart, String nomDemande) {
         this.livraisons = new ArrayList<>();
