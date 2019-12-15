@@ -96,7 +96,7 @@ public class Service {
     }
 
     /**
-     * Supprimer une livraison de la tournée calculée
+     * Supprime une livraison de la tournée calculée
      *
      * @param tournee     la tournée calculée
      * @param idLivraison id de la livraison à supprimer
@@ -150,7 +150,7 @@ public class Service {
     }
 
     /**
-     * Aoute une livraison à une tournée déjà calculée
+     * Ajoute une livraison à une tournée déjà calculée
      *
      * @param tournee  tournée déjà calculée
      * @param pickup   pickup de la livraison à ajouter
