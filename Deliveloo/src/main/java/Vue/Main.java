@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static javafx.application.Application.launch;
 
 /**
  * Demo application for the mapjfx component.

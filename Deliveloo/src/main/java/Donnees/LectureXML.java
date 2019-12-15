@@ -35,7 +35,7 @@ public class LectureXML {
 
     public void chargerPlan(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
-            throw new Exception(01+"Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
+            throw new Exception("Le fichier n'est pas un fichier xml. Veuillez charger un fichier d'extension .xml");
         }
 
         Document document = null;
