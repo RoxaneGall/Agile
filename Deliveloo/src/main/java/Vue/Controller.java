@@ -50,7 +50,7 @@ import Service.Service;
 import javafx.util.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
-import static Modele.Trajet.Type.DELIVERY;
+import static Modeles.Trajet.Type.DELIVERY;
 import static org.apache.commons.lang3.tuple.MutableTriple.of;
 
 public class Controller implements ActionListener {
