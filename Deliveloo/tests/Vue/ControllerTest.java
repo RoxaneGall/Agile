@@ -1,7 +1,12 @@
 package Vue;
 
 import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.Extent;
+import com.sothawo.mapjfx.Projection;
 import com.sun.javafx.application.ParametersImpl;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -14,23 +19,29 @@ import java.util.ArrayList;
 class ControllerTest {
     @Test
     public void mapExtentTest() throws Exception {
-        // ArrayList<Coordinate> col = new ArrayList<>();
+        ArrayList<Coordinate> limites = new ArrayList<>();
         Coordinate c1 = new Coordinate(45.778579, 4.852096);
         Coordinate c2 = new Coordinate(45.781901, 4.791063);
         Coordinate c3 = new Coordinate(45.730995, 4.859773);
         Coordinate c4 = new Coordinate(45.714939, 4.901873);
-        Controller contr = new Controller();
-        contr.chargerPlan("../datas/grandPlan.xml");
+        limites.add(c1);
+        limites.add(c2);
+        limites.add(c3);
+        limites.add(c4);
+        Extent mapExtent = Extent.forCoordinates(limites);
         // min latitude
-        Assertions.assertEquals(contr.mapExtent.getMin().getLatitude(), c4.getLatitude());
+        Assertions.assertEquals(mapExtent.getMin().getLatitude(), c4.getLatitude());
         // min longitude
-        Assertions.assertEquals(contr.mapExtent.getMin().getLongitude(), c2.getLongitude());
+        Assertions.assertEquals(mapExtent.getMin().getLongitude(), c2.getLongitude());
         // max latitude
-        Assertions.assertEquals(contr.mapExtent.getMax().getLatitude(), c2.getLatitude());
+        Assertions.assertEquals(mapExtent.getMax().getLatitude(), c2.getLatitude());
         // max longitude
-        Assertions.assertEquals(contr.mapExtent.getMax().getLongitude(), c4.getLongitude());
+        Assertions.assertEquals(mapExtent.getMax().getLongitude(), c4.getLongitude());
         System.out.println(" Extent Test : PASSED ");
     }
+
+
+
 
 
 }
