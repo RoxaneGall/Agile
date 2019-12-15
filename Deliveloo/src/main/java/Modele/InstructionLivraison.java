@@ -1,4 +1,4 @@
-package Modeles;
+package Modele;
 
 public class InstructionLivraison {
 

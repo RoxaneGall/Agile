@@ -1,7 +1,7 @@
 package Vue;
 
 import Algo.Computations;
-import Modeles.*;
+import Modele.*;
 import Donnees.*;
 
 import javafx.geometry.Insets;
@@ -10,9 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import com.sothawo.mapjfx.*;
 import com.sothawo.mapjfx.Projection;
-import com.sothawo.mapjfx.event.MapLabelEvent;
 import com.sothawo.mapjfx.event.MapViewEvent;
-import com.sothawo.mapjfx.event.MarkerEvent;
 import com.sothawo.mapjfx.offline.OfflineCache;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -330,6 +328,8 @@ public class Controller implements ActionListener {
      */
     public void chargerPlan(String path) {
         System.out.println("Chargement du plan " + path);
+        clearTournee();
+        clearDemande();
         try {
             ArrayList<Coordinate> limites = service.chargerPlan(path);
             System.out.println("Limites du plan :" + limites);
@@ -441,6 +441,7 @@ public class Controller implements ActionListener {
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
+            isAlreadyAdding=false;
         });
     }
 
@@ -509,12 +510,15 @@ public class Controller implements ActionListener {
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
-
+    Boolean isAlreadyAdding = false;
     private void setButtonAjoutLivraison() {
         ajoutLivraison.setOnAction(event -> {
-            ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
-            ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
-            addRightClickEvent(interLivraison);
+            if (!isAlreadyAdding){
+                isAlreadyAdding=true;
+                ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery");
+                ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
+                addRightClickEvent(interLivraison);
+            }
         });
     }
 
