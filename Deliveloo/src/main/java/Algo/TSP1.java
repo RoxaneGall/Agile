@@ -20,7 +20,7 @@ public class TSP1 extends TemplateTSP {
     protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, Trajet[][] cout) {
         ArrayList<Integer> sommetsPossibles = new ArrayList<Integer>();
         for (Integer sommet : nonVus) {
-            if(sommet!=sommetCrt) {
+            if (sommet != sommetCrt) {
                 switch (sommet % 2) {
                     case 0:
                         if (!nonVus.contains(sommet - 1))
@@ -34,7 +34,7 @@ public class TSP1 extends TemplateTSP {
         }
         sommetsPossibles.sort(new Comparator<Integer>() {
             public int compare(Integer trajet1, Integer trajet2) {
-                return ((int)(cout[sommetCrt][trajet1].getLongueur() - cout[sommetCrt][trajet2].getLongueur()));
+                return ((int) (cout[sommetCrt][trajet1].getLongueur() - cout[sommetCrt][trajet2].getLongueur()));
             }
         });
         return sommetsPossibles.iterator();
@@ -53,21 +53,17 @@ public class TSP1 extends TemplateTSP {
 
         Double cout_min = 0.0;
         Double sommetLePlusProcheDeLEntrepotDesNonsVus = Double.MAX_VALUE;
-        for(int i = 0; i < nonVus.size(); i ++){
-
+        for (int i = 0; i < nonVus.size(); i++) {
             double cout_act = cout[sommetCourant][nonVus.get(i)].getLongueur();
             double min = cout_act;
-
-            for(int j = 0; j < nonVus.size(); j++){
-                if (j!=i) {
+            for (int j = 0; j < nonVus.size(); j++) {
+                if (j != i) {
                     cout_act = cout[nonVus.get(i)][nonVus.get(j)].getLongueur();
                     if (cout_act < min)
                         min = cout_act;
                 }
             }
-
-            cout_min+=min;
-
+            cout_min += min;
             if (cout[nonVus.get(i)][0].getLongueur() < sommetLePlusProcheDeLEntrepotDesNonsVus)
                 sommetLePlusProcheDeLEntrepotDesNonsVus = cout[nonVus.get(i)][0].getLongueur();
         }

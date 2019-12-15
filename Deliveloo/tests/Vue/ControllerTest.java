@@ -31,6 +31,7 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 import static com.sun.javafx.application.ParametersImpl.getParameters;
+
 import javafx.application.Application;
 
 import javax.swing.*;
@@ -150,7 +151,7 @@ class ControllerTest {
                             service.calculerTournee(demande);
                             Tournee t = service.recupererTournee();
                             Controller contr = new Controller();
-                            contr.afficherTournee(t);
+                            contr.afficherTournee();
                             ArrayList<Coordinate> tab = (ArrayList<Coordinate>) contr.trackTrajet.getCoordinateStream().collect(Collectors.toList());
                             int i = 0;
                             while (i < t.getTrajets().size()) {
@@ -211,41 +212,7 @@ class ControllerTest {
     }
 
 
-    @Test
-    public void boutonsLivraisonsTest() throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new JFXPanel(); // Initializes the JavaFx Platform
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(10000);
-                            Service service = new Service();
-                            service.chargerPlan("../datas/grandPlan.xml");
-                            String path = "../datas/demandeGrand9.xml";
-                            Demande demande = service.chargerDemande(path);
-                            service.calculerTournee(demande);
-                            Tournee t = service.recupererTournee();
-                            Controller contr = new Controller();
-                            contr.afficherTournee(t);
 
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
-            }
-        });
-        thread.start();
-        Thread.sleep(10000);
-
-
-
-    }
 
 
 }

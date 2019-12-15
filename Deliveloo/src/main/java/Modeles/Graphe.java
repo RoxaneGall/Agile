@@ -8,18 +8,22 @@ import java.util.HashMap;
 public class Graphe {
 
     public static Graphe shared = new Graphe();
-    private HashMap<Long,Intersection> intersectionMap;
+    private HashMap<Long, Intersection> intersectionMap;
 
-    public Graphe() {this.intersectionMap = new HashMap<Long, Intersection>();}
+    public Graphe() {
+        this.intersectionMap = new HashMap<Long, Intersection>();
+    }
 
     /**
-     *
      * @return les intersections de la carte
      */
-    public HashMap<Long,Intersection> getIntersectionMap() {return intersectionMap;}
+    public HashMap<Long, Intersection> getIntersectionMap() {
+        return intersectionMap;
+    }
 
     /**
      * ajoute un troncon au graphe de la ville
+     *
      * @param troncon
      * @param origineId
      */
@@ -31,13 +35,16 @@ public class Graphe {
 
     /**
      * ajoute une intersection au graphe de la ville
+     *
      * @param intersection
      */
     public void addIntersection(Intersection intersection) {
         if (!intersectionMap.containsKey(intersection.getId())) {
-            intersectionMap.put(intersection.getId(),intersection);
+            intersectionMap.put(intersection.getId(), intersection);
         }
     }
 
-    public void clearGraph() {this.intersectionMap.clear();}
+    public void clearGraph() {
+        this.intersectionMap.clear();
+    }
 }

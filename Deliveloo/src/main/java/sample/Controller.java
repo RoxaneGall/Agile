@@ -51,7 +51,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-
 /**
  * Controller for the FXML defined code.
  * from @author P.J. Meisch (pj.meisch@sothawo.com).
@@ -72,17 +71,23 @@ public class Controller {
     private static final Coordinate coordGermanyEast = new Coordinate(51.27277778, 15.04361111);
     private static final Extent extentGermany = Extent.forCoordinates(coordGermanyNorth, coordGermanySouth, coordGermanyWest, coordGermanyEast);
 
-    /** default zoom value. */
+    /**
+     * default zoom value.
+     */
     private static final int ZOOM_DEFAULT = 14;
 
-    /** the markers. */
+    /**
+     * the markers.
+     */
     private final Marker markerKaHarbour;
     private final Marker markerKaCastle;
     private final Marker markerKaStation;
     private final Marker markerKaSoccer;
     private final Marker markerClick;
 
-    /** the labels. */
+    /**
+     * the labels.
+     */
     private final MapLabel labelKaUniversity;
     private final MapLabel labelKaCastle;
     private final MapLabel labelKaStation;
@@ -92,141 +97,213 @@ public class Controller {
     /** button to set the map's zoom. */
     private Button buttonZoom;
 
-    /** the MapView containing the map */
+    /**
+     * the MapView containing the map
+     */
     @FXML
     private MapView mapView;
 
-    /** the box containing the top controls, must be enabled when mapView is initialized */
+    /**
+     * the box containing the top controls, must be enabled when mapView is initialized
+     */
     @FXML
     private HBox topControls;
 
-    /** Slider to change the zoom value */
+    /**
+     * Slider to change the zoom value
+     */
     @FXML
     private Slider sliderZoom;
 
-    /** Accordion for all the different options */
+    /**
+     * Accordion for all the different options
+     */
     @FXML
     private Accordion leftControls;
 
-    /** section containing the location button */
+    /**
+     * section containing the location button
+     */
     @FXML
     private TitledPane optionsLocations;
 
-    /** button to set the map's center */
+    /**
+     * button to set the map's center
+     */
     @FXML
     private Button buttonKaHarbour;
 
-    /** button to set the map's center */
+    /**
+     * button to set the map's center
+     */
     @FXML
     private Button buttonKaCastle;
 
-    /** button to set the map's center */
+    /**
+     * button to set the map's center
+     */
     @FXML
     private Button buttonKaStation;
 
-    /** button to set the map's center */
+    /**
+     * button to set the map's center
+     */
     @FXML
     private Button buttonKaSoccer;
 
-    /** button to set the map's extent. */
+    /**
+     * button to set the map's extent.
+     */
     @FXML
     private Button buttonAllLocations;
 
-    /** for editing the animation duration */
+    /**
+     * for editing the animation duration
+     */
     @FXML
     private TextField animationDuration;
 
-    /** the BIng Maps API Key. */
+    /**
+     * the BIng Maps API Key.
+     */
     @FXML
     private TextField bingMapsApiKey;
 
-    /** Label to display the current center */
+    /**
+     * Label to display the current center
+     */
     @FXML
     private Label labelCenter;
 
-    /** Label to display the current extent */
+    /**
+     * Label to display the current extent
+     */
     @FXML
     private Label labelExtent;
 
-    /** Label to display the current zoom */
+    /**
+     * Label to display the current zoom
+     */
     @FXML
     private Label labelZoom;
 
-    /** label to display the last event. */
+    /**
+     * label to display the last event.
+     */
     @FXML
     private Label labelEvent;
 
-    /** RadioButton for MapStyle OSM */
+    /**
+     * RadioButton for MapStyle OSM
+     */
     @FXML
     private RadioButton radioMsOSM;
 
-    /** RadioButton for MapStyle Stamen Watercolor */
+    /**
+     * RadioButton for MapStyle Stamen Watercolor
+     */
     @FXML
     private RadioButton radioMsSTW;
 
-    /** RadioButton for MapStyle Bing Road */
+    /**
+     * RadioButton for MapStyle Bing Road
+     */
     @FXML
     private RadioButton radioMsBR;
 
-    /** RadioButton for MapStyle Bing Aerial */
+    /**
+     * RadioButton for MapStyle Bing Aerial
+     */
     @FXML
     private RadioButton radioMsBA;
 
-    /** RadioButton for MapStyle WMS. */
+    /**
+     * RadioButton for MapStyle WMS.
+     */
     @FXML
     private RadioButton radioMsWMS;
 
-    /** RadioButton for MapStyle XYZ */
+    /**
+     * RadioButton for MapStyle XYZ
+     */
     @FXML
     private RadioButton radioMsXYZ;
 
-    /** ToggleGroup for the MapStyle radios */
+    /**
+     * ToggleGroup for the MapStyle radios
+     */
     @FXML
     private ToggleGroup mapTypeGroup;
 
-    /** Check button for harbour marker */
+    /**
+     * Check button for harbour marker
+     */
     @FXML
     private CheckBox checkKaHarbourMarker;
 
-    /** Check button for castle marker */
+    /**
+     * Check button for castle marker
+     */
     @FXML
     private CheckBox checkKaCastleMarker;
 
-    /** Check button for harbour marker */
+    /**
+     * Check button for harbour marker
+     */
     @FXML
     private CheckBox checkKaStationMarker;
 
-    /** Check button for soccer marker */
+    /**
+     * Check button for soccer marker
+     */
     @FXML
     private CheckBox checkKaSoccerMarker;
 
-    /** Check button for click marker */
+    /**
+     * Check button for click marker
+     */
     @FXML
     private CheckBox checkClickMarker;
 
-    /** the first CoordinateLine */
+    /**
+     * the first CoordinateLine
+     */
     private CoordinateLine trackMagenta;
-    /** Check button for first track */
+    /**
+     * Check button for first track
+     */
     @FXML
     private CheckBox checkTrackMagenta;
 
-    /** the second CoordinateLine */
+    /**
+     * the second CoordinateLine
+     */
     private CoordinateLine trackCyan;
-    /** Check button for first track */
+    /**
+     * Check button for first track
+     */
     @FXML
     private CheckBox checkTrackCyan;
 
-    /** Coordinateline for polygon drawing. */
+    /**
+     * Coordinateline for polygon drawing.
+     */
     private CoordinateLine polygonLine;
-    /** Check Button for polygon drawing mode. */
+    /**
+     * Check Button for polygon drawing mode.
+     */
     @FXML
     private CheckBox checkDrawPolygon;
 
-    /** Check Button for constraining th extent. */
+    /**
+     * Check Button for constraining th extent.
+     */
     @FXML
     private CheckBox checkConstrainGermany;
 
-    /** params for the WMS server. */
+    /**
+     * params for the WMS server.
+     */
     private WMSParam wmsParam = new WMSParam()
             .setUrl("http://ows.terrestris.de/osm/service?")
             .addParam("layers", "OSM-WMS");
@@ -275,8 +352,7 @@ public class Controller {
      * called after the fxml is loaded and all objects are created. This is not called initialize any more,
      * because we need to pass in the projection before initializing.
      *
-     * @param projection
-     *     the projection to use in the map.
+     * @param projection the projection to use in the map.
      */
     public void initMapAndControls(Projection projection) {
 
@@ -503,8 +579,7 @@ public class Controller {
     /**
      * shows a new polygon with the coordinate from the added.
      *
-     * @param event
-     *     event with coordinates
+     * @param event event with coordinates
      */
     private void handlePolygonClick(MapViewEvent event) {
         final List<Coordinate> coordinates = new ArrayList<>();
@@ -525,8 +600,7 @@ public class Controller {
     /**
      * enables / disables the different controls
      *
-     * @param flag
-     *     if true the controls are disabled
+     * @param flag if true the controls are disabled
      */
     private void setControlsDisable(boolean flag) {
         topControls.setDisable(flag);
@@ -560,11 +634,9 @@ public class Controller {
     /**
      * load a coordinateLine from the given uri in lat;lon csv format
      *
-     * @param url
-     *     url where to load from
+     * @param url url where to load from
      * @return optional CoordinateLine object
-     * @throws java.lang.NullPointerException
-     *     if uri is null
+     * @throws java.lang.NullPointerException if uri is null
      */
     private Optional<CoordinateLine> loadCoordinateLine(URL url) {
         try (

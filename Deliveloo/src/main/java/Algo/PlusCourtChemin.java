@@ -14,38 +14,31 @@ public class PlusCourtChemin {
      * @param arrivee Intersection d'arrivée
      * @return le plus court chemin entre l'origine et l'arrivée
      */
-    public static HashMap<Long, Trajet> dijkstra(Intersection origine,
-                                                 Intersection arrivee)
-    {
+    public static HashMap<Long, Trajet> dijkstra(Intersection origine, Intersection arrivee) {
         //Dijkstra variables
-        HashMap<Long,Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
+        HashMap<Long, Trajet> trajetsPourIntersection = new HashMap<>(); //Liste du trajet optimal trouvé pour chaque interesection
         ArrayList<Long> consideredIntersections = new ArrayList<>(); //Liste des intersection non visités ayant un trajet depuis l'origine
 
         //Pour le point de départ mettre son trajet optimal à un trajet partant de lui meme sans aucun troncon.
-        trajetsPourIntersection.put(origine.getId(),new Trajet(origine));
+        trajetsPourIntersection.put(origine.getId(), new Trajet(origine));
         consideredIntersections.add(origine.getId());
 
-        while(true) {
+        while (true) {
             //Trouver la prochaine intersection à visiter (la plus proche du point de départ)
             Intersection intersection = selectNearestIntersection(trajetsPourIntersection, consideredIntersections);
-
             //Vérifier qu'elle existe et que ce n'est pas la destination finale
-            if (intersection == null || intersection.getId()==arrivee.getId()) {
+            if (intersection == null || intersection.getId() == arrivee.getId()) {
                 break;
             }
-
             //Pour chaque troncon de l'intersection, calculer le nouveau trajet optimal de sa destination
-            for (Troncon troncon: intersection.getTroncons()) {
+            for (Troncon troncon : intersection.getTroncons()) {
                 Trajet newTrajet = newTrajetFromAddingTronconToTrajet(troncon, trajetsPourIntersection.get(intersection.getId()));
-                relacher(newTrajet,trajetsPourIntersection,consideredIntersections);
+                relacher(newTrajet, trajetsPourIntersection, consideredIntersections);
             }
-
             //Ajouter l'intersection aux intersections déjà visitées
             consideredIntersections.remove(intersection.getId());
         }
-
         return trajetsPourIntersection;
-
     }
 
     /**
@@ -53,9 +46,7 @@ public class PlusCourtChemin {
      * @param consideredIntersections intersections en "gris", déjà visités mais pas encore validées
      * @return l'intersection avec le cout le plus faible, le plus proche du depart
      */
-    public static Intersection selectNearestIntersection(HashMap<Long,Trajet> trajetsPourIntersection,
-                                                         ArrayList<Long> consideredIntersections)
-    {
+    public static Intersection selectNearestIntersection(HashMap<Long, Trajet> trajetsPourIntersection, ArrayList<Long> consideredIntersections) {
         Trajet nearestIntersectionTrajet = null;
 
         //Pour prendre le trajet optimal de chaque intersection du graphe
@@ -78,35 +69,30 @@ public class PlusCourtChemin {
     /**
      * ajouter ou remplace le newTrajet dans trajetsPourIntersection si necessaire
      *
-     * @param newTrajet nouveau trajet trouvé
+     * @param newTrajet               nouveau trajet trouvé
      * @param trajetsPourIntersection meilleur trajet pour chaque id d'intersection
      * @param consideredIntersections intersections en "gris", déjà visités mais pas encore validées
      */
-    public static void relacher(Trajet newTrajet,
-                                HashMap<Long, Trajet> trajetsPourIntersection,
-                                ArrayList<Long> consideredIntersections)
-    {
+    public static void relacher(Trajet newTrajet, HashMap<Long, Trajet> trajetsPourIntersection, ArrayList<Long> consideredIntersections) {
         Trajet trajetActuel = trajetsPourIntersection.get(newTrajet.getArrivee().getId());
 
-        if (trajetActuel==null) {
+        if (trajetActuel == null) {
             //Si l'intersection est atteinte pout la premiere fois alors on enregistre l'itineraire correspondant
-            trajetsPourIntersection.put(newTrajet.getArrivee().getId(),newTrajet);
+            trajetsPourIntersection.put(newTrajet.getArrivee().getId(), newTrajet);
             //On ajoute l'intersection aux intersections considérés pour la prochaine iteration
             consideredIntersections.add(newTrajet.getArrivee().getId());
         } else if (trajetActuel.getLongueur() > newTrajet.getLongueur()) {
             //Si le nouveau trajet pour arriver a destination est meilleur que l'ancien
-            trajetsPourIntersection.replace(newTrajet.getArrivee().getId(),newTrajet);
+            trajetsPourIntersection.replace(newTrajet.getArrivee().getId(), newTrajet);
         }
     }
 
     /**
-     * @param arc Troncon entre deux intersections
+     * @param arc            Troncon entre deux intersections
      * @param previousTrajet Trajet auquel on veut ajouter le troncon
      * @return nouveau trajet somme de l'ancien trajet et du troncon
      */
-    public static Trajet newTrajetFromAddingTronconToTrajet(Troncon arc,
-                                                            Trajet previousTrajet)
-    {
+    public static Trajet newTrajetFromAddingTronconToTrajet(Troncon arc, Trajet previousTrajet) {
         Trajet newTrajet = new Trajet(previousTrajet.getOrigine());
         newTrajet.addTroncons(previousTrajet.getTroncons());
         newTrajet.addTroncon(arc);

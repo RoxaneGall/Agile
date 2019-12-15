@@ -151,6 +151,9 @@ public class Controller implements ActionListener {
     public Coordinate entrepot;
     public Marker entrepotMarker;
 
+    public Boolean isAlreadyAdded = false; //paramètre qui permet de savoir si une livraison a été ajoutée
+
+
     public HashMap<Coordinate, Marker> deliveriesMarkers = new HashMap<>(); // marqueurs visuels des livraisons sur la carte
     public HashMap<Coordinate, MapLabel> deliveriesNumbers = new HashMap<>(); // numéros correspondant à l'ordre de passge des livraisons
 
@@ -194,7 +197,9 @@ public class Controller implements ActionListener {
         directoryChooser.setInitialDirectory(new File("../datas"));
 
         loading.visibleProperty().setValue(false);
-        stopTournee.setDisable(true);
+        if (stopTournee != null) {
+            stopTournee.setDisable(true);
+        }
 
         // initialisation MapView-Cache
         createMapCache();
@@ -320,8 +325,8 @@ public class Controller implements ActionListener {
         });
 
         ajoutLivraison.setOnAction(event -> {
-            if (!isAlreadyAdding) { // ajoute une livraison si un ajout n'est pas déjà en cours
-                isAlreadyAdding = true;
+            if (!isAlreadyAdded) { // ajoute une livraison si un ajout n'est pas déjà en cours
+                isAlreadyAdded = true;
                 ajoutPickUp.setText("Veuillez faire un clic droit sur votre point pick up & delivery"); // texte explicatif s'affiche sur l'IHM
                 ArrayList<Intersection> interLivraison = new ArrayList<Intersection>();
                 addRightClickEvent(interLivraison); // attend l'interaction de l'utilisateur avec la carte pour poursuivre l'ajout
@@ -380,7 +385,8 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * Un explorateur de fichier s'ouvre et l'utilisateur peut sélectionner le fichier à charger comme nouveau plan
+     * Action réalisée lorsque l'utilisateur souhaite charger un plan
+     * Un explorateur de fichier est ouvert et l'utilisateur peut sélectionner le fichier à charger comme nouveau plan
      * Si le fichier est invalide un pop-up indiquant l'exception générée s'affiche
      */
     public File selectPlan() {
@@ -468,20 +474,23 @@ public class Controller implements ActionListener {
     }
 
 
+
+
     /**
+     * Méthode qui permet d'identifier la coordonnée du point sélectionner quand l'utilisateur fait un clic droit sur la map
+     *
      * @param interLivraison
      */
     private void addRightClickEvent(ArrayList<Intersection> interLivraison) {
 
         mapView.addEventHandler(MapViewEvent.MAP_RIGHTCLICKED, eventClick -> {
             eventClick.consume();
-            Coordinate pickUp = eventClick.getCoordinate();
-            Intersection i = service.intersectionPlusProche(pickUp);
-            System.out.println("inter trouvée : " + i);
-            if (i != null) {
+            Coordinate coord = eventClick.getCoordinate(); //on récupère le point sélectionné
+            Intersection i = service.intersectionPlusProche(coord); //on cherche l'intersection la plus proche au point
+            if (i != null) { //si le point sélectionné est compris dans le plan
                 int size = demande.getLivraisons().size() + 1;
                 int nbLivrAjoute = interLivraison.size();
-                if (nbLivrAjoute == 0) { //premier clic
+                if (nbLivrAjoute == 0) { //premier point sélectionné qui correspond au point pickUp
                     URL imageURL = null;
                     try {
                         imageURL = new URL(path + "/datas/logos/p_" + size + ".png");
@@ -494,7 +503,7 @@ public class Controller implements ActionListener {
                     interLivraison.add(i);
                     ajouterLivraison(interLivraison);
                 }
-                if (nbLivrAjoute == 1) { //deuxieme clic
+                if (nbLivrAjoute == 1) { //deuxième point sélectionné qui correspond au point delivery
                     URL imageURL = null;
                     try {
                         imageURL = new URL(path + "/datas/logos/d_" + size + ".png");
@@ -507,29 +516,34 @@ public class Controller implements ActionListener {
                     interLivraison.add(i);
                     ajouterLivraison(interLivraison);
                 }
-                if (nbLivrAjoute == 2) {
+                if (nbLivrAjoute == 2) { //si on sélectionne plus que 2 points
                     ajoutPickUp.setText("Livraison ajoutée !");
                 }
-            }
-            if (i == null) {
+            } else { //si le point sélectionné n'est pas compris dans le plan
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Erreur ajout livraison");
                 alert.setHeaderText("Erreur ajout livraison");
                 alert.setContentText("Veuillez sélectionner un point dans le plan !");
                 alert.show();
             }
-            isAlreadyAdding = false;
+            isAlreadyAdded = false;
         });
     }
 
     /**
+     * Méthode qui permet d'ajouter la livraison à la demande et de recalculer la tournée en ayant les
+     * moins de modifications possibles.
+     *
      * @param interLivraison intersections des points de livraison à ajouter
      */
-    private void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+    void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
+
             ajoutPickUp.setText("");
             Intersection interPickUp = interLivraison.get(0);
             Intersection interDelivery = interLivraison.get(1);
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Veuillez rentrer la durée d'enlèvement et de livraison");
             genererLivraison(interPickUp, interDelivery);
             ajoutPickUp.setText("Livraison ajoutée !");
         }
@@ -546,6 +560,7 @@ public class Controller implements ActionListener {
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -594,7 +609,6 @@ public class Controller implements ActionListener {
         ajoutPickUp.setText("Livraison ajoutée !");
     }
 
-    Boolean isAlreadyAdding = false;
 
     /**
      * Un explorateur de fichier s'ouvre et l'utilisateur peut sélectionner le fichier à charger comme nouvelle demande
@@ -644,7 +658,7 @@ public class Controller implements ActionListener {
      * réinitialise les attributs concernant la demande
      * active les boutons cliquables une fois une demande chargée
      */
-    private void afficherDemande() {
+    void afficherDemande() {
         try {
             clearDemande(); // on supprime la demande d'avant
 
@@ -864,6 +878,12 @@ public class Controller implements ActionListener {
      * La tournée est un attribut global du Controller
      */
     public void afficherTournee() {
+        ajoutLivraison.setDisable(true);
+        supprLivraison.setDisable(true);
+        retour.setDisable(true);
+        exportFeuille.setDisable(true);
+        suivant.setDisable(true);
+
 
         /* On ajoute la tournée à l'historique */
         if (historique.size() == 0 || historique.contains(tournee) != true) {

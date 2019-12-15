@@ -31,21 +31,23 @@ class LectureXMLTest {
 
 
     @Test
-    void chargerFichierNonXML_shouldThrowException(){
+    void chargerFichierNonXML_shouldThrowException() {
         Graphe.shared.clearGraph();
         try {
             lectureXML.chargerPlan("../datas/petitPlan");
             fail("Le test doit envoyer une exception car le fichier n'est pas un fichier XML.");
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Test
-    void chargerFichierInexistant_shouldThrowException(){
+    void chargerFichierInexistant_shouldThrowException() {
         Graphe.shared.clearGraph();
         try {
             lectureXML.chargerPlan("../datas/fichierInexistant");
             fail("Le test doit lancer une exception car le fichier n'existe pas.");
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Test
@@ -54,7 +56,7 @@ class LectureXMLTest {
         lectureXML.chargerPlan("../datas/petitPlan.xml");
         long idTest = 25611760;
         assertTrue(Graphe.shared.getIntersectionMap().containsKey(idTest));
-        assertTrue(Graphe.shared.getIntersectionMap().size()==308);
+        assertTrue(Graphe.shared.getIntersectionMap().size() == 308);
     }
 
     @Test
@@ -63,7 +65,7 @@ class LectureXMLTest {
         lectureXML.chargerPlan("../datas/moyenPlan.xml");
         long idTest = 2512682687L;
         assertTrue(Graphe.shared.getIntersectionMap().containsKey(idTest));
-        assertTrue(Graphe.shared.getIntersectionMap().size()==1448);
+        assertTrue(Graphe.shared.getIntersectionMap().size() == 1448);
     }
 
     @Test
@@ -72,7 +74,7 @@ class LectureXMLTest {
         lectureXML.chargerPlan("../datas/grandPlan.xml");
         long idTest = 26576932;
         assertTrue(Graphe.shared.getIntersectionMap().containsKey(idTest));
-        assertTrue(Graphe.shared.getIntersectionMap().size()==3736);
+        assertTrue(Graphe.shared.getIntersectionMap().size() == 3736);
     }
 
     @Test
@@ -81,7 +83,7 @@ class LectureXMLTest {
         assertNotNull(testDemandeGrand7.getHeureDepart());
         assertNotNull(testDemandeGrand7.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeGrand7.getEntrepot()));
-        assertTrue(testDemandeGrand7.getLivraisons().size()==7);
+        assertTrue(testDemandeGrand7.getLivraisons().size() == 7);
     }
 
     @Test
@@ -90,7 +92,7 @@ class LectureXMLTest {
         assertNotNull(testDemandeMoyen3.getHeureDepart());
         assertNotNull(testDemandeMoyen3.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandeMoyen3.getEntrepot()));
-        assertTrue(testDemandeMoyen3.getLivraisons().size()==3);
+        assertTrue(testDemandeMoyen3.getLivraisons().size() == 3);
     }
 
     @Test
@@ -99,7 +101,7 @@ class LectureXMLTest {
         assertNotNull(testDemandePetit1.getHeureDepart());
         assertNotNull(testDemandePetit1.getEntrepot());
         assertTrue(Graphe.shared.getIntersectionMap().containsValue(testDemandePetit1.getEntrepot()));
-        assertTrue(testDemandePetit1.getLivraisons().size()==1);
+        assertTrue(testDemandePetit1.getLivraisons().size() == 1);
     }
 
     @Test
@@ -109,10 +111,10 @@ class LectureXMLTest {
         ArrayList<Coordinate> testList = new ArrayList<>();
         testList = lectureXML.getLimitesPlan();
         int compteur = 1;
-        for(Coordinate c : testList){
-            System.out.println("Coordinate "+compteur);
+        for (Coordinate c : testList) {
+            System.out.println("Coordinate " + compteur);
             System.out.println("latitude : " + c.getLatitude());
-            System.out.println("longitude : "+ c.getLongitude());
+            System.out.println("longitude : " + c.getLongitude());
             compteur++;
         }
         assertTrue(!testList.equals(null));

@@ -16,7 +16,6 @@ public class Demande {
     private String nomDemande;
 
     /**
-     *
      * @param entrepot
      * @param heureDepart
      * @param nomDemande
@@ -29,7 +28,6 @@ public class Demande {
     }
 
     /**
-     *
      * @return les livraisons demandees
      */
     public ArrayList<Livraison> getLivraisons() {
@@ -38,30 +36,31 @@ public class Demande {
 
     /**
      * ajoute une livraison a la demande
+     *
      * @param pickup
      * @param delivery
      * @param dureeEnlevement
      * @param dureeLivraison
      * @return
      */
-    public Livraison addLivraison(Intersection pickup,  Intersection delivery, int dureeEnlevement, int dureeLivraison) {
-        Livraison livraison = new Livraison( ((Integer) livraisons.size()).longValue(), pickup, delivery, dureeEnlevement, dureeLivraison);
+    public Livraison addLivraison(Intersection pickup, Intersection delivery, int dureeEnlevement, int dureeLivraison) {
+        Livraison livraison = new Livraison(((Integer) livraisons.size()).longValue(), pickup, delivery, dureeEnlevement, dureeLivraison);
         livraisons.add(livraison);
         return livraison;
     }
 
     /**
      * ajoute une liste de livraisons a la demande
+     *
      * @param livraisons
      */
     public void addLivraisons(ArrayList<Livraison> livraisons) {
-        for (Livraison livraison: livraisons) {
+        for (Livraison livraison : livraisons) {
             addLivraison(livraison.getPickup(), livraison.getDelivery(), livraison.dureeEnlevement, livraison.getDureeLivraison());
         }
     }
 
     /**
-     *
      * @return l'entrepot de la demande
      */
     public Intersection getEntrepot() {
@@ -70,6 +69,7 @@ public class Demande {
 
     /**
      * modifie l'entrepot de la demande
+     *
      * @param entrepot
      */
     public void setEntrepot(Intersection entrepot) {
@@ -77,7 +77,6 @@ public class Demande {
     }
 
     /**
-     *
      * @return l'heure de depart de la tournee qui sera calculee
      */
     public Date getHeureDepart() {
@@ -86,13 +85,18 @@ public class Demande {
 
     /**
      * modifie l'heure de depart de la tournee qui sera calculee
+     *
      * @param heureDepart
      */
     public void setHeureDepart(Date heureDepart) {
         this.heureDepart = heureDepart;
     }
 
-    public String getNomDemande() {return nomDemande;}
+    public String getNomDemande() {
+        return nomDemande;
+    }
 
-    public void setNomDemande(String nomDemande){ this.nomDemande = nomDemande;}
+    public void setNomDemande(String nomDemande) {
+        this.nomDemande = nomDemande;
+    }
 }

@@ -17,7 +17,6 @@ public class Intersection {
     private ArrayList<Troncon> troncons;
 
     /**
-     *
      * @param id
      * @param c
      */
@@ -32,17 +31,15 @@ public class Intersection {
     }
 
     /**
-     *
      * @param i
      */
-    public Intersection(Intersection i){
-        this.coord=i.coord;
-        this.id=i.id;
-        this.troncons=i.troncons;
+    public Intersection(Intersection i) {
+        this.coord = i.coord;
+        this.id = i.id;
+        this.troncons = i.troncons;
     }
 
     /**
-     *
      * @return l'identifiant de l'intersection
      */
     public long getId() {
@@ -51,6 +48,7 @@ public class Intersection {
 
     /**
      * lie un troncon a l'intersection
+     *
      * @param t
      */
     public void addTroncon(Troncon t) {
@@ -58,7 +56,6 @@ public class Intersection {
     }
 
     /**
-     *
      * @return les coordonnees de l'intersection
      */
     public Coordinate getCoordinate() {
@@ -66,7 +63,6 @@ public class Intersection {
     }
 
     /**
-     *
      * @return les troncons lies a l'intersection
      */
     public Collection<Troncon> getTroncons() {
@@ -77,7 +73,7 @@ public class Intersection {
     public java.lang.String toString() {
         return "Intersection{" +
                 "c=" + coord +
-                "nbTroncons="+troncons.size() +
+                "nbTroncons=" + troncons.size() +
                 '}';
     }
 }

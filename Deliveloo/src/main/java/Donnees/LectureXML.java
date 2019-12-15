@@ -23,7 +23,6 @@ import static java.lang.Math.*;
  * Classe se chargeant de la lecture des fichiers XML
  *
  * @author H4132
- *
  */
 public class LectureXML {
     /**
@@ -48,9 +47,7 @@ public class LectureXML {
     /**
      * Charge le plan de la ville récupéré d'un fichier XML
      *
-     * @param cheminFichier
-     * est le chemin d'accès sur le disque du fichier XML contenant les données du plan à charger
-     *
+     * @param cheminFichier est le chemin d'accès sur le disque du fichier XML contenant les données du plan à charger
      * @throws Exception
      */
     public void chargerPlan(String cheminFichier) throws Exception {
@@ -120,7 +117,7 @@ public class LectureXML {
                         System.out.println(longueur);
                         throw new IllegalArgumentException();
                     }
-                } catch(NullPointerException npe) {
+                } catch (NullPointerException npe) {
                     throw new NullPointerException("Informations manquantes au tronçon " + countTroncon++ + "\n");
                 } catch (NumberFormatException nfe) {
                     throw new Exception("Les attributs du noeud correspondant au tronçon " + countTroncon++ + " sont mal renseignés. " +
@@ -129,7 +126,7 @@ public class LectureXML {
                 } catch (IllegalArgumentException iae) {
                     throw new IllegalArgumentException("La longueur du tronçon ne peut pas être négative. \n" +
                             " Veuillez rectifier cette longueur erronée.");
-                }  catch (Exception e) {
+                } catch (Exception e) {
                     throw new Exception("Problème dans le chargement du plan", e);
                 }
                 destination = Graphe.shared.getIntersectionMap().get(idDestination);
@@ -146,15 +143,11 @@ public class LectureXML {
     /**
      * Charge une demande de livraison(s) à partir d'un fichier XML
      *
-     * @param cheminFichier
-     * est le chemin d'accès sur le disque du fichier XML
-     * contenant les données de la demande de livraison(s)
-     *
+     * @param cheminFichier est le chemin d'accès sur le disque du fichier XML
+     *                      contenant les données de la demande de livraison(s)
      * @return la demande de livraison créée dans notre structure de données
      * à l'aboutissement du chargement de la demande
-     *
      * @throws Exception
-     *
      */
     public Demande chargerDemande(String cheminFichier) throws Exception {
         if (!cheminFichier.substring(cheminFichier.lastIndexOf('.') + 1).equals("xml")) {
@@ -184,10 +177,10 @@ public class LectureXML {
         Date myDate = new Date();
         Intersection entrepot = new Intersection();
 
-        Long countDeliveries= new Long(0);
-        String nomDemande = cheminFichier.substring(cheminFichier.replace("\\","/").lastIndexOf("/")+1,cheminFichier.lastIndexOf("."));
+        Long countDeliveries = new Long(0);
+        String nomDemande = cheminFichier.substring(cheminFichier.replace("\\", "/").lastIndexOf("/") + 1, cheminFichier.lastIndexOf("."));
         Demande demande = new Demande(entrepot, myDate, nomDemande);
-        for(int i=0; i<nbRootNodes; i++){
+        for (int i = 0; i < nbRootNodes; i++) {
             Node node = rootNodes.item(i);
             NamedNodeMap attributes = node.getAttributes();
 
@@ -219,7 +212,7 @@ public class LectureXML {
                     throw new Exception("L'intersection de livraison" + countDeliveries++ + " n'existe pas dans le graphe du plan");
                 }
                 countDeliveries++;
-                demande.addLivraison(enlevement,livraison,dureeEnlevement,dureeLivraison);
+                demande.addLivraison(enlevement, livraison, dureeEnlevement, dureeLivraison);
 
             } else if (node.getNodeName().equals("entrepot")) {
                 try {
@@ -255,7 +248,6 @@ public class LectureXML {
      *
      * @return la liste des coordonnées des quatre extrémités
      * du plan calculées
-     *
      * @throws Exception
      */
     public ArrayList<Coordinate> getLimitesPlan() throws Exception {
@@ -303,10 +295,8 @@ public class LectureXML {
     /**
      * Calcule l'intersection du graphe la plus proche d'un point donné
      *
-     * @param c
-     * représente les coordonnées du point
-     * dont on veut l'intersection la plus proche
-     *
+     * @param c représente les coordonnées du point
+     *          dont on veut l'intersection la plus proche
      * @return l'intersection la plus proche du point donné
      */
     public Intersection getIntersectionPlusProche(Coordinate c) {
@@ -316,13 +306,13 @@ public class LectureXML {
         Collection<Intersection> inter = Graphe.shared.getIntersectionMap().values();
         Iterator it = inter.iterator();
 
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Intersection i = (Intersection) it.next();
 
             Double diffLongitude = abs(i.getCoordinate().getLongitude() - c.getLongitude());
             Double difflatitude = abs(i.getCoordinate().getLatitude() - c.getLatitude());
 
-            Double distance = sqrt(pow(diffLongitude,2)+pow(difflatitude,2));
+            Double distance = sqrt(pow(diffLongitude, 2) + pow(difflatitude, 2));
 
             if (distance < distanceMin) {
                 distanceMin = distance;

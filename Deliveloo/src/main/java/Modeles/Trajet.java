@@ -33,7 +33,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @param origine
      */
     public Trajet(Intersection origine) {
@@ -45,6 +44,7 @@ public class Trajet {
 
     /**
      * Constructeur de copie
+     *
      * @param trajet
      */
     public Trajet(Trajet trajet) {
@@ -58,7 +58,6 @@ public class Trajet {
 
 
     /**
-     *
      * @return l'heure de depart
      */
     public Date getHeureDepart() {
@@ -67,6 +66,7 @@ public class Trajet {
 
     /**
      * modifie l'heure de depart
+     *
      * @param heureDepart
      */
     public void setHeureDepart(Date heureDepart) {
@@ -74,7 +74,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return l'heure d'arrivee
      */
     public Date getHeureArrivee() {
@@ -83,6 +82,7 @@ public class Trajet {
 
     /**
      * modifie l'heure d'arrivee
+     *
      * @param heureArrivee
      */
     public void setHeureArrivee(Date heureArrivee) {
@@ -90,7 +90,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return retourne le type d'action
      */
     public Type getType() {
@@ -99,6 +98,7 @@ public class Trajet {
 
     /**
      * modifie le type d'action
+     *
      * @param type
      */
     public void setType(Type type) {
@@ -106,7 +106,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return la livraison concernee par l'action
      */
     public Livraison getLivraison() {
@@ -115,6 +114,7 @@ public class Trajet {
 
     /**
      * modifie la livraison concernee
+     *
      * @param livraison
      */
     public void setLivraison(Livraison livraison) {
@@ -122,7 +122,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return la longueur du trajet
      */
     public Double getLongueur() {
@@ -130,7 +129,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return l'intersection d'origine du trajet
      */
     public Intersection getOrigine() {
@@ -138,7 +136,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return l'intersection d'arrivee du trajet
      */
     public Intersection getArrivee() {
@@ -146,7 +143,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return les troncons du trajet
      */
     public ArrayList<Troncon> getTroncons() {
@@ -155,16 +151,18 @@ public class Trajet {
 
     /**
      * ajoute une liste de troncons au trajet
+     *
      * @param troncons
      */
     public void addTroncons(ArrayList<Troncon> troncons) {
-        for (Troncon troncon: troncons) {
+        for (Troncon troncon : troncons) {
             addTroncon(troncon);
         }
     }
 
     /**
      * ajoute un troncon au trajet
+     *
      * @param troncon
      */
     public void addTroncon(Troncon troncon) {
@@ -175,6 +173,7 @@ public class Trajet {
 
     /**
      * calcul l'angle lors d'un changement de troncon
+     *
      * @param P1
      * @param P2
      * @param P3
@@ -186,7 +185,6 @@ public class Trajet {
     }
 
     /**
-     *
      * @return les instructions du trajet
      */
     public ArrayList<InstructionLivraison> getInstructions() {
@@ -207,17 +205,17 @@ public class Trajet {
                 double angle = computeAngle(lastLocation.getCoordinate(), lastTroncon.getDestination().getCoordinate(), troncon.getDestination().getCoordinate());
                 distanceSinceLastInstruction += lastTroncon.getLongueur();
 
-                if (angle>0.65) {
+                if (angle > 0.65) {
                     direction = InstructionLivraison.Direction.GAUCHE;
-                } else if (angle<-0.65) {
+                } else if (angle < -0.65) {
                     direction = InstructionLivraison.Direction.DROITE;
-                } else if (angle>0.1) {
+                } else if (angle > 0.1) {
                     direction = InstructionLivraison.Direction.LEGERGAUCHE;
-                } else if (angle<-0.1) {
+                } else if (angle < -0.1) {
                     direction = InstructionLivraison.Direction.LEGERDROIT;
                 }
 
-                if (angle>0.1||angle<-0.1||!lastTroncon.getNom().equals(troncon.getNom())) {
+                if (angle > 0.1 || angle < -0.1 || !lastTroncon.getNom().equals(troncon.getNom())) {
                     InstructionLivraison newInstruction = new InstructionLivraison(troncon.getNom(), direction, distanceSinceLastInstruction);
                     instructions.add(newInstruction);
                     distanceSinceLastInstruction = 0;
@@ -235,7 +233,7 @@ public class Trajet {
     public String toString() {
         String result = "";
         ArrayList<InstructionLivraison> instructions = getInstructions();
-        for (InstructionLivraison instruction: instructions) result += instruction.toString() + "\n" ;
+        for (InstructionLivraison instruction : instructions) result += instruction.toString() + "\n";
         return result;
     }
 }
