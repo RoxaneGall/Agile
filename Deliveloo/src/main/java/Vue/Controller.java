@@ -419,10 +419,6 @@ public class Controller implements ActionListener {
             ArrayList<Coordinate> limites = service.chargerPlan(path); // charge le plan en mémoire
             // limites correspond à une liste des quatres coins du plan
             mapExtent = Extent.forCoordinates(limites);
-            System.out.println("extentMax :" + mapExtent.getMax());
-            System.out.println("extentMin :" + mapExtent.getMin());
-
-
             if (mapView != null) {
                 mapView.setExtent(mapExtent); // cadre la carte en fonction du plan chargé
             }
@@ -472,8 +468,6 @@ public class Controller implements ActionListener {
         }
         return paired;
     }
-
-
 
 
     /**
