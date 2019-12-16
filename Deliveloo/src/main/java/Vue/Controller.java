@@ -307,7 +307,7 @@ public class Controller implements ActionListener {
         });
 
         supprLivraison.setOnAction(event -> {
-            Triple<Coordinate, Long, Trajet.Type> toRemove = recupererInfosCliquées();
+            Triple<Coordinate, Long, Trajet.Type> toRemove = recupererInfosCliquees();
             Coordinate coordToRemove = toRemove.getLeft();
             Long idLivrSupr = toRemove.getMiddle();
             Coordinate pairedToRemove = recupererPairedCoord(coordToRemove, idLivrSupr);
@@ -440,7 +440,7 @@ public class Controller implements ActionListener {
      * @return un triplet des informations (coordonnée, lidentifiant de la livraison et type) du point sélectionné
      */
 
-    private Triple<Coordinate, Long, Trajet.Type> recupererInfosCliquées() {
+    private Triple<Coordinate, Long, Trajet.Type> recupererInfosCliquees() {
         Triple<Coordinate, Long, Trajet.Type> selected = null;
         for (Map.Entry<ToggleButton, Triple<Coordinate, Long, Trajet.Type>> entry : livrButtons.entrySet()) { // parcours la liste des boutons de livraison
             if (entry.getKey().isSelected()) {
@@ -530,7 +530,7 @@ public class Controller implements ActionListener {
      *
      * @param interLivraison intersections des points de livraison à ajouter
      */
-    void ajouterLivraison(ArrayList<Intersection> interLivraison) {
+    public void ajouterLivraison(ArrayList<Intersection> interLivraison) {
         if (interLivraison.size() == 2) {
 
             ajoutPickUp.setText("");
@@ -652,7 +652,7 @@ public class Controller implements ActionListener {
      * réinitialise les attributs concernant la demande
      * active les boutons cliquables une fois une demande chargée
      */
-    void afficherDemande() {
+    public void afficherDemande() {
         try {
             clearDemande(); // on supprime la demande d'avant
 
