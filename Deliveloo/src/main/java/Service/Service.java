@@ -103,6 +103,7 @@ public class Service {
      * @return la nouvelle tournée calculée
      */
     public Tournee supprimerLivraison(Tournee tournee, Long idLivraison) {
+        //Creation de la demande associée
         Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart(), tournee.getDemande().getNomDemande());
         for (Livraison livraison : tournee.getDemande().getLivraisons()) {
             if (livraison.getId() != idLivraison) {
@@ -120,10 +121,14 @@ public class Service {
         for (Trajet trajet : tournee.getTrajets()) {
 
             if ((trajet.getLivraison() != null) && (trajet.getLivraison().getId() == idLivraison) && (lastIntersection == null)) {
+                //Si il faut supprimer la livraison correspondant à ce trajet
                 lastIntersection = trajet.getOrigine();
             } else if (trajet.getLivraison() == null || (trajet.getLivraison().getId() != idLivraison)) {
+                //Si on se dirige vers l'entrepot ou si on souhaite garder la livraison correspondant à ce trajet
                 Trajet nouveauTrajet = new Trajet(trajet);
+
                 if (lastIntersection != null) {
+                    //Si le dernier trajet a ete supprimé, on recréé un chemin depuis la derniere intersection 
                     nouveauTrajet = Computations.getMeilleurTrajet(lastIntersection, trajet.getArrivee());
                     lastIntersection = null;
                 }
@@ -160,6 +165,7 @@ public class Service {
      * @return la nouvelle tournée calculée
      */
     public Tournee ajouterLivraison(Tournee tournee, Intersection pickup, Intersection delivery, int dE, int dL) {
+        //Creation de la demande associée
         Demande nouvelleDemande = new Demande(tournee.getDemande().getEntrepot(), tournee.getDemande().getHeureDepart(), tournee.getDemande().getNomDemande());
         nouvelleDemande.addLivraisons(tournee.getDemande().getLivraisons());
         Livraison livraison = nouvelleDemande.addLivraison(pickup, delivery, dE, dL);
@@ -209,6 +215,7 @@ public class Service {
 
             Trajet trajet = new Trajet(t);
 
+            //Si il faut inserer un nouveau trajet, on execute d'abord ces lignes
             if (currentInsertionId == pickupInsertionId || currentInsertionId == deliveryInsertionId) {
                 Trajet nouveauTrajet = null;
                 if (currentInsertionId == pickupInsertionId) {
